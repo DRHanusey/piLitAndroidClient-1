@@ -1,0 +1,36 @@
+package edu.temple.pilitandroidclient;
+
+import java.util.ArrayList;
+
+public class PiObj {
+
+    String piAddress;
+    int port;
+    LEDconfigObj currentConfig;     // Used to populate the graphical LED representation on screen
+    ArrayList<LEDconfigObj> LEDstripList;
+
+
+    // constructor for adding a new Pi (no led config necessary)
+    public PiObj(String piAddress, int port) {
+        this.piAddress = piAddress;
+        this.port = port;
+    }
+
+    public void addStrip (int ledCount){
+        int newStripId = LEDstripList.size();       //index where new configObj will be placed
+        LEDconfigObj newConfigObj = new LEDconfigObj(ledCount,newStripId );     //initialize new configObj
+        LEDstripList.add(newConfigObj);             //add new configObj to list
+    }
+
+    public void removeStrip (int stripId) {
+        LEDstripList.remove(stripId);
+
+        //updates the stripID of each configObj to match it's index in the array
+        for(int i = 0; i < LEDstripList.size(); i++){
+            LEDstripList.get(i).stripId = i;
+        }
+
+    }
+
+
+}

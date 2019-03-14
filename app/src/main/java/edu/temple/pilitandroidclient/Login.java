@@ -33,6 +33,7 @@ public class Login extends AppCompatActivity {
 
                 //TODO: connect with server
                 //TODO: send userObj for verification against DB
+                //TODO: on succesful login create UserProfile
             }
         };
         loginButton = (Button) findViewById(R.id.buttonLogin);
@@ -43,7 +44,8 @@ public class Login extends AppCompatActivity {
         View.OnClickListener registerOCL = new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                //TODO: display a registration screen
+                //TODO: display a registration screen with email, password1, and password2 (must match, certain length...etc)
+                //TODO: clicking register (on the reg screen) should 1)validate email is in correct format 2)passwords match 3)connect/send userObj to server
             }
         };
         registerButton = (Button) findViewById(R.id.buttonRegister);
