@@ -1,5 +1,6 @@
 package edu.temple.pilitandroidclient;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,10 +12,13 @@ public class Login extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     Button loginButton, registerButton;
 
+    Button loginButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         inputEmail = (EditText) findViewById(R.id.inputEmail);
         inputPassword = (EditText) findViewById(R.id.inputPassword);
@@ -28,6 +32,9 @@ public class Login extends AppCompatActivity {
                         inputPassword.getText().toString());
 
                 Toast.makeText(getApplicationContext(), loginRegObj.toString(), Toast.LENGTH_SHORT).show();
+              
+                Intent intent = new Intent(Login.this, Home.class);
+                startActivity(intent);
 
                 //TODO: connect with server
                 //TODO: send loginRegObj for verification against DB
@@ -48,6 +55,7 @@ public class Login extends AppCompatActivity {
         };
         registerButton = (Button) findViewById(R.id.buttonRegister);
         registerButton.setOnClickListener(registerOCL);
+
 
 
     }
