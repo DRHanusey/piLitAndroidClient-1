@@ -1,9 +1,7 @@
 package edu.temple.pilitandroidclient;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,14 +24,14 @@ public class Login extends AppCompatActivity {
         View.OnClickListener loginOCL = new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                UserObj userObj = new UserObj(inputEmail.getText().toString(),
+                LoginRegObj loginRegObj = new LoginRegObj(inputEmail.getText().toString(),
                         inputPassword.getText().toString());
 
-                Toast.makeText(getApplicationContext(), userObj.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), loginRegObj.toString(), Toast.LENGTH_SHORT).show();
 
                 //TODO: connect with server
-                //TODO: send userObj for verification against DB
-                //TODO: on succesful login create UserProfile
+                //TODO: send loginRegObj for verification against DB
+                //TODO: on succesful login create UserProfileObj
             }
         };
         loginButton = (Button) findViewById(R.id.buttonLogin);

@@ -2,13 +2,13 @@ package edu.temple.pilitandroidclient;
 
 import java.util.ArrayList;
 
-public class UserObj {
+public class LoginRegObj {
 
     private String userName;
     private String userPassword;
 
 
-    public UserObj(String userName, String userPassword) {
+    public LoginRegObj(String userName, String userPassword) {
         this.userName = userName;
         this.userPassword = userPassword;
     }
@@ -21,9 +21,10 @@ public class UserObj {
         return userPassword;
     }
 
+    //for testing
     @Override
     public String toString() {
-        return "UserObj{" +
+        return "LoginRegObj{" +
                 "userName='" + userName + '\'' +
                 ", userPassword='" + userPassword + '\'' +
                 '}';

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class PiObj {
 
+    int piId;
     String piAddress;
     int port;
-    LEDconfigObj currentConfig;     // Used to populate the graphical LED representation on screen
     ArrayList<LEDconfigObj> LEDstripList;
 
 
@@ -29,7 +29,12 @@ public class PiObj {
         for(int i = 0; i < LEDstripList.size(); i++){
             LEDstripList.get(i).stripId = i;
         }
+    }
 
+    //param i: index of LED strip (same as strip Id)
+    //returns: LEDconfigObj of the LED strip selected
+    public LEDconfigObj getLEDconfigObj(int i){
+        return LEDstripList.get(i);
     }
 
 
