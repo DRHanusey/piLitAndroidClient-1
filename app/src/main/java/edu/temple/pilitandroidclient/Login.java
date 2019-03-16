@@ -3,16 +3,26 @@ package edu.temple.pilitandroidclient;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class Login extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
-    Button loginButton, registerButton;
+    Button loginButton, registerButton, sendTestMsgButton;
+    private Socket socket;
+    JSONObject msgJson = new JSONObject();
 
-    Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,19 +30,20 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-        inputEmail = (EditText) findViewById(R.id.inputEmail);
-        inputPassword = (EditText) findViewById(R.id.inputPassword);
+        inputEmail = findViewById(R.id.inputEmail);
+        inputPassword = findViewById(R.id.inputPassword);
+        loginButton =  findViewById(R.id.buttonLogin);
+        registerButton =  findViewById(R.id.buttonRegister);
+        sendTestMsgButton = findViewById(R.id.buttonTest);
 
 
         // Perform login button action
-        View.OnClickListener loginOCL = new View.OnClickListener(){
+        View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 LoginRegObj loginRegObj = new LoginRegObj(inputEmail.getText().toString(),
                         inputPassword.getText().toString());
 
-                Toast.makeText(getApplicationContext(), loginRegObj.toString(), Toast.LENGTH_SHORT).show();
-              
                 Intent intent = new Intent(Login.this, Home.class);
                 startActivity(intent);
 
@@ -41,21 +52,67 @@ public class Login extends AppCompatActivity {
                 //TODO: on succesful login create UserProfileObj
             }
         };
-        loginButton = (Button) findViewById(R.id.buttonLogin);
         loginButton.setOnClickListener(loginOCL);
 
 
         // Perform register button action
-        View.OnClickListener registerOCL = new View.OnClickListener(){
+        View.OnClickListener registerOCL = new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 //TODO: display a registration screen with email, password1, and password2 (must match, certain length...etc)
                 //TODO: clicking register (on the reg screen) should 1)validate email is in correct format 2)passwords match 3)connect/send userObj to server
             }
         };
-        registerButton = (Button) findViewById(R.id.buttonRegister);
         registerButton.setOnClickListener(registerOCL);
 
+        View.OnClickListener testOCL = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    socket = IO.socket("http://192.168.0.7:3000");  //local ip of server, can not use localhost from A.S.
+                } catch (URISyntaxException e) {
+                    Log.e("URISyntaxException", e.toString());
+                }
+
+                String msg = "This is a test";
+                try {
+                    msgJson.put("type",msg);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+
+                    @Override
+                    public void call(Object... args) {
+                        //socket.emit("command", "hi");
+                        socket.emit("command",msgJson );
+                        socket.disconnect();
+                    }
+
+                }).on("event", new Emitter.Listener() {
+
+                    @Override
+                    public void call(Object... args) {
+                    }
+
+                }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+
+                    @Override
+                    public void call(Object... args) {
+                    }
+
+                });
+                socket.connect();
+
+
+                Toast.makeText(getApplicationContext(), "Msg sent", Toast.LENGTH_SHORT).show();
+
+            }
+        };
+        sendTestMsgButton.setOnClickListener(testOCL);
 
 
     }
