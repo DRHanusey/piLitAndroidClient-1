@@ -17,6 +17,8 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 public class Login extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     Button loginButton, registerButton, sendTestMsgButton;
@@ -55,15 +57,13 @@ public class Login extends AppCompatActivity {
         loginButton.setOnClickListener(loginOCL);
 
 
-        // Perform register button action
-        View.OnClickListener registerOCL = new View.OnClickListener() {
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: display a registration screen with email, password1, and password2 (must match, certain length...etc)
-                //TODO: clicking register (on the reg screen) should 1)validate email is in correct format 2)passwords match 3)connect/send userObj to server
+                registerMe();
             }
-        };
-        registerButton.setOnClickListener(registerOCL);
+        });
 
         View.OnClickListener testOCL = new View.OnClickListener(){
             @Override
@@ -116,4 +116,10 @@ public class Login extends AppCompatActivity {
 
 
     }
+    public void registerMe(){
+
+        Intent intent = new Intent(this, Registration.class);
+        startActivity(intent);;
+    }
+
 }
