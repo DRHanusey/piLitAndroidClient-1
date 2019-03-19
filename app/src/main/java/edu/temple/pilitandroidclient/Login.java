@@ -11,17 +11,19 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.URISyntaxException;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity implements Serializable{
     private EditText inputEmail, inputPassword;
     Button loginButton, registerButton, sendTestMsgButton;
     private Socket socket;
     JSONObject msgJson = new JSONObject();
+    public static final String USER_OBJ = "passing user obj";
 
 
     @Override
@@ -44,12 +46,25 @@ public class Login extends AppCompatActivity {
                 LoginRegObj loginRegObj = new LoginRegObj(inputEmail.getText().toString(),
                         inputPassword.getText().toString());
 
-                Intent intent = new Intent(Login.this, Home.class);
-                startActivity(intent);
-
                 //TODO: connect with server
                 //TODO: send loginRegObj for verification against DB
-                //TODO: on succesful login create UserProfileObj
+                //TODO: on succesful login create UserProfileObj and launches Home activity
+
+                //For testing purposes
+                String testEmail;
+                if (loginRegObj.getUserName().contentEquals("Email")){
+                    testEmail = "TestEmail@test.com";
+                } else {
+                    testEmail = loginRegObj.getUserName();
+                }
+
+                UserProfileObj userProfileObj = new UserProfileObj(testEmail);
+
+                Intent intent = new Intent(Login.this, Home.class);
+                intent.putExtra(USER_OBJ,userProfileObj);
+                startActivity(intent);
+
+
             }
         };
         loginButton.setOnClickListener(loginOCL);

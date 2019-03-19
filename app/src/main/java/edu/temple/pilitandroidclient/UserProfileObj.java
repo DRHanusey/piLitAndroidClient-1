@@ -1,15 +1,24 @@
 package edu.temple.pilitandroidclient;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserProfileObj {
+public class UserProfileObj implements Serializable {
 
     String userEmail;
     ArrayList<PiObj> PiList;
 
+    //For use when loading user with PiLits already initialized
     public UserProfileObj(String userEmail, ArrayList<PiObj> piList) {
         this.userEmail = userEmail;
         PiList = piList;
+    }
+
+    //For use when user has no PiLits set up
+    //For use when loading user with PiLits already initialized
+    public UserProfileObj(String userEmail) {
+        this.userEmail = userEmail;
+        PiList = new ArrayList<PiObj>();
     }
 
     public void addPi (String piAddress, int port){
