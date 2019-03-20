@@ -60,6 +60,7 @@ public class Login extends AppCompatActivity implements Serializable{
 
                 UserProfileObj userProfileObj = new UserProfileObj(testEmail);
 
+                //Launches the home activity and passes a user profile obj
                 Intent intent = new Intent(Login.this, Home.class);
                 intent.putExtra(USER_OBJ,userProfileObj);
                 startActivity(intent);
