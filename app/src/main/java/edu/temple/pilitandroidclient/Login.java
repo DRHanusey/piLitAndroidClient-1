@@ -24,6 +24,7 @@ public class Login extends AppCompatActivity {
     Button loginButton, registerButton, sendTestMsgButton;
     private Socket socket;
     JSONObject msgJson = new JSONObject();
+    public static final String USER_OBJ = "passing user obj";
 
 
     @Override
