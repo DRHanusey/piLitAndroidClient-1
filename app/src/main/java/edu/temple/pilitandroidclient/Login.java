@@ -46,12 +46,25 @@ public class Login extends AppCompatActivity {
                 LoginRegObj loginRegObj = new LoginRegObj(inputEmail.getText().toString(),
                         inputPassword.getText().toString());
 
-                Intent intent = new Intent(Login.this, Home.class);
-                startActivity(intent);
-
                 //TODO: connect with server
                 //TODO: send loginRegObj for verification against DB
-                //TODO: on succesful login create UserProfileObj
+                //TODO: on succesful login create UserProfileObj and launches Home activity
+
+                //For testing purposes
+                String testEmail;
+                if (loginRegObj.getUserName().contentEquals("Email")){
+                    testEmail = "TestEmail@test.com";
+                } else {
+                    testEmail = loginRegObj.getUserName();
+                }
+
+                UserProfileObj userProfileObj = new UserProfileObj(testEmail);
+              
+                //Launches the home activity and passes a user profile obj
+                Intent intent = new Intent(Login.this, Home.class);
+                intent.putExtra(USER_OBJ,userProfileObj);
+                startActivity(intent);
+
             }
         };
         loginButton.setOnClickListener(loginOCL);
