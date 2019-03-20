@@ -8,6 +8,7 @@ public class PiObj {
     String piAddress;
     int port;
     ArrayList<LEDconfigObj> LEDstripList;
+    String customName;   //ie living room, bedroom, etc
 
 
     // constructor for adding a new Pi (no led config necessary)
