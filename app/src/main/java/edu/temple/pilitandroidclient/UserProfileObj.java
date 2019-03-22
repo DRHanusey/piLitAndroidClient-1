@@ -21,10 +21,10 @@ public class UserProfileObj implements Serializable {
         PiList = new ArrayList<PiObj>();
     }
 
-    public void addPi (String piAddress, int port){
-        int newPiId = PiList.size();       //index where new configObj will be placed
-        PiObj newConfigObj = new PiObj(piAddress,port );     //initialize new configObj
-        PiList.add(newConfigObj);             //add new configObj to list
+    public void addPi (String piAddress, int port, String name){
+        int newPiId = PiList.size();                                //index where new configObj will be placed
+        PiObj newConfigObj = new PiObj(piAddress,port,name );       //initialize new configObj
+        PiList.add(newConfigObj);                                   //add new configObj to list
     }
 
     public void removePi (int piId) {

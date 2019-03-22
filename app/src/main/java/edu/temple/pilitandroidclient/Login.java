@@ -26,6 +26,8 @@ public class Login extends AppCompatActivity {
     JSONObject msgJson = new JSONObject();
     public static final String USER_OBJ = "passing user obj";
 
+    //TODO insert central server ip
+    public static final String SERVER_IP_PORT = "http://192.168.0.7:3000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class Login extends AppCompatActivity {
 
                 //TODO: connect with server
                 //TODO: send loginRegObj for verification against DB
-                //TODO: on succesful login create UserProfileObj and launches Home activity
+                //TODO: on successful login create UserProfileObj and launches Home activity
 
                 //For testing purposes
                 String testEmail;
@@ -60,6 +62,8 @@ public class Login extends AppCompatActivity {
                 }
 
                 UserProfileObj userProfileObj = new UserProfileObj(testEmail);
+                userProfileObj.addPi("168.0.0.1", 400, "living room");  //create mock PiLit for testing
+                userProfileObj.addPi("168.0.0.2", 400, "bed room");     //create mock PiLit for testing
               
                 //Launches the home activity and passes a user profile obj
                 Intent intent = new Intent(Login.this, Home.class);
@@ -84,7 +88,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
 
                 try {
-                    socket = IO.socket("http://192.168.0.7:3000");  //local ip of server, can not use localhost from A.S.
+                    socket = IO.socket(SERVER_IP_PORT);  //local ip of server, can not use localhost from A.S.
                 } catch (URISyntaxException e) {
                     Log.e("URISyntaxException", e.toString());
                 }

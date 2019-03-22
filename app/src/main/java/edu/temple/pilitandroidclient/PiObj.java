@@ -1,8 +1,9 @@
 package edu.temple.pilitandroidclient;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PiObj {
+public class PiObj implements Serializable {
 
     int piId;
     String piAddress;
@@ -12,9 +13,10 @@ public class PiObj {
 
 
     // constructor for adding a new Pi (no led config necessary)
-    public PiObj(String piAddress, int port) {
+    public PiObj(String piAddress, int port, String customName) {
         this.piAddress = piAddress;
         this.port = port;
+        this.customName = customName;
     }
 
     public void addStrip (int ledCount){
@@ -39,4 +41,9 @@ public class PiObj {
     }
 
 
+    //Must override so the name is displayed in drop down on Home screen
+    @Override
+    public String toString() {
+        return customName;
+    }
 }
