@@ -9,23 +9,6 @@ public class LEDconfigObj {
     int[] colorArray;           // 1 index per light. int color values (ie pink #ff69b4 = 16738740)
     int stripBrightness;        // 0-255
 
-    //IGNORE FOR NOW
-    //Just some idea's of how we will need to to store pass data regarding effects and preloded configs
-    /* PRESET EFFECTS which can be applied to a custom color set up */
-    boolean brightnessBulge;    // brightness would shift around the strip  (1 1 1 2 3 4 3 2 1 1 1 ->)
-    int bulgeSpeed;             // 1-10 how fast LEDs will transition between colors
-
-    boolean colorShift;         // LED colors would shift (B, R, R) -> (R, B, R) -> (R, R, B)
-    int shiftSpeed;
-    int shiftGroup;             // How many LEDs to shift at a time
-    boolean shiftDirection;     // True = Left, False = right
-
-    boolean colorfade;          //LED colors would fade into their next color.
-
-
-    /* PRELOADED CONFIGS would store like this */
-    boolean rainbow;
-    int rainbowSpeed;
 
     // Use when importing objects from Server/DB
     public LEDconfigObj(int ledCount, int[] colorArray, int stripBrightness, int stripId) {
