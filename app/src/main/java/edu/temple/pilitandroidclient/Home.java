@@ -18,7 +18,7 @@ import java.util.logging.Level;
 public class Home extends AppCompatActivity{
     private TextView currentUser;
     private Spinner spinner;
-    private Button add, remove, selectPi, marketPlace;
+    private Button selectPi, marketPlace;
     private ListView configList;
 
     @Override
@@ -30,8 +30,6 @@ public class Home extends AppCompatActivity{
         currentUser = findViewById(R.id.textCurrentUser);
         spinner = findViewById(R.id.spinnerPiSelect);
         selectPi = findViewById(R.id.buttonSelectPi);
-        add = findViewById(R.id.buttonAddPiLit);
-        remove = findViewById(R.id.buttonRemovePiLit);
         marketPlace = findViewById(R.id.buttonMarketPlace);
         configList = findViewById(R.id.listSavedConfigs);
 
@@ -51,7 +49,7 @@ public class Home extends AppCompatActivity{
         View.OnClickListener selectPiOCL = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
 
                 //Launches the home activity and passes a user profile obj
                 //Intent intent = new Intent(Login.this, Home.class);
