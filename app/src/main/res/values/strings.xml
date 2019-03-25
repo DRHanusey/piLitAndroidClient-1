@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">piLitAndroidClient</string>
+    <string name="current_user">Current User:</string>
+    <string name="pilit_list">List of PiLits:</string>
+    <string name="saved_configs">Saved LED configurations:</string>
+    <string name="select_pi">Select PiLit</string>
+    <string name="market_pl_but">Market Place</string>
+    <string name="welcome_title">Welcome to PiLit!</string>
+    <string name="reg_but">Register</string>
+    <string name="login_but">Login</string>
 </resources>
