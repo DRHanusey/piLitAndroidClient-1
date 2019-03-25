@@ -8,4 +8,7 @@
     <string name="welcome_title">Welcome to PiLit!</string>
     <string name="reg_but">Register</string>
     <string name="login_but">Login</string>
+    <string name="current_pilit">Selected PiLit:</string>
+    <string name="strip_list">List of LED strips:</string>
+
 </resources>

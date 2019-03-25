@@ -17,8 +17,6 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 public class Login extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     Button loginButton, registerButton, sendTestMsgButton;
@@ -51,7 +49,7 @@ public class Login extends AppCompatActivity {
 
                 //TODO: connect with server
                 //TODO: send loginRegObj for verification against DB
-                //TODO: on successful login create UserProfileObj and launches Home activity
+                //TODO: on successful login create UserProfileObj and launches User activity
 
                 //For testing purposes
                 String testEmail;
@@ -76,7 +74,7 @@ public class Login extends AppCompatActivity {
 
               
                 //Launches the home activity and passes a user profile obj
-                Intent intent = new Intent(Login.this, Home.class);
+                Intent intent = new Intent(Login.this, User.class);
                 intent.putExtra(USER_OBJ,userProfileObj);
                 startActivity(intent);
 

@@ -41,7 +41,7 @@ public class PiObj implements Serializable {
     }
 
 
-    //Must override so the name is displayed in drop down on Home screen
+    //Must override so the name is displayed in drop down on User screen
     @Override
     public String toString() {
         return customName;
