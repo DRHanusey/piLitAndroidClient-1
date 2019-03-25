@@ -8,26 +8,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.logging.Level;
-
-public class Home extends AppCompatActivity{
+public class User extends AppCompatActivity{
     private TextView currentUser;
     private Spinner spinner;
     private Button selectPi, marketPlace;
     private ListView configList;
+    public static final String PI_OBJ = "passing pi obj";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_user);
 
         //connect java items with their GUI representations
-        currentUser = findViewById(R.id.textCurrentUser);
+        currentUser = findViewById(R.id.textCurrentPi);
         spinner = findViewById(R.id.spinnerPiSelect);
         selectPi = findViewById(R.id.buttonSelectPi);
         marketPlace = findViewById(R.id.buttonMarketPlace);
@@ -46,30 +45,22 @@ public class Home extends AppCompatActivity{
         //Displays the user's saved configurations
         createSavedConfigList(userProfileObj);
 
-        View.OnClickListener selectPiOCL = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
 
-
-                //Launches the home activity and passes a user profile obj
-                //Intent intent = new Intent(Login.this, Home.class);
-                //intent.putExtra(USER_OBJ,userProfileObj);
-                //startActivity(intent);
-
-            }
-        };
-        selectPi.setOnClickListener(selectPiOCL);
-
-
+    public void selectPi(View v){
+        //Launches the home activity and passes a user profile obj
+        Intent intent = new Intent(User.this, Pilit.class);
+        intent.putExtra(PI_OBJ,(PiObj)spinner.getSelectedItem());
+        startActivity(intent);
     }
 
     public void createSavedConfigList(UserProfileObj userProfileObj){
 
         //Creates adapter which populates the list view
-        ArrayAdapter<LEDconfigObj> configAdpater = new ArrayAdapter<LEDconfigObj>(this,
+        ArrayAdapter<LEDconfigObj> configAdapter = new ArrayAdapter<LEDconfigObj>(this,
                 android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
         //Passes the adapter to the list view
-        configList.setAdapter(configAdpater);
+        configList.setAdapter(configAdapter);
     }
 
 
