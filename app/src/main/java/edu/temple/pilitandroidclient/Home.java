@@ -1,9 +1,11 @@
 package edu.temple.pilitandroidclient;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +15,7 @@ import android.widget.TextView;
 public class Home extends AppCompatActivity{
     private TextView currentUser;
     private Spinner spinner;
-    private Button add, remove, select, marketPlace;
+    private Button addBtn, removeBtn, selectBtn, marketBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,10 +25,10 @@ public class Home extends AppCompatActivity{
         //connect java items with their GUI representations
         currentUser = findViewById(R.id.textCurrentUser);
         spinner = findViewById(R.id.spinnerPiSelect);
-        select = findViewById(R.id.buttonSelectPi);
-        add = findViewById(R.id.buttonAddPiLit);
-        remove = findViewById(R.id.buttonRemovePiLit);
-        marketPlace = findViewById(R.id.buttonMarketPlace);
+        selectBtn = findViewById(R.id.buttonSelectPi);
+        addBtn = findViewById(R.id.buttonAddPiLit);
+        removeBtn = findViewById(R.id.buttonRemovePiLit);
+        marketBtn = findViewById(R.id.buttonMarketPlace);
 
         //The userProfile which has been passed from the login screen
         UserProfileObj userProfileObj = (UserProfileObj) getIntent().getSerializableExtra(Login.USER_OBJ);
@@ -36,7 +38,16 @@ public class Home extends AppCompatActivity{
 
         createPiDropdown(userProfileObj);
 
+        //Takes you to marketplace activity
+        marketBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Home.this, Marketplace.class);
+                startActivity(intent);
+            }//end onclick
+        }//end
 
+        );
 
 
 

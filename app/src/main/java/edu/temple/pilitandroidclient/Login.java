@@ -137,7 +137,7 @@ public class Login extends AppCompatActivity {
     public void registerMe(){
 
         Intent intent = new Intent(this, Registration.class);
-        startActivity(intent);;
+        startActivity(intent);
     }
 
 }
