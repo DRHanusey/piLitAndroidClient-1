@@ -1,8 +1,11 @@
 package edu.temple.pilitandroidclient;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -10,12 +13,19 @@ import java.util.ArrayList;
 public class Marketplace extends AppCompatActivity {
 
     //array of options -> array adapter -> use the adapter to populate the listView
+
+    Button homeButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marketplace);
 
+
+        homeButton = findViewById(R.id.homeButton);
+
         populateListView();
+
     }
 
     private void populateListView(){
@@ -41,8 +51,12 @@ public class Marketplace extends AppCompatActivity {
         ListView list = (ListView) findViewById(R.id.listScroll);
         list.setAdapter(ledConfigList);
 
+    }
 
+    public void goHome(View v){
 
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
     }
 
 }
