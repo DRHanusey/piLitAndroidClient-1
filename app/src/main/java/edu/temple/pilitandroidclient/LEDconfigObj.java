@@ -36,7 +36,7 @@ public class LEDconfigObj implements Serializable {
         }
     }
 
-    //for testing
+    //for TESTING ONLY!!
     public LEDconfigObj(String desc){
         this.stripId = 10;
         this.ledCount = 30;
