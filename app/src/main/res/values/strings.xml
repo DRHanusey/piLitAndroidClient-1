@@ -10,7 +10,9 @@
     <string name="login_but">Login</string>
     <string name="current_pilit">Selected PiLit:</string>
     <string name="strip_list">List of LED strips:</string>
-    <string name="color_button">Change Color</string>
-    <string name="apply_button">Apply</string>
+    <string name="confirmpassword" />
+    <string name="password" />
+    <string name="signup" />
+    <string name="name" />
 
 </resources>

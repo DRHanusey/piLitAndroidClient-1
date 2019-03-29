@@ -11,8 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".Config"></activity>
-        <activity android:name=".Pilit" />
+        <activity android:name=".Pilit"></activity>
         <activity android:name=".Marketplace" />
         <activity android:name=".Registration" />
         <activity android:name=".Login">

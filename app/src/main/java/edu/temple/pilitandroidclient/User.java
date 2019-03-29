@@ -45,6 +45,14 @@ public class User extends AppCompatActivity{
         //Displays the user's saved configurations
         createSavedConfigList(userProfileObj);
 
+        marketPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(User.this, Marketplace.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void selectPi(View v){

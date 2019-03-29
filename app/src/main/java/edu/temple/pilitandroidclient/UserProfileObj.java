@@ -38,4 +38,11 @@ public class UserProfileObj implements Serializable {
         }
     }
 
+    //param i: index of LED pi (same as pi Id)
+    //returns: PiObj of the LED strip selected
+    public PiObj getPiObj(int i){
+        return PiList.get(i);
+    }
+
+
 }

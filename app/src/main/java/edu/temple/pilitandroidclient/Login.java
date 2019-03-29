@@ -40,8 +40,6 @@ public class Login extends AppCompatActivity {
         sendTestMsgButton = findViewById(R.id.buttonTest);
 
 
-
-
         // Perform login button action
         View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
@@ -65,7 +63,6 @@ public class Login extends AppCompatActivity {
                 UserProfileObj userProfileObj = new UserProfileObj(testEmail);
                 userProfileObj.addPi("168.0.0.1", 400, "living room");  //create mock PiLit for testing
                 userProfileObj.addPi("168.0.0.2", 400, "bed room");     //create mock PiLit for testing
-
                 userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));        //create mock LEDconfig obj
                 userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));    //create mock LEDconfig obj
                 userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));    //create mock LEDconfig obj
@@ -73,12 +70,6 @@ public class Login extends AppCompatActivity {
                 userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));    //create mock LEDconfig obj
                 userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));    //create mock LEDconfig obj
                 userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));    //create mock LEDconfig obj
-
-                userProfileObj.PiList.get(0).addStrip("strip 1");   //adding a 30LED strip to PiLit 0
-                userProfileObj.PiList.get(0).addStrip("strip 2");
-                userProfileObj.PiList.get(1).addStrip("strip 1");   //adding a 30LED strip to PiLit 1
-                userProfileObj.PiList.get(1).addStrip("strip 2");
-                userProfileObj.PiList.get(1).addStrip("strip 3");
 
 
               
@@ -153,11 +144,8 @@ public class Login extends AppCompatActivity {
     }
     public void registerMe(){
 
-        Intent intent = new Intent(this, Config.class);
+        Intent intent = new Intent(this, Registration.class);
         startActivity(intent);
-
-        //Intent intent = new Intent(this, Registration.class);
-        //startActivity(intent);
     }
 
 }
