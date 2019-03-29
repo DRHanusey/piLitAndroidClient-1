@@ -16,7 +16,8 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text="@string/name"
+        android:autofillHints="@string/name"
         app:layout_constraintBottom_toTopOf="@+id/PasswordID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -32,7 +33,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="188dp"
-        android:text="SignUp"
+        android:text="@string/signup"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.338"
@@ -48,11 +49,12 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Password"
+        android:text="@string/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.313"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextFields" />
 
     <EditText
         android:id="@+id/ConfirmPasswordID"
@@ -63,11 +65,12 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="ConfirmPassword"
+        android:text="@string/confirmpassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.313"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PasswordID" />
+        app:layout_constraintTop_toBottomOf="@+id/PasswordID"
+        tools:ignore="TextFields" />
 
     <TextView
         android:id="@+id/SignUpLogID"
@@ -77,7 +80,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="SignUp"
+        android:text="@string/signup"
         app:layout_constraintBottom_toTopOf="@+id/UserNameID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.42"
