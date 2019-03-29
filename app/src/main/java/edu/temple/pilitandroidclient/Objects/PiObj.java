@@ -1,7 +1,9 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
 
 public class PiObj implements Serializable {
 
@@ -9,7 +11,7 @@ public class PiObj implements Serializable {
     String piAddress;
     int port;
     ArrayList<LEDconfigObj> LEDstripList;
-    String customName;   //ie living room, bedroom, etc
+    public String customName;   //ie living room, bedroom, etc
 
 
     // constructor for adding a new Pi (no led config necessary)

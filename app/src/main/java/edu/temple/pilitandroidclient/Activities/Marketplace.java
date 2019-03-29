@@ -1,11 +1,13 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
+import edu.temple.pilitandroidclient.R;
 
 public class Marketplace extends AppCompatActivity {
 
@@ -24,13 +26,13 @@ public class Marketplace extends AppCompatActivity {
         ArrayList<LEDconfigObj> myPatterns = new ArrayList<LEDconfigObj>();
         int[] nums = {3,4,5};
 
-        LEDconfigObj partyLights = new LEDconfigObj(5, nums, 3, 4);
-        LEDconfigObj sleepLights = new LEDconfigObj(5, nums, 3, 4);
-        LEDconfigObj gameLights = new LEDconfigObj(5, nums, 3, 4);
+        //LEDconfigObj partyLights = new LEDconfigObj(5, nums, 3, 4);
+        //LEDconfigObj sleepLights = new LEDconfigObj(5, nums, 3, 4);
+        //LEDconfigObj gameLights = new LEDconfigObj(5, nums, 3, 4);
 
-        myPatterns.add(partyLights);
-        myPatterns.add(sleepLights);
-        myPatterns.add(gameLights);
+        //myPatterns.add(partyLights);
+        //myPatterns.add(sleepLights);
+        //myPatterns.add(gameLights);
 
         //create the adapter
         //ArrayAdapter<String> colorList = new ArrayAdapter<String>(this, R.layout.activity_marketplace, myItems);
@@ -38,8 +40,8 @@ public class Marketplace extends AppCompatActivity {
 
         //create the listView
         //list.setAdapter(colorList);
-        ListView list = (ListView) findViewById(R.id.listScroll);
-        list.setAdapter(ledConfigList);
+        //ListView list = (ListView) findViewById(R.id.listScroll);
+        //list.setAdapter(ledConfigList);
 
 
 

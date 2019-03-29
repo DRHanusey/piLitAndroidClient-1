@@ -1,4 +1,4 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Objects;
 
 import java.io.Serializable;
 

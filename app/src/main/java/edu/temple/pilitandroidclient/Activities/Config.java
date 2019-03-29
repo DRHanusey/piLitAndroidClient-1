@@ -1,24 +1,19 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
-import java.util.ArrayList;
+import edu.temple.pilitandroidclient.R;
 
 public class Config extends AppCompatActivity {
 

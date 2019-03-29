@@ -1,13 +1,16 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
+import edu.temple.pilitandroidclient.Objects.PiObj;
+
 public class UserProfileObj implements Serializable {
 
-    String userEmail;
-    ArrayList<PiObj> PiList;
-    ArrayList<LEDconfigObj> savedConfigs;       //For what a user creates a configs OR saves a public config.
+    public String userEmail;
+    public ArrayList<PiObj> PiList;
+    public ArrayList<LEDconfigObj> savedConfigs;       //For what a user creates a configs OR saves a public config.
 
     //For use when loading user with PiLits already initialized
     public UserProfileObj(String userEmail, ArrayList<PiObj> piList) {

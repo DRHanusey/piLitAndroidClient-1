@@ -1,4 +1,4 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import edu.temple.pilitandroidclient.Objects.LoginRegObj;
+import edu.temple.pilitandroidclient.R;
 
 public class Registration extends AppCompatActivity {
     Button signUp;

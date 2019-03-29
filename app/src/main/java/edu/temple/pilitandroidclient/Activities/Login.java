@@ -1,4 +1,4 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +13,10 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
+import edu.temple.pilitandroidclient.Objects.LoginRegObj;
+import edu.temple.pilitandroidclient.Objects.UserProfileObj;
+import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -61,15 +65,15 @@ public class Login extends AppCompatActivity {
 
                 // USER OBJ FOR TESTING
                 UserProfileObj userProfileObj = new UserProfileObj(testEmail);
-                userProfileObj.addPi("168.0.0.1", 400, "living room");  //create mock PiLit for testing
-                userProfileObj.addPi("168.0.0.2", 400, "bed room");     //create mock PiLit for testing
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));        //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));    //create mock LEDconfig obj
+                userProfileObj.addPi("168.0.0.1", 400, "living room");         //create mock PiLit for testing
+                userProfileObj.addPi("168.0.0.2", 400, "bed room");            //create mock PiLit for testing
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
 
 
               

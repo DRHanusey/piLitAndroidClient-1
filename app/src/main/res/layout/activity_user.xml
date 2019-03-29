@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2d2727"
-    tools:context=".User">
+    tools:context=".Activities.User">
 
     <TextView
         android:id="@+id/textSavedConfigs"

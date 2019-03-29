@@ -1,4 +1,4 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Activities;
 
 
 import android.content.Intent;
@@ -11,6 +11,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import edu.temple.pilitandroidclient.Objects.UserProfileObj;
+import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
+import edu.temple.pilitandroidclient.Objects.PiObj;
+//import edu.temple.pilitandroidclient.Objects.UserProfileObj;
+import edu.temple.pilitandroidclient.R;
 
 public class User extends AppCompatActivity{
     private TextView currentUser;

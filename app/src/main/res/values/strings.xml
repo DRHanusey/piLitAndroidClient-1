@@ -10,9 +10,11 @@
     <string name="login_but">Login</string>
     <string name="current_pilit">Selected PiLit:</string>
     <string name="strip_list">List of LED strips:</string>
-    <string name="confirmpassword" />
-    <string name="password" />
-    <string name="signup" />
-    <string name="name" />
+
+    <string name="Email">Enter Email</string>
+    <string name="confirmpassword">Confirm Password</string>
+    <string name="password">Enter Password</string>
+    <string name="signup" >SignUp</string>
+    <string name="name" >UserName</string>
 
 </resources>

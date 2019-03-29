@@ -1,9 +1,12 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import edu.temple.pilitandroidclient.Objects.PiObj;
+import edu.temple.pilitandroidclient.R;
 
 public class Pilit extends AppCompatActivity {
     private TextView currentPi;
