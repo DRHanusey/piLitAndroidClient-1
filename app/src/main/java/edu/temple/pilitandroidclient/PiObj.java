@@ -17,11 +17,19 @@ public class PiObj implements Serializable {
         this.piAddress = piAddress;
         this.port = port;
         this.customName = customName;
+        LEDstripList = new ArrayList<LEDconfigObj>();
     }
 
     public void addStrip (int ledCount){
         int newStripId = LEDstripList.size();       //index where new configObj will be placed
         LEDconfigObj newConfigObj = new LEDconfigObj(ledCount,newStripId );     //initialize new configObj
+        LEDstripList.add(newConfigObj);             //add new configObj to list
+    }
+
+    //FOR TESTING ONLY!!!
+    public void addStrip (String desc){
+        //int newStripId = LEDstripList.size();       //index where new configObj will be placed
+        LEDconfigObj newConfigObj = new LEDconfigObj(desc);     //initialize new configObj
         LEDstripList.add(newConfigObj);             //add new configObj to list
     }
 
