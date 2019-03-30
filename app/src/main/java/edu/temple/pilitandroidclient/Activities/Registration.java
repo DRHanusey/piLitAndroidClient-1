@@ -2,6 +2,7 @@ package edu.temple.pilitandroidclient.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,9 +27,13 @@ public class Registration extends AppCompatActivity {
 
      signUp =  findViewById(R.id.SignUpID);
 
-     UserName= findViewById(R.id.UserNameID);
-     Password = findViewById(R.id.PasswordID);
+     UserName = findViewById(R.id.UserNameID);
+
+     Password = (EditText)findViewById(R.id.PasswordID);
+     Password.setTransformationMethod(new AsteriskPasswordTransformationMethod());
+
      ConfirmPassword =  findViewById(R.id.ConfirmPasswordID);
+     ConfirmPassword.setTransformationMethod(new AsteriskPasswordTransformationMethod());
 
     signUp.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -72,5 +77,28 @@ public class Registration extends AppCompatActivity {
         return "N/A";
 
 
+    }
+
+    public class AsteriskPasswordTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return new PasswordCharSequence(source);
+        }
+
+        private class PasswordCharSequence implements CharSequence {
+            private CharSequence mSource;
+            public PasswordCharSequence(CharSequence source) {
+                mSource = source; // Store char sequence
+            }
+            public char charAt(int index) {
+                return '*'; // This is the important part
+            }
+            public int length() {
+                return mSource.length(); // Return default
+            }
+            public CharSequence subSequence(int start, int end) {
+                return mSource.subSequence(start, end); // Return default
+            }
+        }
     }
 }
