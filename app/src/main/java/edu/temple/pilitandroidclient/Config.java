@@ -24,6 +24,7 @@ public class Config extends AppCompatActivity {
 
     Button button;
     final Context context = this;
+    int btnCount = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +34,22 @@ public class Config extends AppCompatActivity {
 
         LinearLayout ll = (LinearLayout)findViewById(R.id.linLay);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        //Button myButton = new Button(this);
-        //myButton.setText("Push Me");
-        //ll.addView(button,lp);
-        //ll.addView(myButton, lp);
+
+        for(int i = 0; i < btnCount ; i++ ) {
+            final Button myButton = new Button(this);
+            myButton.setText(""+i);
+            myButton.setWidth(10);
+
+            View.OnClickListener clickOCL = new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    myButton.setBackgroundColor(0xD4FBCE);
+                }
+            };
+            myButton.setOnClickListener(clickOCL);
+
+            ll.addView(myButton, lp);
+        }
 
 
     }

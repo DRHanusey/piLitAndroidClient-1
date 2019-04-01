@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+<!--
             <Button
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -209,7 +209,7 @@
                 android:onClick="changeColor"
                 android:text="15" />
 
-
+-->
         </LinearLayout>
     </HorizontalScrollView>
 
