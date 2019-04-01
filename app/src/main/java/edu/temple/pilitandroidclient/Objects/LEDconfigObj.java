@@ -1,4 +1,4 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Objects;
 
 import java.io.Serializable;
 
@@ -36,7 +36,7 @@ public class LEDconfigObj implements Serializable {
         }
     }
 
-    //for TESTING ONLY!!
+    //for testing
     public LEDconfigObj(String desc){
         this.stripId = 10;
         this.ledCount = 30;

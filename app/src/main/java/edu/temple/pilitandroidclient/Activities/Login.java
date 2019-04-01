@@ -1,8 +1,9 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,10 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
+import edu.temple.pilitandroidclient.Objects.LoginRegObj;
+import edu.temple.pilitandroidclient.Objects.UserProfileObj;
+import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -35,11 +40,11 @@ public class Login extends AppCompatActivity {
 
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
+        inputPassword.setTransformationMethod(new AsteriskPasswordTransformationMethod());
+
         loginButton =  findViewById(R.id.buttonLogin);
         registerButton =  findViewById(R.id.buttonRegister);
         sendTestMsgButton = findViewById(R.id.buttonTest);
-
-
 
 
         // Perform login button action
@@ -63,22 +68,15 @@ public class Login extends AppCompatActivity {
 
                 // USER OBJ FOR TESTING
                 UserProfileObj userProfileObj = new UserProfileObj(testEmail);
-                userProfileObj.addPi("168.0.0.1", 400, "living room");  //create mock PiLit for testing
-                userProfileObj.addPi("168.0.0.2", 400, "bed room");     //create mock PiLit for testing
-
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));        //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));    //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));    //create mock LEDconfig obj
-
-                userProfileObj.PiList.get(0).addStrip("strip 1");   //adding a 30LED strip to PiLit 0
-                userProfileObj.PiList.get(0).addStrip("strip 2");
-                userProfileObj.PiList.get(1).addStrip("strip 1");   //adding a 30LED strip to PiLit 1
-                userProfileObj.PiList.get(1).addStrip("strip 2");
-                userProfileObj.PiList.get(1).addStrip("strip 3");
+                userProfileObj.addPi("168.0.0.1", 400, "living room");         //create mock PiLit for testing
+                userProfileObj.addPi("168.0.0.2", 400, "bed room");            //create mock PiLit for testing
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
+                userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
 
 
               
@@ -151,13 +149,37 @@ public class Login extends AppCompatActivity {
 
 
     }
+
     public void registerMe(){
 
-        Intent intent = new Intent(this, Config.class);
+        Intent intent = new Intent(this, Registration.class);
         startActivity(intent);
-
-        //Intent intent = new Intent(this, Registration.class);
-        //startActivity(intent);
     }
 
+
+    public class AsteriskPasswordTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return new PasswordCharSequence(source);
+        }
+
+        private class PasswordCharSequence implements CharSequence {
+            private CharSequence mSource;
+            public PasswordCharSequence(CharSequence source) {
+                mSource = source; // Store char sequence
+            }
+            public char charAt(int index) {
+                return '*'; // This is the important part
+            }
+            public int length() {
+                return mSource.length(); // Return default
+            }
+            public CharSequence subSequence(int start, int end) {
+                return mSource.subSequence(start, end); // Return default
+            }
+        }
+    }
 }
+
+
+
