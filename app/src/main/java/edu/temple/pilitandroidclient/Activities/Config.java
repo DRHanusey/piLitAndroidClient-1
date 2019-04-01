@@ -27,7 +27,9 @@ public class Config extends AppCompatActivity {
         button = findViewById(R.id.button);
 
         LinearLayout ll = (LinearLayout)findViewById(R.id.linLay);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         //Button myButton = new Button(this);
         //myButton.setText("Push Me");
         //ll.addView(button,lp);
@@ -54,11 +56,13 @@ public class Config extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                         button.setBackgroundColor(selectedColor);
+
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                     }
                 })
                 .build()
