@@ -11,9 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.net.URISyntaxException;
-
 import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
 import edu.temple.pilitandroidclient.Objects.LoginRegObj;
 import edu.temple.pilitandroidclient.Objects.UserProfileObj;
@@ -24,10 +22,13 @@ import io.socket.emitter.Emitter;
 
 public class Login extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
-    Button loginButton, registerButton, sendTestMsgButton;
+    Button loginButton, registerButton, sendTestMsgButton, configButton;
     private Socket socket;
     JSONObject msgJson = new JSONObject();
     public static final String USER_OBJ = "passing user obj";
+
+    //For TESTING ONLY
+    UserProfileObj userProfileObj;
 
     //TODO insert central server ip
     public static final String SERVER_IP_PORT = "http://192.168.0.7:3000";
@@ -45,6 +46,7 @@ public class Login extends AppCompatActivity {
         loginButton =  findViewById(R.id.buttonLogin);
         registerButton =  findViewById(R.id.buttonRegister);
         sendTestMsgButton = findViewById(R.id.buttonTest);
+        configButton = findViewById(R.id.buttonConfig);
 
 
         // Perform login button action
@@ -66,20 +68,9 @@ public class Login extends AppCompatActivity {
                     testEmail = loginRegObj.getUserName();
                 }
 
-                // USER OBJ FOR TESTING
-                UserProfileObj userProfileObj = new UserProfileObj(testEmail);
-                userProfileObj.addPi("168.0.0.1", 400, "living room");         //create mock PiLit for testing
-                userProfileObj.addPi("168.0.0.2", 400, "bed room");            //create mock PiLit for testing
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
-                userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
+                createTestObj(testEmail);
 
 
-              
                 //Launches the home activity and passes a user profile obj
                 Intent intent = new Intent(Login.this, User.class);
                 intent.putExtra(USER_OBJ,userProfileObj);
@@ -178,6 +169,27 @@ public class Login extends AppCompatActivity {
                 return mSource.subSequence(start, end); // Return default
             }
         }
+    }
+
+    public void createTestObj (String testEmail){
+        // USER OBJ FOR TESTING
+        userProfileObj = new UserProfileObj(testEmail);
+        userProfileObj.addPi("168.0.0.1", 400, "living room");         //create mock PiLit for testing
+        userProfileObj.addPi("168.0.0.2", 400, "bed room");            //create mock PiLit for testing
+        userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
+
+    }
+
+    //For TESTING
+    public void configScreen(View v){
+        Intent intent = new Intent(this, Config.class);
+        startActivity(intent);
     }
 }
 

@@ -1,4 +1,4 @@
-package edu.temple.pilitandroidclient;
+package edu.temple.pilitandroidclient.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +10,12 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
+import edu.temple.pilitandroidclient.R;
+
 public class Marketplace extends AppCompatActivity {
 
     //array of options -> array adapter -> use the adapter to populate the listView
-
     Button homeButton;
 
     @Override
@@ -29,33 +31,31 @@ public class Marketplace extends AppCompatActivity {
     }
 
     private void populateListView(){
+
+        LEDconfigObj partyLights = new LEDconfigObj("partyLights");
+        LEDconfigObj sleepLights = new LEDconfigObj("sleepLights");
+        LEDconfigObj gameLights = new LEDconfigObj("gameLights");
+
         //create list of items
-        //String[] myItems = {"blue", "green", "red", "yellow"};
         ArrayList<LEDconfigObj> myPatterns = new ArrayList<LEDconfigObj>();
-        int[] nums = {3,4,5};
-
-        LEDconfigObj partyLights = new LEDconfigObj(5, nums, 3, 4);
-        LEDconfigObj sleepLights = new LEDconfigObj(5, nums, 3, 4);
-        LEDconfigObj gameLights = new LEDconfigObj(5, nums, 3, 4);
-
         myPatterns.add(partyLights);
         myPatterns.add(sleepLights);
         myPatterns.add(gameLights);
 
         //create the adapter
-        //ArrayAdapter<String> colorList = new ArrayAdapter<String>(this, R.layout.activity_marketplace, myItems);
-        ArrayAdapter<LEDconfigObj> ledConfigList = new ArrayAdapter<LEDconfigObj>(this, R.layout.activity_marketplace, myPatterns);
+        ArrayAdapter<LEDconfigObj> ledConfigList = new ArrayAdapter<LEDconfigObj>(this,
+                android.R.layout.simple_list_item_1, myPatterns);
+
 
         //create the listView
-        //list.setAdapter(colorList);
-        ListView list = (ListView) findViewById(R.id.listScroll);
+        ListView list = (ListView) findViewById(R.id.listConfig);
         list.setAdapter(ledConfigList);
 
     }
 
     public void goHome(View v){
 
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, User.class);
         startActivity(intent);
     }
 

@@ -7,12 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
-
 import edu.temple.pilitandroidclient.R;
 
 public class Config extends AppCompatActivity {
@@ -26,8 +24,9 @@ public class Config extends AppCompatActivity {
         setContentView(R.layout.activity_config);
         button = findViewById(R.id.button);
 
-        LinearLayout ll = (LinearLayout)findViewById(R.id.linLay);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        //LinearLayout ll = (LinearLayout)findViewById(R.id.linLay);
+        //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         //Button myButton = new Button(this);
         //myButton.setText("Push Me");
         //ll.addView(button,lp);

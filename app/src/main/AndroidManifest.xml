@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".Activities.Pilit"></activity>
+        <activity android:name=".Activities.Config" />
         <activity android:name=".Activities.Marketplace" />
         <activity android:name=".Activities.Registration" />
         <activity android:name=".Activities.Login">
