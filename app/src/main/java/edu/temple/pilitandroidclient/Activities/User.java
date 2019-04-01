@@ -38,6 +38,7 @@ public class User extends AppCompatActivity{
         configList = findViewById(R.id.listSavedConfigs);
 
 
+
         //The userProfile which has been passed from the login screen
         UserProfileObj userProfileObj = (UserProfileObj) getIntent().getSerializableExtra(Login.USER_OBJ);
 
@@ -72,6 +73,7 @@ public class User extends AppCompatActivity{
         //Creates adapter which populates the list view
         ArrayAdapter<LEDconfigObj> configAdapter = new ArrayAdapter<LEDconfigObj>(this,
                 android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
+
         //Passes the adapter to the list view
         configList.setAdapter(configAdapter);
     }
