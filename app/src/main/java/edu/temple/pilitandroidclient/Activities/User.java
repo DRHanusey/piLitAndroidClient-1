@@ -38,6 +38,7 @@ public class User extends AppCompatActivity{
         configList = findViewById(R.id.listSavedConfigs);
 
 
+
         //The userProfile which has been passed from the login screen
         UserProfileObj userProfileObj = (UserProfileObj) getIntent().getSerializableExtra(Login.USER_OBJ);
 
