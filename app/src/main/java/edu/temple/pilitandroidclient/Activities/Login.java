@@ -24,25 +24,24 @@ public class Login extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     Button loginButton, registerButton, sendTestMsgButton, configButton;
     private Socket socket;
-    JSONObject msgJson = new JSONObject();
     public static final String USER_OBJ = "passing user obj";
-
+    JSONObject outgoingJson = new JSONObject();
+    JSONObject incomingJson = new JSONObject();
     //For TESTING ONLY
     UserProfileObj userProfileObj;
 
-    //TODO insert central server ip
-    public static final String SERVER_IP_PORT = "http://192.168.0.7:3000";
+
+    public static final String SERVER_ADDRESS = "https://pi-lit.herokuapp.com";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
         inputPassword.setTransformationMethod(new AsteriskPasswordTransformationMethod());
-
         loginButton =  findViewById(R.id.buttonLogin);
         registerButton =  findViewById(R.id.buttonRegister);
         sendTestMsgButton = findViewById(R.id.buttonTest);
@@ -89,19 +88,23 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        //****************SEND TEST MSG**************************
         View.OnClickListener testOCL = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
+                //Insert the https address into the socket
                 try {
-                    socket = IO.socket(SERVER_IP_PORT);  //local ip of server, can not use localhost from A.S.
+                    socket = IO.socket(SERVER_ADDRESS);
                 } catch (URISyntaxException e) {
-                    Log.e("URISyntaxException", e.toString());
+                    e.printStackTrace();
                 }
 
-                String msg = "This is a test";
+                //Create the Json to be sent to server
                 try {
-                    msgJson.put("type",msg);
+                    outgoingJson.put("userName","testuser");
+                    outgoingJson.put("password","password");
+                    //Log.i("******* outgoingJson",outgoingJson.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -112,14 +115,23 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void call(Object... args) {
                         //socket.emit("command", "hi");
-                        socket.emit("command",msgJson );
-                        socket.disconnect();
+                        socket.emit("login", outgoingJson);
+
+                        Log.i("******* outgoingJson",outgoingJson.toString());
+                        Toast.makeText(getApplicationContext(), "sent!!!", Toast.LENGTH_SHORT).show();
                     }
 
-                }).on("event", new Emitter.Listener() {
+                }).on("login", new Emitter.Listener() {
 
                     @Override
                     public void call(Object... args) {
+
+                        incomingJson = (JSONObject)args[0];
+
+
+                        Log.i("&&&&&&& incomingJson:",incomingJson.toString());
+                        Toast.makeText(getApplicationContext(), "recieved!!!", Toast.LENGTH_SHORT).show();
+                        socket.disconnect();
                     }
 
                 }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
@@ -129,10 +141,11 @@ public class Login extends AppCompatActivity {
                     }
 
                 });
+                
                 socket.connect();
 
 
-                Toast.makeText(getApplicationContext(), "Msg sent", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
 
             }
         };
