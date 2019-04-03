@@ -24,25 +24,24 @@ public class Login extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     Button loginButton, registerButton, sendTestMsgButton, configButton;
     private Socket socket;
-    JSONObject msgJson = new JSONObject();
     public static final String USER_OBJ = "passing user obj";
-
-    //For TESTING ONLY
+    JSONObject outgoingJson = new JSONObject();
+    JSONObject incomingJson = new JSONObject();
+    JSONObject testJson = new JSONObject();
     UserProfileObj userProfileObj;
 
-    //TODO insert central server ip
-    public static final String SERVER_IP_PORT = "http://192.168.0.7:3000";
+
+    public static final String SERVER_ADDRESS =  "https://pi-lit.herokuapp.com";
+    //public static final String SERVER_ADDRESS =  "http://192.168.0.7:3000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
         inputPassword.setTransformationMethod(new AsteriskPasswordTransformationMethod());
-
         loginButton =  findViewById(R.id.buttonLogin);
         registerButton =  findViewById(R.id.buttonRegister);
         sendTestMsgButton = findViewById(R.id.buttonTest);
@@ -53,22 +52,15 @@ public class Login extends AppCompatActivity {
         View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginRegObj loginRegObj = new LoginRegObj(inputEmail.getText().toString(),
-                        inputPassword.getText().toString());
-
                 //TODO: connect with server
                 //TODO: send loginRegObj for verification against DB
                 //TODO: on successful login create UserProfileObj and launches User activity
 
-                //For testing purposes
-                String testEmail;
-                if (loginRegObj.getUserName().contentEquals("Email")){
-                    testEmail = "TestEmail@test.com";
-                } else {
-                    testEmail = loginRegObj.getUserName();
-                }
+                String email = inputEmail.getText().toString();
+                String pword = inputPassword.getText().toString();
 
-                createTestObj(testEmail);
+                //For testing purposes
+                createTestObj("TestEmail@test.com");
 
 
                 //Launches the home activity and passes a user profile obj
@@ -89,19 +81,24 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        //****************SEND TEST MSG**************************
         View.OnClickListener testOCL = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
+                //Insert the https address into the socket
                 try {
-                    socket = IO.socket(SERVER_IP_PORT);  //local ip of server, can not use localhost from A.S.
+                    socket = IO.socket(SERVER_ADDRESS);
                 } catch (URISyntaxException e) {
-                    Log.e("URISyntaxException", e.toString());
+                    e.printStackTrace();
                 }
 
-                String msg = "This is a test";
+                //Create the Json to be sent to server
                 try {
-                    msgJson.put("type",msg);
+                    //testJson.put("type","This is just a test!!");
+                    outgoingJson.put("userName","testuser");
+                    outgoingJson.put("password","password");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -111,34 +108,29 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void call(Object... args) {
-                        //socket.emit("command", "hi");
-                        socket.emit("command",msgJson );
+                        //socket.emit("command", testJson);
+                        //Log.i("******* testJson",testJson.toString());
+                        socket.emit("login", outgoingJson);
+                        Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+                    }
+
+                }).on("login", new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        incomingJson = (JSONObject)args[0];
+                        Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
                         socket.disconnect();
                     }
-
-                }).on("event", new Emitter.Listener() {
-
-                    @Override
-                    public void call(Object... args) {
-                    }
-
                 }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-
                     @Override
                     public void call(Object... args) {
                     }
-
                 });
                 socket.connect();
-
-
-                Toast.makeText(getApplicationContext(), "Msg sent", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
             }
         };
         sendTestMsgButton.setOnClickListener(testOCL);
-
-
     }
 
     public void registerMe(){
@@ -191,6 +183,7 @@ public class Login extends AppCompatActivity {
         Intent intent = new Intent(this, Config.class);
         startActivity(intent);
     }
+
 }
 
 
