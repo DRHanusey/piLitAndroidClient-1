@@ -27,12 +27,12 @@ public class Login extends AppCompatActivity {
     public static final String USER_OBJ = "passing user obj";
     JSONObject outgoingJson = new JSONObject();
     JSONObject incomingJson = new JSONObject();
-    //For TESTING ONLY
+    JSONObject testJson = new JSONObject();
     UserProfileObj userProfileObj;
 
 
-    public static final String SERVER_ADDRESS = "https://pi-lit.herokuapp.com";
-
+    public static final String SERVER_ADDRESS =  "https://pi-lit.herokuapp.com";
+    //public static final String SERVER_ADDRESS =  "http://192.168.0.7:3000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,22 +52,15 @@ public class Login extends AppCompatActivity {
         View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginRegObj loginRegObj = new LoginRegObj(inputEmail.getText().toString(),
-                        inputPassword.getText().toString());
-
                 //TODO: connect with server
                 //TODO: send loginRegObj for verification against DB
                 //TODO: on successful login create UserProfileObj and launches User activity
 
-                //For testing purposes
-                String testEmail;
-                if (loginRegObj.getUserName().contentEquals("Email")){
-                    testEmail = "TestEmail@test.com";
-                } else {
-                    testEmail = loginRegObj.getUserName();
-                }
+                String email = inputEmail.getText().toString();
+                String pword = inputPassword.getText().toString();
 
-                createTestObj(testEmail);
+                //For testing purposes
+                createTestObj("TestEmail@test.com");
 
 
                 //Launches the home activity and passes a user profile obj
@@ -102,9 +95,10 @@ public class Login extends AppCompatActivity {
 
                 //Create the Json to be sent to server
                 try {
+                    //testJson.put("type","This is just a test!!");
                     outgoingJson.put("userName","testuser");
                     outgoingJson.put("password","password");
-                    //Log.i("******* outgoingJson",outgoingJson.toString());
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -114,44 +108,29 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void call(Object... args) {
-                        //socket.emit("command", "hi");
+                        //socket.emit("command", testJson);
+                        //Log.i("******* testJson",testJson.toString());
                         socket.emit("login", outgoingJson);
-
-                        Log.i("******* outgoingJson",outgoingJson.toString());
-                        Toast.makeText(getApplicationContext(), "sent!!!", Toast.LENGTH_SHORT).show();
+                        Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
                     }
 
                 }).on("login", new Emitter.Listener() {
-
                     @Override
                     public void call(Object... args) {
-
                         incomingJson = (JSONObject)args[0];
-
-
-                        Log.i("&&&&&&& incomingJson:",incomingJson.toString());
-                        Toast.makeText(getApplicationContext(), "recieved!!!", Toast.LENGTH_SHORT).show();
+                        Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
                         socket.disconnect();
                     }
-
                 }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-
                     @Override
                     public void call(Object... args) {
                     }
-
                 });
-                
                 socket.connect();
-
-
                 Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
-
             }
         };
         sendTestMsgButton.setOnClickListener(testOCL);
-
-
     }
 
     public void registerMe(){
@@ -204,6 +183,7 @@ public class Login extends AppCompatActivity {
         Intent intent = new Intent(this, Config.class);
         startActivity(intent);
     }
+
 }
 
 
