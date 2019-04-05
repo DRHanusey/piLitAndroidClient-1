@@ -119,6 +119,7 @@ public class Login extends AppCompatActivity {
                     public void call(Object... args) {
                         incomingJson = (JSONObject)args[0];
                         Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
+                        //Toast.makeText(getApplicationContext(), incomingJson.toString(), Toast.LENGTH_SHORT).show();
                         socket.disconnect();
                     }
                 }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
