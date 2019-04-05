@@ -3,7 +3,7 @@ package edu.temple.pilitandroidclient.Objects;
 public class Command {
     int range[];  //range of LED lights being changed, each item is an individual light
     enum effect{
-        RAINBOW,
+        RAINBOW, CUSToM
     } //name of light pattern effect
     int brightness; //level of brightness for all lights unchanged by command
     Color otherLights = new Color(); //color that all lights unchanged by command display

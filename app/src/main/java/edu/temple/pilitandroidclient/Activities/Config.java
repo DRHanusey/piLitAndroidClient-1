@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
+import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -41,6 +42,7 @@ public class Config extends AppCompatActivity {
     private Socket socket;
     JSONObject outgoingJson = new JSONObject();
     JSONObject incomingJson = new JSONObject();
+    LEDConfigPattern lcp = new LEDConfigPattern("Test Config");
 
 
     @Override
