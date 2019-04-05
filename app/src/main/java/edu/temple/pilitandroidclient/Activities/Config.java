@@ -73,7 +73,7 @@ public class Config extends AppCompatActivity {
             ll.addView(myButton);
         }
         buttonExample.setVisibility(View.INVISIBLE);
-        testBtn = findViewById(R.id.buttonTest);
+        //testBtn = findViewById(R.id.buttonTest);
 
 
     }
