@@ -30,7 +30,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import edu.temple.pilitandroidclient.Objects.ColorObj;
+import edu.temple.pilitandroidclient.Objects.Command;
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
+import edu.temple.pilitandroidclient.Objects.Timestamp;
 import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -46,6 +49,7 @@ public class Config extends AppCompatActivity {
     Button color1, color2;
     int selColor;
     ArrayList<Button> previewButtons;
+    String[] effects = {"RAINBOW","SOLID", "FLASH","CUSTOM"};
 
     private Socket socket;
     JSONObject outgoingJson = new JSONObject();
@@ -60,7 +64,6 @@ public class Config extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         buttonExample = findViewById(R.id.example);
-        circle = getResources().getDrawable(R.drawable.circle);
 
 
         previewButtons = new ArrayList<Button>();
@@ -73,23 +76,17 @@ public class Config extends AppCompatActivity {
         }
 
 
-
-        String[] effects = {"RAINBOW","SOLID", "FLASH","CUSTOM"};
         ArrayAdapter<String> effectAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, effects);
         effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         effects1 = findViewById(R.id.spinnerEffects1);
         effects1.setAdapter(effectAdapter);
-
         effects2 = findViewById(R.id.spinnerEffects2);
         effects2.setAdapter(effectAdapter);
 
-
-
         range1 = findViewById(R.id.editRange1);
         range2 = findViewById(R.id.editRange2);
-
 
         color1 = findViewById(R.id.buttonColor1);
         color2 = findViewById(R.id.buttonColor2);
@@ -100,13 +97,17 @@ public class Config extends AppCompatActivity {
                 changeColor(color1,range1);
             }
         });
-
         color2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeColor(color2,range2);
             }
         });
+
+
+
+
+
 
 
     }
@@ -248,16 +249,55 @@ public class Config extends AppCompatActivity {
         return RGB;
     }
 
-    public void returnColor(int inColor){
-        selColor = inColor;
-    }
-
     public void colorSelected(int col,EditText edTx){
         ArrayList<Integer> values = parseRange(edTx.getText().toString());
         for (int i = 0; i < values.size(); i++){
             int ledIndex = values.get(i);
             previewButtons.get(ledIndex).setBackgroundColor(col);
+
+
         }
     }
 
 }
+
+/////////////////////////////////////////
+//creating a test LEDConfigPattern Object
+        /*
+        LEDConfigPattern testConfig = new LEDConfigPattern("party lights");
+        //testConfig.setDescription("party lights");
+        //light strip size 5
+        Command twoFourSix = new Command();
+
+        int testArr[] = {2,4,6};
+        ColorObj unchangedLights = new ColorObj();
+        unchangedLights.setColor(100,200,55);
+
+        ColorObj changedLights = new ColorObj();
+        changedLights.setColor(120,130,75);
+
+        ColorObj secondChangedLights = new ColorObj();
+        secondChangedLights.setColor(150,170,45);
+
+        ArrayList<Timestamp> timestampArrayList = new ArrayList<Timestamp>();
+        Timestamp testStampOne = new Timestamp();
+        Timestamp testStampTwo = new Timestamp();
+
+        testStampOne.setTimestamp(changedLights, 2, 5);
+        testStampTwo.setTimestamp(secondChangedLights, 5, 7);
+
+
+        timestampArrayList.add(testStampOne);
+        timestampArrayList.add(testStampTwo);
+
+        twoFourSix.setCommand(testArr, Command.effect.RAINBOW, 5, unchangedLights, timestampArrayList);
+
+        testConfig.commandArray.add(twoFourSix);
+
+                int ledsInRange = testConfig.commandArray.get(0).range.length;
+        for (int i = 0; i<ledsInRange-1; i++){
+            int index = testConfig.commandArray.get(0).range[i];
+            Color color = new Color();//??????????????????????????????
+            previewButtons.get(index).setBackgroundColor();
+        }
+        */
