@@ -22,6 +22,7 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,25 +41,21 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity {
-    String[] effects = {"SOLID", "RAINBOW","FLASH","CUSTOM"};
+    //String[] effects = {"SOLID", "RAINBOW","FLASH","CUSTOM"};
     //Command.effect[] effects =
     //        {Command.effect.SOLID, Command.effect.RAINBOW, Command.effect.FLASH,Command.effect.CUSTOM};
     Button buttonApply, buttonExample, buttonExamplePreview;
-    int btnCount = 20;
-    Drawable circle;
+    int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2;
     Button color1, color2;
-    int selColor;
     ArrayList<Button> previewButtons;
-
     LEDConfigPattern stripConfig;
+    Gson gson = new Gson();
 
     private Socket socket;
     JSONObject outgoingJson;// = new JSONObject();
     JSONObject incomingJson = new JSONObject();
-
-    LEDConfigPattern lcp = new LEDConfigPattern("Test Config");
 
 
     @Override
@@ -66,6 +63,7 @@ public class Config extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         buttonExample = findViewById(R.id.example);
+        buttonApply = findViewById(R.id.buttonApply);
         stripConfig = new LEDConfigPattern("new custom");
 
 
@@ -78,10 +76,9 @@ public class Config extends AppCompatActivity {
             previewButtons.get(i).setLayoutParams(buttonExample.getLayoutParams());
             ll2.addView(previewButtons.get(i));
         }
-
-
+        
         ArrayAdapter<String> effectAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, effects);
+                android.R.layout.simple_spinner_item, Command.effectList);
         effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         effects1 = findViewById(R.id.spinnerEffects1);
@@ -105,12 +102,6 @@ public class Config extends AppCompatActivity {
             }
         });
 
-
-        //outgoingJson = new JSONObject(stripConfig);
-
-        Log.i("*********stripConfig",stripConfig.toString());
-
-
         color2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,7 +113,27 @@ public class Config extends AppCompatActivity {
         });
 
 
+        //Converts LEDConfigPattern to String
+        //Converts String to JSON obj
+        buttonApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String jsonStr = gson.toJson(stripConfig);
+                Log.i("******Json String:",jsonStr);
 
+                //outgoingJson = new JSONObject();
+
+                try {
+                    outgoingJson = new JSONObject(jsonStr);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i("******Json Object:",outgoingJson.toString());
+
+                sendConfigToServer(outgoingJson);
+            }
+        });
 
 
 
@@ -184,24 +195,13 @@ public class Config extends AppCompatActivity {
         return Integer.parseInt(strIntVal);
     }
 
-    public void clickApply(View v){
+    public void sendConfigToServer(final JSONObject outgoingJson){
         //Insert the https address into the socket
         try {
             socket = IO.socket(Login.SERVER_ADDRESS);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
-        //Create the Json to be sent to server
-        try {
-            //testJson.put("type","This is just a test!!");
-            outgoingJson.put("userName","testuser");
-            outgoingJson.put("password","password");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
@@ -271,44 +271,3 @@ public class Config extends AppCompatActivity {
     }
 
 }
-
-/////////////////////////////////////////
-//creating a test LEDConfigPattern Object
-        /*
-        LEDConfigPattern testConfig = new LEDConfigPattern("party lights");
-        //testConfig.setDescription("party lights");
-        //light strip size 5
-        Command twoFourSix = new Command();
-
-        int testArr[] = {2,4,6};
-        ColorObj unchangedLights = new ColorObj();
-        unchangedLights.setColor(100,200,55);
-
-        ColorObj changedLights = new ColorObj();
-        changedLights.setColor(120,130,75);
-
-        ColorObj secondChangedLights = new ColorObj();
-        secondChangedLights.setColor(150,170,45);
-
-        ArrayList<Timestamp> timestampArrayList = new ArrayList<Timestamp>();
-        Timestamp testStampOne = new Timestamp();
-        Timestamp testStampTwo = new Timestamp();
-
-        testStampOne.setTimestamp(changedLights, 2, 5);
-        testStampTwo.setTimestamp(secondChangedLights, 5, 7);
-
-
-        timestampArrayList.add(testStampOne);
-        timestampArrayList.add(testStampTwo);
-
-        twoFourSix.setCommand(testArr, Command.effect.RAINBOW, 5, unchangedLights, timestampArrayList);
-
-        testConfig.commandArray.add(twoFourSix);
-
-                int ledsInRange = testConfig.commandArray.get(0).range.length;
-        for (int i = 0; i<ledsInRange-1; i++){
-            int index = testConfig.commandArray.get(0).range[i];
-            Color color = new Color();//??????????????????????????????
-            previewButtons.get(index).setBackgroundColor();
-        }
-        */
