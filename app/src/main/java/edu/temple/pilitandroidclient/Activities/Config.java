@@ -40,7 +40,9 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity {
-
+    String[] effects = {"SOLID", "RAINBOW","FLASH","CUSTOM"};
+    //Command.effect[] effects =
+    //        {Command.effect.SOLID, Command.effect.RAINBOW, Command.effect.FLASH,Command.effect.CUSTOM};
     Button buttonApply, buttonExample, buttonExamplePreview;
     int btnCount = 20;
     Drawable circle;
@@ -49,12 +51,12 @@ public class Config extends AppCompatActivity {
     Button color1, color2;
     int selColor;
     ArrayList<Button> previewButtons;
-    String[] effects = {"RAINBOW","SOLID", "FLASH","CUSTOM"};
+
+    LEDConfigPattern stripConfig;
 
     private Socket socket;
-    JSONObject outgoingJson = new JSONObject();
+    JSONObject outgoingJson;// = new JSONObject();
     JSONObject incomingJson = new JSONObject();
-    int hexColorArray[] = new int[btnCount];
 
     LEDConfigPattern lcp = new LEDConfigPattern("Test Config");
 
@@ -64,6 +66,8 @@ public class Config extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         buttonExample = findViewById(R.id.example);
+        stripConfig = new LEDConfigPattern("new custom");
+
 
 
         previewButtons = new ArrayList<Button>();
@@ -94,13 +98,26 @@ public class Config extends AppCompatActivity {
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeColor(color1,range1);
+                String selectedEffect = effects1.getSelectedItem().toString();
+                Command command = new Command(selectedEffect);
+                changeColor(color1,range1,command);
+                stripConfig.commandArray.add(command);
             }
         });
+
+
+        //outgoingJson = new JSONObject(stripConfig);
+
+        Log.i("*********stripConfig",stripConfig.toString());
+
+
         color2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeColor(color2,range2);
+                String selectedEffect = effects2.getSelectedItem().toString();
+                Command command = new Command(selectedEffect);
+                changeColor(color2,range2,command);
+                stripConfig.commandArray.add(command);
             }
         });
 
@@ -210,7 +227,7 @@ public class Config extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
     }
 
-    public void changeColor(final Button btn, final EditText edTx){
+    public void changeColor(final Button btn, final EditText edTx, final Command command){
         ColorPickerDialogBuilder
                 .with(this)
                 .setTitle("Choose color")
@@ -227,7 +244,7 @@ public class Config extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                         btn.setBackgroundColor(selectedColor);
                         //returnColor(selectedColor);
-                        colorSelected(selectedColor,edTx);
+                        colorSelected(selectedColor,edTx, command);
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -239,24 +256,18 @@ public class Config extends AppCompatActivity {
                 .show();
     }
 
-    public int[] convertHexToRgb(int hexVal){
-        int r, g, b;
-        r = Color.red(hexVal);
-        g = Color.green(hexVal);
-        b = Color.blue(hexVal);
-        Log.i("**********rgb values:", r+" "+g+" "+b);
-        int RGB[] = {r,g,b};
-        return RGB;
-    }
-
-    public void colorSelected(int col,EditText edTx){
+    public void colorSelected(int col,EditText edTx, Command command){
         ArrayList<Integer> values = parseRange(edTx.getText().toString());
+        int[] range = new int[values.size()];
+
         for (int i = 0; i < values.size(); i++){
             int ledIndex = values.get(i);
+            range[i] = ledIndex;
             previewButtons.get(ledIndex).setBackgroundColor(col);
+            }
 
-
-        }
+        command.range = range;
+        command.color.setRGBfromHex(col);
     }
 
 }
