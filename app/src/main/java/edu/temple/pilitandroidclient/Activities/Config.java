@@ -66,20 +66,26 @@ public class Config extends AppCompatActivity {
         buttonExample = findViewById(R.id.example);
 
 
+        //This creates the LED preview at the top of the activity.
+        //Each index of the arrayList previewButtons corresponds to a preview element
+
+        //EXAMPLE change color of bulb at index 3:
+        //       previewButtons.get(3).setBackgroundColor(*color*);
         previewButtons = new ArrayList<Button>();
         LinearLayout ll2 = findViewById(R.id.linLay2);
-        //buttonExamplePreview = findViewById(R.id.example);
         for (int i = 0; i < btnCount; i++){
             previewButtons.add(new Button(this));
             previewButtons.get(i).setLayoutParams(buttonExample.getLayoutParams());
             ll2.addView(previewButtons.get(i));
         }
 
-
+        //Creates effects spinner
         ArrayAdapter<String> effectAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, effects);
         effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        //Manually creates two input rows for changing colors.
+        // TODO: 4/7/2019 Put into fragment and creates dynamically by using an "add" button
         effects1 = findViewById(R.id.spinnerEffects1);
         effects1.setAdapter(effectAdapter);
         effects2 = findViewById(R.id.spinnerEffects2);
