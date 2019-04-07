@@ -49,7 +49,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:onClick="clickApply"
         android:text="Apply"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,18 +127,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <!--
-            <Button
-                android:id="@+id/example2"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/circle" />
--->
-
         </LinearLayout>
     </HorizontalScrollView>
 

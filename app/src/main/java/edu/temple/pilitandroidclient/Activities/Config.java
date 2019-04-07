@@ -22,6 +22,7 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,23 +41,21 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity {
-
+    //String[] effects = {"SOLID", "RAINBOW","FLASH","CUSTOM"};
+    //Command.effect[] effects =
+    //        {Command.effect.SOLID, Command.effect.RAINBOW, Command.effect.FLASH,Command.effect.CUSTOM};
     Button buttonApply, buttonExample, buttonExamplePreview;
-    int btnCount = 20;
-    Drawable circle;
+    int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2;
     Button color1, color2;
-    int selColor;
     ArrayList<Button> previewButtons;
-    String[] effects = {"RAINBOW","SOLID", "FLASH","CUSTOM"};
+    LEDConfigPattern stripConfig;
+    Gson gson = new Gson();
 
     private Socket socket;
-    JSONObject outgoingJson = new JSONObject();
+    JSONObject outgoingJson;// = new JSONObject();
     JSONObject incomingJson = new JSONObject();
-    int hexColorArray[] = new int[btnCount];
-
-    LEDConfigPattern lcp = new LEDConfigPattern("Test Config");
 
 
     @Override
@@ -64,6 +63,9 @@ public class Config extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         buttonExample = findViewById(R.id.example);
+        buttonApply = findViewById(R.id.buttonApply);
+        stripConfig = new LEDConfigPattern("new custom");
+
 
 
         //This creates the LED preview at the top of the activity.
@@ -81,7 +83,7 @@ public class Config extends AppCompatActivity {
 
         //Creates effects spinner
         ArrayAdapter<String> effectAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, effects);
+                android.R.layout.simple_spinner_item, Command.effectList);
         effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         //Manually creates two input rows for changing colors.
@@ -100,18 +102,45 @@ public class Config extends AppCompatActivity {
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeColor(color1,range1);
+                String selectedEffect = effects1.getSelectedItem().toString();
+                Command command = new Command(selectedEffect);
+                changeColor(color1,range1,command);
+                stripConfig.commandArray.add(command);
             }
         });
+
         color2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeColor(color2,range2);
+                String selectedEffect = effects2.getSelectedItem().toString();
+                Command command = new Command(selectedEffect);
+                changeColor(color2,range2,command);
+                stripConfig.commandArray.add(command);
             }
         });
 
 
+        //Converts LEDConfigPattern to String
+        //Converts String to JSON obj
+        buttonApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String jsonStr = gson.toJson(stripConfig);
+                Log.i("******Json String:",jsonStr);
 
+                //outgoingJson = new JSONObject();
+
+                try {
+                    outgoingJson = new JSONObject(jsonStr);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i("******Json Object:",outgoingJson.toString());
+
+                sendConfigToServer(outgoingJson);
+            }
+        });
 
 
 
@@ -173,24 +202,13 @@ public class Config extends AppCompatActivity {
         return Integer.parseInt(strIntVal);
     }
 
-    public void clickApply(View v){
+    public void sendConfigToServer(final JSONObject outgoingJson){
         //Insert the https address into the socket
         try {
             socket = IO.socket(Login.SERVER_ADDRESS);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
-        //Create the Json to be sent to server
-        try {
-            //testJson.put("type","This is just a test!!");
-            outgoingJson.put("userName","testuser");
-            outgoingJson.put("password","password");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
@@ -216,7 +234,7 @@ public class Config extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
     }
 
-    public void changeColor(final Button btn, final EditText edTx){
+    public void changeColor(final Button btn, final EditText edTx, final Command command){
         ColorPickerDialogBuilder
                 .with(this)
                 .setTitle("Choose color")
@@ -233,7 +251,7 @@ public class Config extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                         btn.setBackgroundColor(selectedColor);
                         //returnColor(selectedColor);
-                        colorSelected(selectedColor,edTx);
+                        colorSelected(selectedColor,edTx, command);
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -245,65 +263,18 @@ public class Config extends AppCompatActivity {
                 .show();
     }
 
-    public int[] convertHexToRgb(int hexVal){
-        int r, g, b;
-        r = Color.red(hexVal);
-        g = Color.green(hexVal);
-        b = Color.blue(hexVal);
-        Log.i("**********rgb values:", r+" "+g+" "+b);
-        int RGB[] = {r,g,b};
-        return RGB;
-    }
-
-    public void colorSelected(int col,EditText edTx){
+    public void colorSelected(int col,EditText edTx, Command command){
         ArrayList<Integer> values = parseRange(edTx.getText().toString());
+        int[] range = new int[values.size()];
+
         for (int i = 0; i < values.size(); i++){
             int ledIndex = values.get(i);
+            range[i] = ledIndex;
             previewButtons.get(ledIndex).setBackgroundColor(col);
+            }
 
-
-        }
+        command.range = range;
+        command.color.setRGBfromHex(col);
     }
 
 }
-
-/////////////////////////////////////////
-//creating a test LEDConfigPattern Object
-        /*
-        LEDConfigPattern testConfig = new LEDConfigPattern("party lights");
-        //testConfig.setDescription("party lights");
-        //light strip size 5
-        Command twoFourSix = new Command();
-
-        int testArr[] = {2,4,6};
-        ColorObj unchangedLights = new ColorObj();
-        unchangedLights.setColor(100,200,55);
-
-        ColorObj changedLights = new ColorObj();
-        changedLights.setColor(120,130,75);
-
-        ColorObj secondChangedLights = new ColorObj();
-        secondChangedLights.setColor(150,170,45);
-
-        ArrayList<Timestamp> timestampArrayList = new ArrayList<Timestamp>();
-        Timestamp testStampOne = new Timestamp();
-        Timestamp testStampTwo = new Timestamp();
-
-        testStampOne.setTimestamp(changedLights, 2, 5);
-        testStampTwo.setTimestamp(secondChangedLights, 5, 7);
-
-
-        timestampArrayList.add(testStampOne);
-        timestampArrayList.add(testStampTwo);
-
-        twoFourSix.setCommand(testArr, Command.effect.RAINBOW, 5, unchangedLights, timestampArrayList);
-
-        testConfig.commandArray.add(twoFourSix);
-
-                int ledsInRange = testConfig.commandArray.get(0).range.length;
-        for (int i = 0; i<ledsInRange-1; i++){
-            int index = testConfig.commandArray.get(0).range[i];
-            Color color = new Color();//??????????????????????????????
-            previewButtons.get(index).setBackgroundColor();
-        }
-        */
