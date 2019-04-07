@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class Config extends AppCompatActivity {
     ArrayList<Button> previewButtons;
     LEDConfigPattern stripConfig;
     Gson gson = new Gson();
+    SeekBar seekBarTime;
 
     private Socket socket;
     JSONObject outgoingJson;// = new JSONObject();
@@ -65,11 +67,14 @@ public class Config extends AppCompatActivity {
         buttonExample = findViewById(R.id.example);
         buttonApply = findViewById(R.id.buttonApply);
         stripConfig = new LEDConfigPattern("new custom");
+        seekBarTime = findViewById(R.id.seekBarTime);
+
+
 
 
 
         //This creates the LED preview at the top of the activity.
-        //Each index of the arrayList previewButtons corresponds to a preview element
+        //Each index of the arrayList previewButtons corresponds to a preview element(bulb)
 
         //EXAMPLE change color of bulb at index 3:
         //       previewButtons.get(3).setBackgroundColor(*color*);
@@ -103,9 +108,15 @@ public class Config extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String selectedEffect = effects1.getSelectedItem().toString();
-                Command command = new Command(selectedEffect);
-                changeColor(color1,range1,command);
-                stripConfig.commandArray.add(command);
+
+                if(seekBarTime.getProgress() == 0) {
+                    Command command = new Command(selectedEffect);
+                    changeColor(color1, range1, command);
+                    stripConfig.commandArray.add(command);
+                } else{                                                 //Create timestamp
+                    Timestamp timestamp = new Timestamp(seekBarTime.getProgress());
+                }
+                //Log.i("*****SeekBar value:", "" + seekBarTime.getProgress() );
             }
         });
 
@@ -174,7 +185,7 @@ public class Config extends AppCompatActivity {
                 }
             }
         }
-        Log.i("*****range", "range: " + range.toString());
+        //Log.i("*****range", "range: " + range.toString());
         return range;
 
     }

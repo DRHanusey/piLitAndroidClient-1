@@ -11,4 +11,7 @@ public class Timestamp {
         this.brightness = brightness;
     }
 
+    public Timestamp(int time) {
+        this.time = time;
+    }
 }
