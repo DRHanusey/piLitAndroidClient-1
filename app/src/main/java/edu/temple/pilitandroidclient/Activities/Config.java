@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
@@ -40,7 +42,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class Config extends AppCompatActivity {
+public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     //String[] effects = {"SOLID", "RAINBOW","FLASH","CUSTOM"};
     //Command.effect[] effects =
     //        {Command.effect.SOLID, Command.effect.RAINBOW, Command.effect.FLASH,Command.effect.CUSTOM};
@@ -86,12 +88,21 @@ public class Config extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, Command.effectList);
         effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+
+
         //Manually creates two input rows for changing colors.
         // TODO: 4/7/2019 Put into fragment and creates dynamically by using an "add" button
         effects1 = findViewById(R.id.spinnerEffects1);
+        // Spinner click listener
+        effects1.setOnItemSelectedListener(this);
+
         effects1.setAdapter(effectAdapter);
+
+
         effects2 = findViewById(R.id.spinnerEffects2);
         effects2.setAdapter(effectAdapter);
+
+
 
         range1 = findViewById(R.id.editRange1);
         range2 = findViewById(R.id.editRange2);
@@ -246,6 +257,7 @@ public class Config extends AppCompatActivity {
                     public void onColorSelected(int selectedColor) {
                     }
                 })
+
                 .setPositiveButton("ok", new ColorPickerClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
@@ -263,6 +275,7 @@ public class Config extends AppCompatActivity {
                 .show();
     }
 
+
     public void colorSelected(int col,EditText edTx, Command command){
         ArrayList<Integer> values = parseRange(edTx.getText().toString());
         int[] range = new int[values.size()];
@@ -271,10 +284,87 @@ public class Config extends AppCompatActivity {
             int ledIndex = values.get(i);
             range[i] = ledIndex;
             previewButtons.get(ledIndex).setBackgroundColor(col);
-            }
+        }
 
         command.range = range;
         command.color.setRGBfromHex(col);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+
+        if (item.equals("rainbow")) {
+
+            rainbowEffect();
+        }
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected:" + item, Toast.LENGTH_LONG).show();
+
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    public void rainbowEffect(){
+
+        // for (int i = 0; i < values.size(); i++){
+        //   int ledIndex = values.get(i);
+        // range[i] = ledIndex;
+        // previewButtons.get(ledIndex).setBackgroundColor(col);
+        //}
+
+        //command.range = range;
+        //command.color.setRGBfromHex(col);
+
+         /*
+     static String[] rainbow = {"red", "orange", "yellow", "green", "blue", "indigo", "violet"};
+     static String[] rainbow = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee "};
+    public static void main(String[] args) {
+     */  String[] rainbow = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
+        int counter = 0;
+        for(int j= 0; j < 10; j++){
+            counter = j % 7;
+            for(int i = 0; i < 10; i++){
+                if((i + j) % 7 == 0){
+                    counter = 0;
+
+
+
+                    previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
+                    //             System.out.print(rainbow[counter] + " ");
+                }
+                else{
+                    System.out.println("counter = " + counter+ " j = "+ j+ " i = " + i);
+                    //   System.out.print(rainbow[counter] + " ");
+                    previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
+
+                }
+                //System.out.print(counter + " ");
+                counter++;
+            }
+
+          try{
+                System.out.println("good night");
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+                System.out.print("Sleep error here");
+            }
+        }
+
+
+        Log.wtf("reading rainbow", "color");
+    }
+
+
+
+
 }
+
