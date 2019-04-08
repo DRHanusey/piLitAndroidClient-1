@@ -52,15 +52,13 @@ public class Login extends AppCompatActivity {
         View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: connect with server
-                //TODO: send loginRegObj for verification against DB
                 //TODO: on successful login create UserProfileObj and launches User activity
 
                 String email = inputEmail.getText().toString();
                 String pword = inputPassword.getText().toString();
 
                 //For testing purposes
-                createTestObj("TestEmail@test.com");
+                //createTestObj("TestEmail@test.com");
 
 
                 //Launches the home activity and passes a user profile obj

@@ -309,9 +309,6 @@ public class Config extends AppCompatActivity {
             int indexOfLastTimestampAdded = command.timestamps.size();
             command.timestamps.get(indexOfLastTimestampAdded-1).color.setRGBfromHex(col);
         }
-
-
-
     }
 
 }
