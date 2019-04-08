@@ -1,14 +1,8 @@
 package edu.temple.pilitandroidclient.Activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -30,9 +24,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.Objects.Timestamp;
@@ -107,14 +99,26 @@ public class Config extends AppCompatActivity {
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String selectedEffect = effects1.getSelectedItem().toString();
+                int indexOfCommand = 0;     //each frag will need this to point to its corresponding command
 
                 if(seekBarTime.getProgress() == 0) {
+                    String selectedEffect = effects1.getSelectedItem().toString();
                     Command command = new Command(selectedEffect);
-                    changeColor(color1, range1, command);
+
+                    //Gives command.range its value from the EditText box
+                    ArrayList<Integer> values = parseRange(range1.getText().toString());
+                    command.setRangeSize(values.size());
+                    for (int i = 0; i < values.size(); i++){
+                        command.range[i] = values.get(i);
+                    }
+
+                    colorPicker(color1, command);
                     stripConfig.commandArray.add(command);
-                } else{                                                 //Create timestamp
+                } else{                                                             //<--Create timestamp
                     Timestamp timestamp = new Timestamp(seekBarTime.getProgress());
+                    stripConfig.commandArray.get(indexOfCommand).timestamps.add(timestamp);
+                    colorPicker(color1,stripConfig.commandArray.get(indexOfCommand));
+
                 }
                 //Log.i("*****SeekBar value:", "" + seekBarTime.getProgress() );
             }
@@ -123,10 +127,28 @@ public class Config extends AppCompatActivity {
         color2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String selectedEffect = effects2.getSelectedItem().toString();
-                Command command = new Command(selectedEffect);
-                changeColor(color2,range2,command);
-                stripConfig.commandArray.add(command);
+                int indexOfCommand = 1;     //each frag will need this to point to its corresponding command
+
+                if(seekBarTime.getProgress() == 0) {
+                    String selectedEffect = effects2.getSelectedItem().toString();
+                    Command command = new Command(selectedEffect);
+
+                    //Gives command.range its value from the EditText box
+                    ArrayList<Integer> values = parseRange(range2.getText().toString());
+                    command.setRangeSize(values.size());
+                    for (int i = 0; i < values.size(); i++){
+                        command.range[i] = values.get(i);
+                    }
+
+                    colorPicker(color2, command);
+                    stripConfig.commandArray.add(command);
+                } else{                                                             //<--Create timestamp
+                    Timestamp timestamp = new Timestamp(seekBarTime.getProgress());
+                    stripConfig.commandArray.get(indexOfCommand).timestamps.add(timestamp);
+                    colorPicker(color2,stripConfig.commandArray.get(indexOfCommand));
+
+                }
+                //Log.i("*****SeekBar value:", "" + seekBarTime.getProgress() );
             }
         });
 
@@ -172,12 +194,13 @@ public class Config extends AppCompatActivity {
             }
         } else {                                                                //list of numbers (ie 3,4,6)
             for (int i = 0; i < strInput.length(); i++){
-                //Does not evaluate last digit if the last digit is part of a double digit number
-                //ie if last number is 18, break so that "8" is not added after adding "18"
-                if (i == strInput.length()-1 && range.get(range.size()-1) > 9){
-                    break;
-                }
-
+                try {
+                    //Does not evaluate last digit if the last digit is part of a double digit number
+                    //ie if last number is 18, break so that "8" is not added after adding "18"
+                    if (i == strInput.length()-1 && range.get(range.size()-1) > 9){
+                        break;
+                    }
+                } catch (Exception e){}
                 char x = strInput.charAt(i);
                 if (Character.isDigit(x)){
                     int number = isMultiDigit(strInput, i, i + 1);
@@ -187,7 +210,6 @@ public class Config extends AppCompatActivity {
         }
         //Log.i("*****range", "range: " + range.toString());
         return range;
-
     }
 
     //Return val is either singe dig int val at index "initialDigIndex" or multi dig val
@@ -245,7 +267,7 @@ public class Config extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
     }
 
-    public void changeColor(final Button btn, final EditText edTx, final Command command){
+    public void colorPicker(final Button btn, final Command command){
         ColorPickerDialogBuilder
                 .with(this)
                 .setTitle("Choose color")
@@ -261,8 +283,7 @@ public class Config extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                         btn.setBackgroundColor(selectedColor);
-                        //returnColor(selectedColor);
-                        colorSelected(selectedColor,edTx, command);
+                        colorSelected(selectedColor, command);
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -274,18 +295,23 @@ public class Config extends AppCompatActivity {
                 .show();
     }
 
-    public void colorSelected(int col,EditText edTx, Command command){
-        ArrayList<Integer> values = parseRange(edTx.getText().toString());
-        int[] range = new int[values.size()];
+    public void colorSelected(int col, Command command){
 
-        for (int i = 0; i < values.size(); i++){
-            int ledIndex = values.get(i);
-            range[i] = ledIndex;
-            previewButtons.get(ledIndex).setBackgroundColor(col);
+        if (command.color.r < 0) {                              //enter values for command
+            for (int i = 0; i < command.range.length; i++) {
+                previewButtons.get(command.range[i]).setBackgroundColor(col);
             }
+            command.color.setRGBfromHex(col);
+        } else{                                                 //enter values for timestamp
+            for (int i = 0; i < command.range.length; i++) {
+                previewButtons.get(command.range[i]).setBackgroundColor(col);
+            }
+            int indexOfLastTimestampAdded = command.timestamps.size();
+            command.timestamps.get(indexOfLastTimestampAdded-1).color.setRGBfromHex(col);
+        }
 
-        command.range = range;
-        command.color.setRGBfromHex(col);
+
+
     }
 
 }

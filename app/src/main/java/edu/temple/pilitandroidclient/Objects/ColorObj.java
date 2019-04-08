@@ -3,9 +3,9 @@ package edu.temple.pilitandroidclient.Objects;
 import android.graphics.Color;
 
 public class ColorObj {
-    int r; //r value; value must be integer between 1-255
-    int g; //g value; value must be integer between 1-255
-    int b; //b value; value is an integer between 1-255
+    public int r = -1; //r value; value must be integer between 1-255
+    public int g = -1; //g value; value must be integer between 1-255
+    public int b = -1; //b value; value is an integer between 1-255
 
     public void setColor(int redValue, int greenValue, int blueValue){  //constructor
         this.r = redValue;

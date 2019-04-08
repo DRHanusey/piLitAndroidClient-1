@@ -29,4 +29,8 @@ public class Command {
         this.timestamps = timestampList;
     }
 
+    public void setRangeSize(int size){
+        this.range = new int[size];
+    }
+
 }
