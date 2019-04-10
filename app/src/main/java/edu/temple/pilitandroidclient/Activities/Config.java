@@ -1,7 +1,10 @@
 package edu.temple.pilitandroidclient.Activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +25,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -32,6 +36,8 @@ import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
+
 
 public class Config extends AppCompatActivity {
     //String[] effects = {"SOLID", "RAINBOW","FLASH","CUSTOM"};
@@ -52,6 +58,50 @@ public class Config extends AppCompatActivity {
     JSONObject incomingJson = new JSONObject();
 
 
+    private static class MyHandler extends Handler {}       //DELAY TEST
+    private final MyHandler mHandler = new MyHandler();     //DELAY TEST
+
+    public static class MyRunnable implements Runnable {
+        private final WeakReference<Activity> mActivity;
+        ArrayList<Button> previewBtns;
+        boolean flag = true;
+
+        public MyRunnable(Activity activity,ArrayList<Button> previewBtns) {
+            mActivity = new WeakReference<>(activity);
+            this.previewBtns = previewBtns;
+        }
+
+        @Override
+        public void run() {
+            Activity activity = mActivity.get();
+
+            if (activity != null) {
+                int cnt = 20;
+                while (cnt > 0) {
+                    Log.i("~~~CNT~~~~", ""+cnt);
+                    if (flag) {
+                        previewBtns.get(0).setBackgroundColor(Color.BLUE);
+                        flag = false;
+                    } else {
+                        previewBtns.get(0).setBackgroundColor(Color.RED);
+                        flag = true;
+                    }
+
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    cnt--;
+                }
+
+            }
+        }
+    }
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +110,7 @@ public class Config extends AppCompatActivity {
         buttonApply = findViewById(R.id.buttonApply);
         stripConfig = new LEDConfigPattern("new custom");
         seekBarTime = findViewById(R.id.seekBarTime);
-
-
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
         //This creates the LED preview at the top of the activity.
         //Each index of the arrayList previewButtons corresponds to a preview element(bulb)
 
@@ -95,6 +141,21 @@ public class Config extends AppCompatActivity {
 
         color1 = findViewById(R.id.buttonColor1);
         color2 = findViewById(R.id.buttonColor2);
+
+
+
+        previewButtons.get(0).setBackgroundColor(Color.RED);
+        MyRunnable mRunnable = new MyRunnable(this,previewButtons);
+        mHandler.postDelayed(mRunnable, 3000);
+
+
+        int cnt = 20;
+        while (cnt > 0) {
+
+            cnt--;
+            Log.i("~~~CNT~~~~", ""+cnt);
+        }
+
 
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
