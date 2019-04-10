@@ -159,18 +159,13 @@ public class Config extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String jsonStr = gson.toJson(stripConfig);
-                Log.i("******Json String:",jsonStr);
-
-                //outgoingJson = new JSONObject();
-
+                //Log.i("******Json String:",jsonStr);
                 try {
                     outgoingJson = new JSONObject(jsonStr);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                Log.i("******Json Object:",outgoingJson.toString());
-
+                //Log.i("******Json Object:",outgoingJson.toString());
                 sendConfigToServer(outgoingJson);
             }
         });
@@ -264,7 +259,7 @@ public class Config extends AppCompatActivity {
             }
         });
         socket.connect();
-        Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
     }
 
     public void colorPicker(final Button btn, final Command command){
