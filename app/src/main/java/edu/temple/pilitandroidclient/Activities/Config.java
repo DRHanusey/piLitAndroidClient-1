@@ -47,7 +47,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     //Command.effect[] effects =
     //        {Command.effect.SOLID, Command.effect.RAINBOW, Command.effect.FLASH,Command.effect.CUSTOM};
     Button buttonApply, buttonExample, buttonExamplePreview;
-    int btnCount = 30;
+    int btnCount = 7;
     Spinner effects1, effects2;
     EditText range1, range2;
     Button color1, color2;
@@ -338,11 +338,11 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
 
                     previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
-                    //             System.out.print(rainbow[counter] + " ");
+                                 System.out.println(counter + " " + rainbow[counter] );
                 }
                 else{
-                    System.out.println("counter = " + counter+ " j = "+ j+ " i = " + i);
-                    //   System.out.print(rainbow[counter] + " ");
+                    //System.out.println("counter = " + counter+ " j = "+ j+ " i = " + i);
+                       System.out.println(counter+ " " + rainbow[counter] );
                     previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
 
                 }
@@ -352,7 +352,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
           try{
                 System.out.println("good night");
-                Thread.sleep(100);
+                Thread.sleep(1000);
             }
             catch (InterruptedException e) {
                 System.out.print("Sleep error here");
