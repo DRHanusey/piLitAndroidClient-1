@@ -152,13 +152,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 sendConfigToServer(outgoingJson);
             }
         });
-
-
-
-
     }
-
-
 
     public ArrayList<Integer> parseRange(String strInput){
         ArrayList<Integer> range = new ArrayList<>();
@@ -292,8 +286,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
 
@@ -303,8 +295,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected:" + item, Toast.LENGTH_LONG).show();
-
-
     }
 
     @Override
@@ -334,19 +324,14 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             for(int i = 0; i < 10; i++){
                 if((i + j) % 7 == 0){
                     counter = 0;
-
-
-
                     previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
-                                 System.out.println(counter + " " + rainbow[counter] );
+                    System.out.println(".get("+ counter +")  " + "setBGColor(" + rainbow[counter] + ")" );
                 }
                 else{
                     //System.out.println("counter = " + counter+ " j = "+ j+ " i = " + i);
-                       System.out.println(counter+ " " + rainbow[counter] );
                     previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
-
+                    System.out.println(".get("+ counter +")  " + "setBGColor(" + rainbow[counter] + ")" );
                 }
-                //System.out.print(counter + " ");
                 counter++;
             }
 
@@ -358,8 +343,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 System.out.print("Sleep error here");
             }
         }
-
-
+        
         Log.wtf("reading rainbow", "color");
     }
 
