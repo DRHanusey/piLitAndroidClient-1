@@ -3,7 +3,7 @@ package edu.temple.pilitandroidclient.Objects;
 import java.util.ArrayList;
 
 public class Command {
-    final int DEFAULT_BRIGHTNESS = 50;
+    public static final int DEFAULT_BRIGHTNESS = 50;
     public static final String[] effectList = {"solid", "rainbow","flash","custom"};
 
     public int range[];                                //range of LED lights being changed, each item is an individual light
@@ -27,6 +27,10 @@ public class Command {
         this.effect = title;
         this.color = color;
         this.timestamps = timestampList;
+    }
+
+    public void setRangeSize(int size){
+        this.range = new int[size];
     }
 
 }

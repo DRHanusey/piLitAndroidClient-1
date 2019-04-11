@@ -5,20 +5,20 @@ import java.util.ArrayList;
 public class LoginRegObj {
 
     private String userName;
-    private String userPassword;
+    private String password;
 
 
     public LoginRegObj(String userName, String userPassword) {
         this.userName = userName;
-        this.userPassword = userPassword;
+        this.password = userPassword;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public String getPassword() {
+        return password;
     }
 
     //for testing
@@ -26,7 +26,7 @@ public class LoginRegObj {
     public String toString() {
         return "LoginRegObj{" +
                 "userName='" + userName + '\'' +
-                ", userPassword='" + userPassword + '\'' +
+                ", userPassword='" + password + '\'' +
                 '}';
     }
 }

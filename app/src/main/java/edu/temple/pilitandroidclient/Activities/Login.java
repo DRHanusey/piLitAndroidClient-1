@@ -52,21 +52,34 @@ public class Login extends AppCompatActivity {
         View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: connect with server
-                //TODO: send loginRegObj for verification against DB
                 //TODO: on successful login create UserProfileObj and launches User activity
 
                 String email = inputEmail.getText().toString();
                 String pword = inputPassword.getText().toString();
 
-                //For testing purposes
-                createTestObj("TestEmail@test.com");
+
+                //String loggedInUser = "";
+
+
+                try {
+                    outgoingJson.put("userName",email);
+                    outgoingJson.put("password",pword);
+                    sendMsgToServer(outgoingJson);
+                    //loggedInUser = (String)incomingJson.get("userName");
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                //createTestObj(loggedInUser);
 
 
                 //Launches the home activity and passes a user profile obj
-                Intent intent = new Intent(Login.this, User.class);
-                intent.putExtra(USER_OBJ,userProfileObj);
-                startActivity(intent);
+                //Intent intent = new Intent(Login.this, User.class);
+                //intent.putExtra(USER_OBJ,userProfileObj);
+                //startActivity(intent);
 
             }
         };
@@ -95,21 +108,16 @@ public class Login extends AppCompatActivity {
 
                 //Create the Json to be sent to server
                 try {
-                    //testJson.put("type","This is just a test!!");
                     outgoingJson.put("userName","testuser");
                     outgoingJson.put("password","password");
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
                 socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
                     @Override
                     public void call(Object... args) {
-                        //socket.emit("command", testJson);
-                        //Log.i("******* testJson",testJson.toString());
                         socket.emit("login", outgoingJson);
                         Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
                     }
@@ -134,12 +142,60 @@ public class Login extends AppCompatActivity {
         sendTestMsgButton.setOnClickListener(testOCL);
     }
 
+    public void launchUserActivity() throws JSONException {
+
+        String loggedInUser = (String)incomingJson.get("userName");
+        createTestObj(loggedInUser);
+
+        //Launches the home activity and passes a user profile obj
+        Intent intent = new Intent(Login.this, User.class);
+        intent.putExtra(USER_OBJ,userProfileObj);
+        startActivity(intent);
+    }
+
+    public void sendMsgToServer(final JSONObject outgoingJson){
+        //Insert the https address into the socket
+        try {
+            socket = IO.socket(Login.SERVER_ADDRESS);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+                socket.emit("login", outgoingJson);
+                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+            }
+
+        }).on("login", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                incomingJson = (JSONObject)args[0];
+                Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
+                try {
+                    launchUserActivity();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                socket.disconnect();
+            }
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+            }
+        });
+        socket.connect();
+        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
+
+    }
+
     public void registerMe(){
 
         Intent intent = new Intent(this, Registration.class);
         startActivity(intent);
     }
-
 
     public class AsteriskPasswordTransformationMethod extends PasswordTransformationMethod {
         @Override

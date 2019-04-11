@@ -8,7 +8,7 @@ public class LEDConfigPattern {
 
 
     public LEDConfigPattern(String description) {
-        this.commandArray = new ArrayList<Command>();
         this.description = description;
-    }
+        this.commandArray = new ArrayList<Command>();
+        }
 }

@@ -9,29 +9,44 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
 import edu.temple.pilitandroidclient.Objects.LoginRegObj;
 import edu.temple.pilitandroidclient.R;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class Registration extends AppCompatActivity {
     Button signUp;
-    EditText UserName,Password, ConfirmPassword;
+    EditText UserName,Password, ConfirmPassword, Email;
     String passwordStr;
     String confirmPasswordStr;
     LoginRegObj userReg;
     String passwordIsGood;
     String strUserName;
+    String email;
+
+    private Socket socket;
+    //Gson gson = new Gson();
+    JSONObject outgoingJson;
+    JSONObject incomingJson = new JSONObject();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
      signUp =  findViewById(R.id.SignUpID);
-
      UserName = findViewById(R.id.UserNameID);
-
+     Email = findViewById(R.id.editText2);
      Password = (EditText)findViewById(R.id.PasswordID);
      Password.setTransformationMethod(new AsteriskPasswordTransformationMethod());
-
      ConfirmPassword =  findViewById(R.id.ConfirmPasswordID);
      ConfirmPassword.setTransformationMethod(new AsteriskPasswordTransformationMethod());
 
@@ -43,6 +58,7 @@ public class Registration extends AppCompatActivity {
             confirmPasswordStr = ConfirmPassword.getText().toString();
             strUserName = UserName.getText().toString();
             passwordIsGood  = PasswordVerification(passwordStr,confirmPasswordStr);
+            email = Email.getText().toString();
             //Log.i("passwordIsGood", passwordIsGood);
             if (passwordIsGood.equals("N/A")){
 
@@ -53,12 +69,63 @@ public class Registration extends AppCompatActivity {
                 //Log.i("password","it work");
 
                 userReg = new LoginRegObj(strUserName,passwordStr);
-                Toast.makeText(getApplicationContext(),userReg.getUserName()+" "+userReg.getUserPassword(),Toast.LENGTH_LONG).show();
+                try {
+                    outgoingJson = new JSONObject();
+                    outgoingJson.put("userName", strUserName);
+                    outgoingJson.put("password",passwordStr);
+                    outgoingJson.put("email", email);
+                    //outgoingJson.put("userName", "testUserNAme222");
+                    //outgoingJson.put("password","testPassWord");
+                    //outgoingJson.put("email", "testEmail@email.com");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //Log.i("******Json Object:",outgoingJson.toString());
+                sendMsgToServer(outgoingJson);
+
+                //Toast.makeText(getApplicationContext(),userReg.getUserName()+" "+userReg.getPassword(),Toast.LENGTH_LONG).show();
             }
         }
     });
 
+    }
 
+    public void sendMsgToServer(final JSONObject outgoingJson){
+        //Insert the https address into the socket
+        try {
+            socket = IO.socket(Login.SERVER_ADDRESS);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+                socket.emit("register", outgoingJson);
+                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+            }
+
+        }).on("register", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                incomingJson = (JSONObject)args[0];
+                Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
+                //toast();
+                socket.disconnect();
+            }
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+            }
+        });
+        socket.connect();
+        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
+
+    }
+    public void toast(){
+        Toast.makeText(getApplicationContext(), "Registration complete", Toast.LENGTH_SHORT).show();
     }
 
     public String PasswordVerification(String passwor, String confirmPas){
