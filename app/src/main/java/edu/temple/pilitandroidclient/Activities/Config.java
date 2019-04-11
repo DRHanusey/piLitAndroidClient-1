@@ -41,7 +41,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     //Command.effect[] effects =
     //        {Command.effect.SOLID, Command.effect.RAINBOW, Command.effect.FLASH,Command.effect.CUSTOM};
     Button buttonApply, buttonExample, buttonExamplePreview;
-    int btnCount = 7;
+    int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2;
     Button color1, color2;
@@ -54,47 +54,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     JSONObject outgoingJson;// = new JSONObject();
     JSONObject incomingJson = new JSONObject();
 
-
-    private static class MyHandler extends Handler {}       //DELAY TEST
-    private final MyHandler mHandler = new MyHandler();     //DELAY TEST
-
-    public static class MyRunnable implements Runnable {
-        private final WeakReference<Activity> mActivity;
-        ArrayList<Button> previewBtns;
-        boolean flag = true;
-
-        public MyRunnable(Activity activity,ArrayList<Button> previewBtns) {
-            mActivity = new WeakReference<>(activity);
-            this.previewBtns = previewBtns;
-        }
-
-        @Override
-        public void run() {
-            Activity activity = mActivity.get();
-
-            if (activity != null) {
-                int cnt = 20;
-                while (cnt > 0) {
-                    Log.i("~~~CNT~~~~", ""+cnt);
-                    if (flag) {
-                        previewBtns.get(0).setBackgroundColor(Color.BLUE);
-                        flag = false;
-                    } else {
-                        previewBtns.get(0).setBackgroundColor(Color.RED);
-                        flag = true;
-                    }
-
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    cnt--;
-                }
-
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,12 +99,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
         color1 = findViewById(R.id.buttonColor1);
         color2 = findViewById(R.id.buttonColor2);
-
-
-        //Testing for button color changes -Dan
-        previewButtons.get(0).setBackgroundColor(Color.RED);
-        MyRunnable mRunnable = new MyRunnable(this,previewButtons);
-        mHandler.postDelayed(mRunnable, 3000);
 
 
         color1.setOnClickListener(new View.OnClickListener() {
@@ -354,7 +307,9 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }
     }
 
-}
+    public void changeBulbColor(int index, int hexColor){
+        previewButtons.get(index).setBackgroundColor(hexColor);
+    }
 
 
     @Override
