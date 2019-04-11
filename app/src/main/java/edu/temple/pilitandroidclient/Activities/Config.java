@@ -3,6 +3,7 @@ package edu.temple.pilitandroidclient.Activities;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +42,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     //Command.effect[] effects =
     //        {Command.effect.SOLID, Command.effect.RAINBOW, Command.effect.FLASH,Command.effect.CUSTOM};
     Button buttonApply, buttonExample, buttonExamplePreview;
-    int btnCount = 7;
+    int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2;
     Button color1, color2;
@@ -54,47 +55,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     JSONObject outgoingJson;// = new JSONObject();
     JSONObject incomingJson = new JSONObject();
 
-
-    private static class MyHandler extends Handler {}       //DELAY TEST
-    private final MyHandler mHandler = new MyHandler();     //DELAY TEST
-
-    public static class MyRunnable implements Runnable {
-        private final WeakReference<Activity> mActivity;
-        ArrayList<Button> previewBtns;
-        boolean flag = true;
-
-        public MyRunnable(Activity activity,ArrayList<Button> previewBtns) {
-            mActivity = new WeakReference<>(activity);
-            this.previewBtns = previewBtns;
-        }
-
-        @Override
-        public void run() {
-            Activity activity = mActivity.get();
-
-            if (activity != null) {
-                int cnt = 20;
-                while (cnt > 0) {
-                    Log.i("~~~CNT~~~~", ""+cnt);
-                    if (flag) {
-                        previewBtns.get(0).setBackgroundColor(Color.BLUE);
-                        flag = false;
-                    } else {
-                        previewBtns.get(0).setBackgroundColor(Color.RED);
-                        flag = true;
-                    }
-
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    cnt--;
-                }
-
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +72,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         //       previewButtons.get(3).setBackgroundColor(*color*);
         previewButtons = new ArrayList<Button>();
         LinearLayout ll2 = findViewById(R.id.linLay2);
-        for (int i = 0; i < btnCount; i++){
+        for (int i = 0; i < btnCount; i++) {
             previewButtons.add(new Button(this));
             previewButtons.get(i).setLayoutParams(buttonExample.getLayoutParams());
             ll2.addView(previewButtons.get(i));
@@ -122,7 +82,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         ArrayAdapter<String> effectAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, Command.effectList);
         effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 
 
         //Manually creates two input rows for changing colors.
@@ -142,34 +101,28 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         color2 = findViewById(R.id.buttonColor2);
 
 
-        //Testing for button color changes -Dan
-        previewButtons.get(0).setBackgroundColor(Color.RED);
-        MyRunnable mRunnable = new MyRunnable(this,previewButtons);
-        mHandler.postDelayed(mRunnable, 3000);
-
-
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int indexOfCommand = 0;     //each frag will need this to point to its corresponding command
 
-                if(seekBarTime.getProgress() == 0) {
+                if (seekBarTime.getProgress() == 0) {
                     String selectedEffect = effects1.getSelectedItem().toString();
                     Command command = new Command(selectedEffect);
 
                     //Gives command.range its value from the EditText box
                     ArrayList<Integer> values = parseRange(range1.getText().toString());
                     command.setRangeSize(values.size());
-                    for (int i = 0; i < values.size(); i++){
+                    for (int i = 0; i < values.size(); i++) {
                         command.range[i] = values.get(i);
                     }
 
                     colorPicker(color1, command);
                     stripConfig.commandArray.add(command);
-                } else{                                                             //<--Create timestamp
+                } else {                                                             //<--Create timestamp
                     Timestamp timestamp = new Timestamp(seekBarTime.getProgress());
                     stripConfig.commandArray.get(indexOfCommand).timestamps.add(timestamp);
-                    colorPicker(color1,stripConfig.commandArray.get(indexOfCommand));
+                    colorPicker(color1, stripConfig.commandArray.get(indexOfCommand));
 
                 }
                 //Log.i("*****SeekBar value:", "" + seekBarTime.getProgress() );
@@ -181,23 +134,23 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             public void onClick(View v) {
                 int indexOfCommand = 1;     //each frag will need this to point to its corresponding command
 
-                if(seekBarTime.getProgress() == 0) {
+                if (seekBarTime.getProgress() == 0) {
                     String selectedEffect = effects2.getSelectedItem().toString();
                     Command command = new Command(selectedEffect);
 
                     //Gives command.range its value from the EditText box
                     ArrayList<Integer> values = parseRange(range2.getText().toString());
                     command.setRangeSize(values.size());
-                    for (int i = 0; i < values.size(); i++){
+                    for (int i = 0; i < values.size(); i++) {
                         command.range[i] = values.get(i);
                     }
 
                     colorPicker(color2, command);
                     stripConfig.commandArray.add(command);
-                } else{                                                             //<--Create timestamp
+                } else {                                                             //<--Create timestamp
                     Timestamp timestamp = new Timestamp(seekBarTime.getProgress());
                     stripConfig.commandArray.get(indexOfCommand).timestamps.add(timestamp);
-                    colorPicker(color2,stripConfig.commandArray.get(indexOfCommand));
+                    colorPicker(color2, stripConfig.commandArray.get(indexOfCommand));
 
                 }
                 //Log.i("*****SeekBar value:", "" + seekBarTime.getProgress() );
@@ -223,27 +176,28 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
-    public ArrayList<Integer> parseRange(String strInput){
+    public ArrayList<Integer> parseRange(String strInput) {
         ArrayList<Integer> range = new ArrayList<>();
 
-        if (strInput.contains("-")){                                            //range of number (ie 3 - 6)
-            int startVal = isMultiDigit(strInput,0,1);
-            int endVal = isMultiDigit(strInput, strInput.length()-1, strInput.length()-2);
+        if (strInput.contains("-")) {                                            //range of number (ie 3 - 6)
+            int startVal = isMultiDigit(strInput, 0, 1);
+            int endVal = isMultiDigit(strInput, strInput.length() - 1, strInput.length() - 2);
 
-            for (int i = startVal; i <= endVal; i++){
+            for (int i = startVal; i <= endVal; i++) {
                 range.add(i);
             }
         } else {                                                                //list of numbers (ie 3,4,6)
-            for (int i = 0; i < strInput.length(); i++){
+            for (int i = 0; i < strInput.length(); i++) {
                 try {
                     //Does not evaluate last digit if the last digit is part of a double digit number
                     //ie if last number is 18, break so that "8" is not added after adding "18"
-                    if (i == strInput.length()-1 && range.get(range.size()-1) > 9){
+                    if (i == strInput.length() - 1 && range.get(range.size() - 1) > 9) {
                         break;
                     }
-                } catch (Exception e){}
+                } catch (Exception e) {
+                }
                 char x = strInput.charAt(i);
-                if (Character.isDigit(x)){
+                if (Character.isDigit(x)) {
                     int number = isMultiDigit(strInput, i, i + 1);
                     range.add(number);
                 }
@@ -255,20 +209,20 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     //Return val is either singe dig int val at index "initialDigIndex" or multi dig val
     //including "nextDigIndex"
-    public int isMultiDigit(String strInput, int initialDigIndex, int nextDigIndex){
+    public int isMultiDigit(String strInput, int initialDigIndex, int nextDigIndex) {
         String strIntVal;
 
-        if (nextDigIndex > strInput.length()-1){
+        if (nextDigIndex > strInput.length() - 1) {
             return Integer.parseInt(String.valueOf(strInput.charAt(initialDigIndex)));
         }
 
-        if (Character.isDigit(strInput.charAt(nextDigIndex))){
+        if (Character.isDigit(strInput.charAt(nextDigIndex))) {
             if (initialDigIndex < nextDigIndex) {
                 strIntVal = String.valueOf(strInput.charAt(initialDigIndex)) + String.valueOf(strInput.charAt(nextDigIndex));
             } else {
-                strIntVal = String.valueOf(strInput.charAt(nextDigIndex) + String.valueOf(strInput.charAt(initialDigIndex)) );
+                strIntVal = String.valueOf(strInput.charAt(nextDigIndex) + String.valueOf(strInput.charAt(initialDigIndex)));
             }
-        } else{
+        } else {
             strIntVal = String.valueOf(strInput.charAt(initialDigIndex));
         }
 
@@ -276,7 +230,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         return Integer.parseInt(strIntVal);
     }
 
-    public void sendConfigToServer(final JSONObject outgoingJson){
+    public void sendConfigToServer(final JSONObject outgoingJson) {
         //Insert the https address into the socket
         try {
             socket = IO.socket(Login.SERVER_ADDRESS);
@@ -289,14 +243,14 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             @Override
             public void call(Object... args) {
                 socket.emit("login", outgoingJson);
-                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+                Log.i("******* outgoingJson", outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
             }
 
         }).on("login", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                incomingJson = (JSONObject)args[0];
-                Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
+                incomingJson = (JSONObject) args[0];
+                Log.i("&&&&&&& incomingJson:", incomingJson.toString());     //Print JSON to Logcat(bottom of screen
                 socket.disconnect();
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
@@ -308,7 +262,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
     }
 
-    public void colorPicker(final Button btn, final Command command){
+    public void colorPicker(final Button btn, final Command command) {
         ColorPickerDialogBuilder
                 .with(this)
                 .setTitle("Choose color")
@@ -338,23 +292,25 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
 
-    public void colorSelected(int col, Command command){
+    public void colorSelected(int col, Command command) {
 
         if (command.color.r < 0) {                              //enter values for command
             for (int i = 0; i < command.range.length; i++) {
                 previewButtons.get(command.range[i]).setBackgroundColor(col);
             }
             command.color.setRGBfromHex(col);
-        } else{                                                 //enter values for timestamp
+        } else {                                                 //enter values for timestamp
             for (int i = 0; i < command.range.length; i++) {
                 previewButtons.get(command.range[i]).setBackgroundColor(col);
             }
             int indexOfLastTimestampAdded = command.timestamps.size();
-            command.timestamps.get(indexOfLastTimestampAdded-1).color.setRGBfromHex(col);
+            command.timestamps.get(indexOfLastTimestampAdded - 1).color.setRGBfromHex(col);
         }
     }
 
-}
+    public void changeBulbColor(int index, int hexColor) {
+        previewButtons.get(index).setBackgroundColor(hexColor);
+    }
 
 
     @Override
@@ -375,48 +331,82 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
-    public void rainbowEffect(){
+    public void rainbowEffect() {
 
-        // for (int i = 0; i < values.size(); i++){
-        //   int ledIndex = values.get(i);
-        // range[i] = ledIndex;
-        // previewButtons.get(ledIndex).setBackgroundColor(col);
-        //}
-
-        //command.range = range;
-        //command.color.setRGBfromHex(col);
-
-         /*
-     static String[] rainbow = {"red", "orange", "yellow", "green", "blue", "indigo", "violet"};
-     static String[] rainbow = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee "};
-    public static void main(String[] args) {
-     */  String[] rainbow = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
+        String[] rainbow = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
         int counter = 0;
-        for(int j= 0; j < 10; j++){
+        for (int j = 0; j < 10; j++) {
             counter = j % 7;
-            for(int i = 0; i < 10; i++){
-                if((i + j) % 7 == 0){
+            for (int i = 0; i < 10; i++) {
+                if ((i + j) % 7 == 0) {
                     counter = 0;
                     previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
-                    System.out.println(".get("+ counter +")  " + "setBGColor(" + rainbow[counter] + ")" );
-                }
-                else{
+                    System.out.println(".get(" + counter + ")  " + "setBGColor(" + rainbow[counter] + ")");
+                } else {
                     //System.out.println("counter = " + counter+ " j = "+ j+ " i = " + i);
                     previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
-                    System.out.println(".get("+ counter +")  " + "setBGColor(" + rainbow[counter] + ")" );
+                    System.out.println(".get(" + counter + ")  " + "setBGColor(" + rainbow[counter] + ")");
                 }
                 counter++;
             }
 
-          try{
+            try {
                 System.out.println("good night");
                 Thread.sleep(1000);
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 System.out.print("Sleep error here");
             }
         }
-        
+
         Log.wtf("reading rainbow", "color");
     }
+
+    public void startPreview(View v){
+        AsyncTaskRunner runner = new AsyncTaskRunner();
+        runner.execute("1000");
+    }
+
+    boolean flag = true;
+    public void updatePreviewButtons(){
+
+        for (int i = 0; i < previewButtons.size()-1; i++) {
+            if (flag) {
+                previewButtons.get(i).setBackgroundColor(Color.BLUE);
+                flag = false;
+            } else {
+                previewButtons.get(i).setBackgroundColor(Color.RED);
+                flag = true;
+            }
+        }
+    }
+
+
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+
+        private String resp;
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                int time = Integer.parseInt(params[0]);
+
+                for (int i = 0; i < 20; i++) {
+                    updatePreviewButtons();
+                    Thread.sleep(time);
+                }
+
+                resp = "Slept for " + params[0] + " seconds";
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            }
+            return resp;
+        }
+
+    }
+
 }
