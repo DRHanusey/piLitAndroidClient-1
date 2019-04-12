@@ -1,10 +1,11 @@
 package edu.temple.pilitandroidclient.Activities;
 
-
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,8 +24,12 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
@@ -369,20 +374,25 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     boolean flag = true;
     int x= 0x1;
-    int rainbowIndex = 0;
+    int rainbowIndex = 0,
+        customIndex = 0;
     String[] rainbowStr = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
+
+
 
     //seekBarValue = milliseconds, range 0-9999
     public void updatePreviewButtons(int seekBarValue){
 
-        if ( effects1.getSelectedItem().equals("rainbow") ) {
+        if ( effects1.getSelectedItem().equals("rainbow") ){
             dansRainbowEffect(seekBarValue);
         } else if( effects1.getSelectedItem().equals("flash") ) {
             //TODO
 
         } else if ( effects1.getSelectedItem().equals("custom") ){
             //TODO
-
+            if(seekBarValue == 0) {
+                maliksCustomEffect(seekBarValue, stripConfig);
+            }
         } 
 
         //otherRainbow(seekBarValue);
@@ -477,5 +487,37 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 rainbowIndex++;
             }
         }
+    }
+
+    public void maliksCustomEffect(int seekBarValue, LEDConfigPattern stripCon){
+        System.out.print("\n\nhello\n\n");
+        HashMap<Integer, ArrayList> myMap = new HashMap<>();
+        //myMap.put(stripCon.commandArray);
+
+        for (int i = 0; i < stripCon.commandArray.size()-1; i++){
+            ArrayList<Timestamp> timestampArray = new ArrayList<>();
+            int time = stripCon.commandArray.get(i).timestamps.get(0).time;
+
+            for (int j = 0; j < stripCon.commandArray.get(i).timestamps.size()-1; j++){
+                timestampArray.add(stripCon.commandArray.get(i).timestamps.get(j));
+            }
+
+            myMap.put(time,timestampArray);
+        }
+
+        System.out.print("##########" + myMap.toString());
+
+/*
+        if (seekBarValue % 100 == 0 ){
+
+            for (int i = 0; i < previewButtons.size(); i++){
+                if (seekBarValue == myMap.get() ){
+                    ;
+                }
+                changeBulbColor(i,Color.parseColor();//rainbowStr[rainbowIndex]));
+                //rainbowIndex++;
+            }
+        }
+*/
     }
 }
