@@ -195,6 +195,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                         break;
                     }
                 } catch (Exception e) {
+                    Log.i("in arrayList","in config.java arrayList method");
                 }
                 char x = strInput.charAt(i);
                 if (Character.isDigit(x)) {
@@ -317,10 +318,11 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
-
+       // boolean usersChoose = false;
         if (item.equals("rainbow")) {
-
+            //usersChoose = true;
             rainbowEffect();
+            Log.wtf("in item equal", "if statment");
         }
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected:" + item, Toast.LENGTH_LONG).show();
@@ -334,8 +336,31 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     public void rainbowEffect() {
 
         String[] rainbow = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
-        int counter = 0;
-        for (int j = 0; j < 10; j++) {
+
+        int colorOfTheRainbow =0;
+        for (int buttunPostion =0;buttunPostion <previewButtons.size(); buttunPostion++){
+             if (colorOfTheRainbow > rainbow.length-1) {
+                 colorOfTheRainbow=0;
+                 Log.i("in if","k is set to 0");
+             }
+                 if (buttunPostion % 2 == 0) {
+                     previewButtons.get(buttunPostion).setBackgroundColor(Color.parseColor(rainbow[colorOfTheRainbow]));
+                 } else {
+                     previewButtons.get(buttunPostion).setBackgroundColor(Color.parseColor(rainbow[colorOfTheRainbow]));
+                 }
+            try {
+                System.out.println("good night");
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                System.out.print("Sleep error here");
+            }
+            colorOfTheRainbow++;
+
+
+           
+
+        }
+        /*for (int j = 0; j < 10; j++) {
             counter = j % 7;
             for (int i = 0; i < 10; i++) {
                 if ((i + j) % 7 == 0) {
@@ -356,7 +381,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             } catch (InterruptedException e) {
                 System.out.print("Sleep error here");
             }
-        }
+        }*/
 
         Log.wtf("reading rainbow", "color");
     }
@@ -369,7 +394,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     boolean flag = true;
     public void updatePreviewButtons(){
 
-        for (int i = 0; i < previewButtons.size()-1; i++) {
+        /*for (int i = 0; i < previewButtons.size()-1; i++) {
             if (flag) {
                 previewButtons.get(i).setBackgroundColor(Color.BLUE);
                 flag = false;
@@ -377,11 +402,15 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 previewButtons.get(i).setBackgroundColor(Color.RED);
                 flag = true;
             }
-        }
+        }*/
+
+
+        rainbowEffect();
+
     }
 
 
-    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+    private  class  AsyncTaskRunner extends AsyncTask<String, String, String> {
 
         private String resp;
 
