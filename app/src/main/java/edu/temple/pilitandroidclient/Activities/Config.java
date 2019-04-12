@@ -1,11 +1,10 @@
 package edu.temple.pilitandroidclient.Activities;
 
-import android.app.Activity;
+
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,11 +23,10 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
+
+import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.Objects.Timestamp;
@@ -38,67 +36,31 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    //String[] effects = {"SOLID", "RAINBOW","FLASH","CUSTOM"};
-    //Command.effect[] effects =
-    //        {Command.effect.SOLID, Command.effect.RAINBOW, Command.effect.FLASH,Command.effect.CUSTOM};
-    Button buttonApply, buttonExample, buttonExamplePreview;
+    Button buttonApply, buttonExample, color1, color2;
     int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2;
-    Button color1, color2;
     ArrayList<Button> previewButtons;
     LEDConfigPattern stripConfig;
     Gson gson = new Gson();
     SeekBar seekBarTime;
-
+    LinearLayout ll2;
     private Socket socket;
-    JSONObject outgoingJson;// = new JSONObject();
+    JSONObject outgoingJson;
     JSONObject incomingJson = new JSONObject();
+    final int MAX_DISPLAY_TIME = 9999;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
-        buttonExample = findViewById(R.id.example);
-        buttonApply = findViewById(R.id.buttonApply);
-        stripConfig = new LEDConfigPattern("new custom");
-        seekBarTime = findViewById(R.id.seekBarTime);
-//////////////////////////////////////////////////////////////////////////////////////////////////
-        //This creates the LED preview at the top of the activity.
-        //Each index of the arrayList previewButtons corresponds to a preview element(bulb)
 
-        //EXAMPLE change color of bulb at index 3:
-        //       previewButtons.get(3).setBackgroundColor(*color*);
-        previewButtons = new ArrayList<Button>();
-        LinearLayout ll2 = findViewById(R.id.linLay2);
-        for (int i = 0; i < btnCount; i++) {
-            previewButtons.add(new Button(this));
-            previewButtons.get(i).setLayoutParams(buttonExample.getLayoutParams());
-            ll2.addView(previewButtons.get(i));
-        }
+        assignGUIelementsToJavaObjects();
 
-        //Creates effects spinner
-        ArrayAdapter<String> effectAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, Command.effectList);
-        effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        createPreviewButtons();
 
-
-        //Manually creates two input rows for changing colors.
-        // TODO: 4/7/2019 Put into fragment and creates dynamically by using an "add" button
-        effects1 = findViewById(R.id.spinnerEffects1);
-        // Spinner click listener
-        effects1.setOnItemSelectedListener(this);
-        effects1.setAdapter(effectAdapter);
-
-        effects2 = findViewById(R.id.spinnerEffects2);
-        effects2.setAdapter(effectAdapter);
-
-        range1 = findViewById(R.id.editRange1);
-        range2 = findViewById(R.id.editRange2);
-
-        color1 = findViewById(R.id.buttonColor1);
-        color2 = findViewById(R.id.buttonColor2);
+        createEffectsSpinner();
 
 
         color1.setOnClickListener(new View.OnClickListener() {
@@ -174,6 +136,45 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 sendConfigToServer(outgoingJson);
             }
         });
+    }
+
+    public void assignGUIelementsToJavaObjects(){
+        buttonExample = findViewById(R.id.example);
+        buttonApply = findViewById(R.id.buttonApply);
+        stripConfig = new LEDConfigPattern("new custom");
+        seekBarTime = findViewById(R.id.seekBarTime);
+        previewButtons = new ArrayList<Button>();
+        ll2 = findViewById(R.id.linLay2);
+        // TODO: 4/7/2019 Put into fragment and creates dynamically by using an "add" button
+        effects1 = findViewById(R.id.spinnerEffects1);
+        effects2 = findViewById(R.id.spinnerEffects2);
+        range1 = findViewById(R.id.editRange1);
+        range2 = findViewById(R.id.editRange2);
+        color1 = findViewById(R.id.buttonColor1);
+        color2 = findViewById(R.id.buttonColor2);
+    }
+
+    public void createPreviewButtons(){
+        //This creates the LED preview at the top of the activity.
+        //Each index of the arrayList previewButtons corresponds to a preview element(bulb)
+        //EXAMPLE change color of bulb at index 3:
+        //       previewButtons.get(3).setBackgroundColor(*color*);
+        for (int i = 0; i < btnCount; i++) {
+            previewButtons.add(new Button(this));
+            previewButtons.get(i).setLayoutParams(buttonExample.getLayoutParams());
+            ll2.addView(previewButtons.get(i));
+        }
+    }
+
+    public void createEffectsSpinner(){
+        //Creates effects spinner
+        ArrayAdapter<String> effectAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, Command.effectList);
+        effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        effects1.setOnItemSelectedListener(this);
+        effects1.setAdapter(effectAdapter);
+        effects2.setAdapter(effectAdapter);
     }
 
     public ArrayList<Integer> parseRange(String strInput) {
@@ -320,10 +321,10 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
         if (item.equals("rainbow")) {
 
-            rainbowEffect();
+            //rainbowEffect();
         }
         // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected:" + item, Toast.LENGTH_LONG).show();
+        //Toast.makeText(parent.getContext(), "Selected:" + item, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -363,23 +364,33 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     public void startPreview(View v){
         AsyncTaskRunner runner = new AsyncTaskRunner();
-        runner.execute("1000");
+        runner.execute();
     }
 
     boolean flag = true;
-    public void updatePreviewButtons(){
+    int x= 0x1;
+    int rainbowIndex = 0;
+    String[] rainbowStr = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
 
-        for (int i = 0; i < previewButtons.size()-1; i++) {
-            if (flag) {
-                previewButtons.get(i).setBackgroundColor(Color.BLUE);
-                flag = false;
-            } else {
-                previewButtons.get(i).setBackgroundColor(Color.RED);
-                flag = true;
-            }
-        }
+    //seekBarValue = milliseconds, range 0-9999
+    public void updatePreviewButtons(int seekBarValue){
+
+        if ( effects1.getSelectedItem().equals("rainbow") ) {
+            dansRainbowEffect(seekBarValue);
+        } else if( effects1.getSelectedItem().equals("flash") ) {
+            //TODO
+
+        } else if ( effects1.getSelectedItem().equals("custom") ){
+            //TODO
+
+        } 
+
+        //otherRainbow(seekBarValue);
     }
 
+    public void advanceSeekBar(int newVal){
+        seekBarTime.setProgress(newVal);
+    }
 
     private class AsyncTaskRunner extends AsyncTask<String, String, String> {
 
@@ -389,14 +400,21 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         protected String doInBackground(String... params) {
 
             try {
-                int time = Integer.parseInt(params[0]);
+                int emulatorIncr = 40;
+                int galaxyIncr = 1;
 
-                for (int i = 0; i < 20; i++) {
-                    updatePreviewButtons();
-                    Thread.sleep(time);
+
+                for (int time = 0; time < MAX_DISPLAY_TIME; time+=galaxyIncr) {
+                    updatePreviewButtons(time);
+                    advanceSeekBar(time);
+                    Thread.sleep(1);
                 }
 
-                resp = "Slept for " + params[0] + " seconds";
+
+
+
+
+                resp = "Complete";
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 resp = e.getMessage();
@@ -409,4 +427,55 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
+
+    public void otherRainbow(int seekBarValue){
+
+        //String[] color = new String[btnCount];
+        ColorObj[] colorList = new ColorObj[btnCount];
+
+        //give initial values
+        if (seekBarValue == 0) {
+            double frequency = .2;
+            for (int i = 0; i < btnCount; ++i) {
+                double red = Math.sin(frequency * i + 0) * 127 + 128;
+                double green = Math.sin(frequency * i + 2) * 127 + 128;
+                double blue = Math.sin(frequency * i + 4) * 127 + 128;
+
+                changeBulbColor(i, Color.rgb((int) red, (int) green, (int) blue));
+
+                //color[i] = Color.rgb((int) red, (int) green, (int) blue);
+                colorList[i].setColor((int) red, (int) green, (int) blue);
+                //System.out.println(color[i]);
+            }
+        }
+
+        if (seekBarValue % 100 == -1 ){
+
+            for (int i = 0; i < previewButtons.size(); i++){
+                if (rainbowIndex == 29){
+                    rainbowIndex = 0;
+                }
+                //changeBulbColor(i, colorList[rainbowIndex]);
+                previewButtons.get(i).setBackgroundColor(Color.rgb( colorList[rainbowIndex].r, colorList[i].g, colorList[i].b) );
+                rainbowIndex++;
+            }
+        }
+
+
+
+    }
+
+    public  void dansRainbowEffect(int seekBarValue){
+
+        if (seekBarValue % 100 == 0 ){
+
+            for (int i = 0; i < previewButtons.size(); i++){
+                if (rainbowIndex == 7){
+                    rainbowIndex = 0;
+                }
+                changeBulbColor(i,Color.parseColor(rainbowStr[rainbowIndex]));
+                rainbowIndex++;
+            }
+        }
+    }
 }
