@@ -58,10 +58,9 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
 
+        //These methods used to clean up onCreate
         assignGUIelementsToJavaObjects();
-
         createPreviewButtons();
-
         createEffectsSpinner();
 
 
@@ -69,6 +68,11 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             @Override
             public void onClick(View v) {
                 int indexOfCommand = 0;     //each frag will need this to point to its corresponding command
+
+                //if a effect hasnt been selected, exit onClick
+                if (effects1.getSelectedItem().equals("Select effect")){
+                    return;
+                }
 
                 if (seekBarTime.getProgress() == 0) {
                     String selectedEffect = effects1.getSelectedItem().toString();
@@ -90,6 +94,11 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
                 }
                 //Log.i("*****SeekBar value:", "" + seekBarTime.getProgress() );
+
+                range1.setFocusable(false);
+                range1.setEnabled(false);
+                effects1.setFocusable(false);
+                effects1.setEnabled(false);
             }
         });
 
@@ -97,6 +106,12 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             @Override
             public void onClick(View v) {
                 int indexOfCommand = 1;     //each frag will need this to point to its corresponding command
+
+                //if a effect hasnt been selected, exit onClick
+                if (effects2.getSelectedItem().equals("Select effect")){
+                    return;
+                }
+
 
                 if (seekBarTime.getProgress() == 0) {
                     String selectedEffect = effects2.getSelectedItem().toString();
@@ -118,6 +133,10 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
                 }
                 //Log.i("*****SeekBar value:", "" + seekBarTime.getProgress() );
+                range2.setFocusable(false);
+                range2.setEnabled(false);
+                effects2.setFocusable(false);
+                effects2.setEnabled(false);
             }
         });
 
@@ -183,13 +202,31 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 android.R.layout.simple_spinner_item, Command.effectList);
         effectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        effects1.setOnItemSelectedListener(this);
+        //effects1.setOnItemSelectedListener(this);
         effects1.setAdapter(effectAdapter);
         effects2.setAdapter(effectAdapter);
     }
 
     public ArrayList<Integer> parseRange(String strInput) {
         ArrayList<Integer> range = new ArrayList<>();
+
+        if (strInput.equalsIgnoreCase("even")){
+            for (int i = 0; i < btnCount; i++){
+                if (i % 2 == 0 ){
+                    range.add(i);
+                }
+            }
+            return range;
+        }
+
+        if (strInput.equalsIgnoreCase("odd")){
+            for (int i = 0; i < btnCount; i++){
+                if (i % 2 != 0 ){
+                    range.add(i);
+                }
+            }
+            return range;
+        }
 
         if (strInput.contains("-")) {                                            //range of number (ie 3 - 6)
             int startVal = isMultiDigit(strInput, 0, 1);
@@ -329,13 +366,8 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
-       // boolean usersChoose = false;
-        if (item.equals("rainbow")) {
 
-            //rainbowEffect();
-        }
-        // Showing selected spinner item
-        //Toast.makeText(parent.getContext(), "Selected:" + item, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
