@@ -25,10 +25,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
+import edu.temple.pilitandroidclient.Objects.PiObj;
 import edu.temple.pilitandroidclient.Objects.Timestamp;
 import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
@@ -120,15 +122,23 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
 
 
+        final PiObj pi = new PiObj("testpi", "username");
+
         //Converts LEDConfigPattern to String
         //Converts String to JSON obj
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String jsonStr = gson.toJson(stripConfig);
+                String jsonStr = gson.toJson(stripConfig.commandArray);
+                String jsonPiStr = gson.toJson(pi);
                 //Log.i("******Json String:",jsonStr);
                 try {
-                    outgoingJson = new JSONObject(jsonStr);
+                    //'{""config": {'+json_String+'}
+                    outgoingJson = new JSONObject();
+                    outgoingJson.put("config",jsonStr);
+                    outgoingJson.put("pi",jsonPiStr);
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -137,6 +147,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             }
         });
     }
+
 
     public void assignGUIelementsToJavaObjects(){
         buttonExample = findViewById(R.id.example);
@@ -243,11 +254,11 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
             @Override
             public void call(Object... args) {
-                socket.emit("login", outgoingJson);
+                socket.emit("command", outgoingJson);
                 Log.i("******* outgoingJson", outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
             }
 
-        }).on("login", new Emitter.Listener() {
+        }).on("command", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 incomingJson = (JSONObject) args[0];
@@ -355,34 +366,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             }
             colorOfTheRainbow++;
 
-
-
-
         }
-        /*for (int j = 0; j < 10; j++) {
-            counter = j % 7;
-            for (int i = 0; i < 10; i++) {
-                if ((i + j) % 7 == 0) {
-                    counter = 0;
-                    previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
-                    System.out.println(".get(" + counter + ")  " + "setBGColor(" + rainbow[counter] + ")");
-                } else {
-                    //System.out.println("counter = " + counter+ " j = "+ j+ " i = " + i);
-                    previewButtons.get(counter).setBackgroundColor(Color.parseColor(rainbow[counter]));
-                    System.out.println(".get(" + counter + ")  " + "setBGColor(" + rainbow[counter] + ")");
-                }
-                counter++;
-            }
-
-            try {
-                System.out.println("good night");
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                System.out.print("Sleep error here");
-            }
-        }
-
-        Log.wtf("reading rainbow", "color");
     }
 
     public void startPreview(View v){
@@ -409,9 +393,8 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             if(seekBarValue == 0) {
                 maliksCustomEffect(seekBarValue, stripConfig);
             }
-        } 
+        }
 
-        //otherRainbow(seekBarValue);
     }
 
     public void advanceSeekBar(int newVal){
@@ -430,7 +413,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 int galaxyIncr = 1;
 
 
-                for (int time = 0; time < MAX_DISPLAY_TIME; time+=galaxyIncr) {
+                for (int time = 0; time < MAX_DISPLAY_TIME; time+= emulatorIncr) {
                     updatePreviewButtons(time);
                     advanceSeekBar(time);
                     Thread.sleep(1);
@@ -450,44 +433,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             }
             return resp;
         }
-
-    }
-
-
-    public void otherRainbow(int seekBarValue){
-
-        //String[] color = new String[btnCount];
-        ColorObj[] colorList = new ColorObj[btnCount];
-
-        //give initial values
-        if (seekBarValue == 0) {
-            double frequency = .2;
-            for (int i = 0; i < btnCount; ++i) {
-                double red = Math.sin(frequency * i + 0) * 127 + 128;
-                double green = Math.sin(frequency * i + 2) * 127 + 128;
-                double blue = Math.sin(frequency * i + 4) * 127 + 128;
-
-                changeBulbColor(i, Color.rgb((int) red, (int) green, (int) blue));
-
-                //color[i] = Color.rgb((int) red, (int) green, (int) blue);
-                colorList[i].setColor((int) red, (int) green, (int) blue);
-                //System.out.println(color[i]);
-            }
-        }
-
-        if (seekBarValue % 100 == -1 ){
-
-            for (int i = 0; i < previewButtons.size(); i++){
-                if (rainbowIndex == 29){
-                    rainbowIndex = 0;
-                }
-                //changeBulbColor(i, colorList[rainbowIndex]);
-                previewButtons.get(i).setBackgroundColor(Color.rgb( colorList[rainbowIndex].r, colorList[i].g, colorList[i].b) );
-                rainbowIndex++;
-            }
-        }
-
-
 
     }
 
