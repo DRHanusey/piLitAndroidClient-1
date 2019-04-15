@@ -24,7 +24,7 @@ public class Pilit extends AppCompatActivity {
         PiObj piObj = (PiObj) getIntent().getSerializableExtra(User.PI_OBJ);
 
         //Display name of Pilit
-        currentPi.setText(piObj.customName);
+        currentPi.setText(piObj.piName);
 
 
     }

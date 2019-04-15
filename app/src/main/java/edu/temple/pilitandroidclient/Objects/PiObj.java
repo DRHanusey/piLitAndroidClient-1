@@ -3,22 +3,21 @@ package edu.temple.pilitandroidclient.Objects;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
-
 public class PiObj implements Serializable {
 
     int piId;
     String piAddress;
     int port;
     ArrayList<LEDconfigObj> LEDstripList;
-    public String customName;   //ie living room, bedroom, etc
+    public String piName;   //ie living room, bedroom, etc
+    public String userName;
 
 
     // constructor for adding a new Pi (no led config necessary)
-    public PiObj(String piAddress, int port, String customName) {
+    public PiObj(String piAddress, int port, String piName) {
         this.piAddress = piAddress;
         this.port = port;
-        this.customName = customName;
+        this.piName = piName;
         LEDstripList = new ArrayList<LEDconfigObj>();
     }
 
@@ -50,10 +49,14 @@ public class PiObj implements Serializable {
         return LEDstripList.get(i);
     }
 
+    public PiObj(String piName, String userName) {
+        this.piName = piName;
+        this.userName = userName;
+    }
 
     //Must override so the name is displayed in drop down on User screen
     @Override
     public String toString() {
-        return customName;
+        return piName;
     }
 }
