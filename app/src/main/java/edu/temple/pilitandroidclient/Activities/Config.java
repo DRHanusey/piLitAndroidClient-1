@@ -49,7 +49,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     SeekBar seekBarTime;
     LinearLayout ll2;
     private Socket socket;
-    JSONObject outgoingJson;
+    JSONObject outgoingJson, jsonCmd, jsonPi;
     JSONObject incomingJson = new JSONObject();
     final int MAX_DISPLAY_TIME = 9999;
 
@@ -64,9 +64,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         assignGUIelementsToJavaObjects();
         createPreviewButtons();
         createEffectsSpinner();
-
-        //testConfig = new LEDConfigPattern();
-        //testConfig = gson.fromJson("[{\"brightness\":50,\"color\":{\"b\":-1,\"g\":-1,\"r\":-1},\"effect\":\"custom\",\"range\":[2,3],\"timestamps\":[{\"brightness\":50,\"color\":{\"b\":70,\"g\":139,\"r\":255},\"time\":0},{\"brightness\":50,\"color\":{\"b\":255,\"g\":255,\"r\":139},\"time\":1268}]},{\"brightness\":50,\"color\":{\"b\":-1,\"g\":-1,\"r\":-1},\"effect\":\"custom\",\"range\":[0,4],\"timestamps\":[{\"brightness\":50,\"color\":{\"b\":174,\"g\":93,\"r\":255},\"time\":0},{\"brightness\":50,\"color\":{\"b\":255,\"g\":46,\"r\":99},\"time\":1268}]}]",LEDConfigPattern.class);
 
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,22 +86,31 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String jsonCmdStr = gson.toJson(stripConfig.commandArray);
                 System.out.println("COMMAND STR" + jsonCmdStr);
 
                 String jsonPiStr = gson.toJson(pi);
                 System.out.println("PI STR" + jsonPiStr);
 
+
                 try {
-                    outgoingJson = new JSONObject();
-                    outgoingJson.put("config",jsonCmdStr);
-                    outgoingJson.put("pi",jsonPiStr);
+                    jsonCmd = new JSONObject(jsonCmdStr);
+                    jsonPi = new JSONObject(jsonPiStr);
+
+                    jsonCmd.put("config",jsonCmdStr);
+                    jsonPi.put("pi",jsonPiStr);
+
+
+                    //outgoingJson.put("config",jsonCmdStr);
+                    //outgoingJson.put("pi",jsonPiStr);
 
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //Log.i("******Json Object:",outgoingJson.toString());
+                Log.i("******jsonCmd:",jsonCmd.toString());
+                Log.i("******jsonPi:",jsonPi.toString());
                 sendConfigToServer(outgoingJson);
             }
         });

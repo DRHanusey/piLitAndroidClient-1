@@ -19,5 +19,8 @@ public class ColorObj {
         this.g = Color.green(hexColor);
     }
 
-
+    @Override
+    public String toString() {
+        return "red: " + r + " green: " + g + " blue: " + b;
+    }
 }
