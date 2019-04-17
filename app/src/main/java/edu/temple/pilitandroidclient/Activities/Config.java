@@ -40,14 +40,14 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     Button buttonApply, buttonExample, color1, color2;
     int btnCount = 30;
     Spinner effects1, effects2;
-    EditText range1, range2;
+    EditText range1, range2, configName;
     ArrayList<Button> previewButtons;
     LEDConfigPattern stripConfig;
     Gson gson = new Gson();
     SeekBar seekBarTime;
     LinearLayout ll2;
-    private Socket socket;
-    JSONObject outgoingJson, config, pi;
+    private Socket configSocket;
+    JSONObject outgoingJson, config, pi, composite;
     JSONObject incomingJson = new JSONObject();
     JSONObject incomingJson2 = new JSONObject();
     final int MAX_DISPLAY_TIME = 9999;
@@ -66,6 +66,8 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         assignGUIelementsToJavaObjects();
         createPreviewButtons();
         createEffectsSpinner();
+        configName.setText(stripConfig.description);
+
 
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,11 +102,17 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                     outgoingJson.put("userName","testuser");
                     outgoingJson.put("password","password");
 
+
                     config = new JSONObject();
                     config.put("config",jsonConfigStr);
 
                     pi = new JSONObject();
                     pi.put("pi",jsonPiStr);
+
+                    composite = new JSONObject();
+                    composite.put("pi",pi);
+                    composite.put("config",config);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -199,7 +207,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     public void assignGUIelementsToJavaObjects(){
         buttonExample = findViewById(R.id.example);
         buttonApply = findViewById(R.id.buttonApply);
-        stripConfig = new LEDConfigPattern("new custom");
+        stripConfig = new LEDConfigPattern("default custom");
         seekBarTime = findViewById(R.id.seekBarTime);
         previewButtons = new ArrayList<Button>();
         ll2 = findViewById(R.id.linLay2);
@@ -210,6 +218,8 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         range2 = findViewById(R.id.editRange2);
         color1 = findViewById(R.id.buttonColor1);
         color2 = findViewById(R.id.buttonColor2);
+        configName = findViewById(R.id.configNameEditText);
+
     }
 
     public void createPreviewButtons(){
@@ -308,19 +318,19 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
     public void sendConfigToServer(final JSONObject loginMsg ,final JSONObject configMsg, final JSONObject piMsg ) {
-        //Insert the https address into the socket
+        //Insert the https address into the configSocket
         try {
-            socket = IO.socket(Login.SERVER_ADDRESS);
+            configSocket = IO.socket(Login.SERVER_ADDRESS);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+        configSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
             @Override
             public void call(Object... args) {
 
-                socket.emit("login",loginMsg);
+                configSocket.emit("login",loginMsg);
                 Log.i("******* loginMsg",loginMsg.toString());
             }
 
@@ -333,7 +343,8 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
                 try {
                     //Emit the command AFTER a successful login
-                    socket.emit("command", configMsg, piMsg);
+
+                    configSocket.emit("command", configMsg, piMsg);
                     Log.i("******* configMsg.get  ", configMsg.get("config").toString());
                     Log.i("******* piMsg.get  ", piMsg.get("pi").toString());
                 } catch (JSONException e) {
@@ -346,7 +357,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             public void call(Object... args) {
                 incomingJson2 = (JSONObject) args[0];
                 Log.i("&&&&&&& incomingJson2:", incomingJson2.toString());
-                socket.disconnect();
+                configSocket.disconnect();
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
@@ -354,7 +365,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 Log.i("EVENT_DISCONNET" , "disconnet from config screen");
             }
         });
-        socket.connect();
+        configSocket.connect();
         //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
     }
 
@@ -457,6 +468,9 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         runner.execute();
     }
 
+    public void saveNameBtnClick(View v){
+        stripConfig.description = configName.getText().toString();
+    }
 
     //Called from AsyncTask once/milisecond
     public void updatePreviewButtons(int seekBarValue){
