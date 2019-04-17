@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.health.SystemHealthManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
@@ -44,14 +42,18 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     Spinner effects1, effects2;
     EditText range1, range2;
     ArrayList<Button> previewButtons;
-    LEDConfigPattern stripConfig, testConfig;
+    LEDConfigPattern stripConfig;
     Gson gson = new Gson();
     SeekBar seekBarTime;
     LinearLayout ll2;
     private Socket socket;
-    JSONObject outgoingJson, jsonCmd, jsonPi;
+    JSONObject outgoingJson, config, pi;
     JSONObject incomingJson = new JSONObject();
+    JSONObject incomingJson2 = new JSONObject();
     final int MAX_DISPLAY_TIME = 9999;
+    final int SEEK_BAR_SPEED = 1;   //Change to 40 for emulator or Maliks slow ass phone
+    final int FLASH_SPEED = 200;     //smaller = faster
+    final int RAINBOW_SPEED = 100;
 
 
     @Override
@@ -81,37 +83,36 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
 
 
-        final PiObj pi = new PiObj("testpi", "username");
+        final PiObj piObj = new PiObj("testpi", "username");
 
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String jsonCmdStr = gson.toJson(stripConfig.commandArray);
-                System.out.println("COMMAND STR" + jsonCmdStr);
+                String jsonConfigStr = gson.toJson(stripConfig.commandArray);
+                System.out.println("COMMAND STR" + jsonConfigStr);
 
-                String jsonPiStr = gson.toJson(pi);
+                String jsonPiStr = gson.toJson(piObj);
                 System.out.println("PI STR" + jsonPiStr);
 
-
                 try {
-                    jsonCmd = new JSONObject(jsonCmdStr);
-                    jsonPi = new JSONObject(jsonPiStr);
+                    outgoingJson = new JSONObject();
+                    outgoingJson.put("userName","testuser");
+                    outgoingJson.put("password","password");
 
-                    jsonCmd.put("config",jsonCmdStr);
-                    jsonPi.put("pi",jsonPiStr);
+                    config = new JSONObject();
+                    config.put("config",jsonConfigStr);
 
-
-                    //outgoingJson.put("config",jsonCmdStr);
-                    //outgoingJson.put("pi",jsonPiStr);
-
-
+                    pi = new JSONObject();
+                    pi.put("pi",jsonPiStr);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.i("******jsonCmd:",jsonCmd.toString());
-                Log.i("******jsonPi:",jsonPi.toString());
-                sendConfigToServer(outgoingJson);
+
+                //Log.i("~~~~~~~config:", config.toString());
+                Log.i("~~~~~~~pi:", pi.toString());
+                sendConfigToServer(outgoingJson, config, pi);
+
             }
         });
     }
@@ -306,7 +307,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         return Integer.parseInt(strIntVal);
     }
 
-    public void sendConfigToServer(final JSONObject outgoingJson) {
+    public void sendConfigToServer(final JSONObject loginMsg ,final JSONObject configMsg, final JSONObject piMsg ) {
         //Insert the https address into the socket
         try {
             socket = IO.socket(Login.SERVER_ADDRESS);
@@ -318,20 +319,39 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
             @Override
             public void call(Object... args) {
-                socket.emit("command", outgoingJson);
-                Log.i("******* outgoingJson", outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+
+                socket.emit("login",loginMsg);
+                Log.i("******* loginMsg",loginMsg.toString());
             }
 
+        }).on("login", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                incomingJson = (JSONObject)args[0];
+                Log.i("&&&&&&& incomingJson:",incomingJson.toString());
+
+
+                try {
+                    //Emit the command AFTER a successful login
+                    socket.emit("command", configMsg, piMsg);
+                    Log.i("******* configMsg.get  ", configMsg.get("config").toString());
+                    Log.i("******* piMsg.get  ", piMsg.get("pi").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }).on("command", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                incomingJson = (JSONObject) args[0];
-                Log.i("&&&&&&& incomingJson:", incomingJson.toString());     //Print JSON to Logcat(bottom of screen
+                incomingJson2 = (JSONObject) args[0];
+                Log.i("&&&&&&& incomingJson2:", incomingJson2.toString());
                 socket.disconnect();
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                Log.i("EVENT_DISCONNET" , "disconnet from config screen");
             }
         });
         socket.connect();
@@ -354,7 +374,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 .setPositiveButton("ok", new ColorPickerClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                        btn.setBackgroundColor(selectedColor);
+                        //btn.setBackgroundColor(selectedColor);
                         colorSelected(selectedColor, command);
                     }
                 })
@@ -366,7 +386,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 .build()
                 .show();
     }
-
 
     public void colorSelected(int col, Command command) {
 
@@ -438,23 +457,46 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         runner.execute();
     }
 
-    boolean flag = true;
-    int x= 0x1;
-    int rainbowIndex = 0,
-        customIndex = 0;
-    String[] rainbowStr = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
-    //seekBarValue = milliseconds, range 0-9999
+
+    //Called from AsyncTask once/milisecond
     public void updatePreviewButtons(int seekBarValue){
 
         //TODO effects1.getSelected.... is wrong. What if first comand is solid, second command is custom?
 
-        if ( effects1.getSelectedItem().equals("rainbow") ) {
-            dansRainbowEffect(seekBarValue);
-        } else if( effects1.getSelectedItem().equals("flash") ) {
-            //TODO
+        if ( effects1.getSelectedItem().equals("rainbow") || effects2.getSelectedItem().equals("rainbow") ) {
+            dansRainbowEffect(seekBarValue, stripConfig);
+        }
 
-        } else if ( effects1.getSelectedItem().equals("custom") ){
-                maliksCustomEffect(seekBarValue, stripConfig);
+        if ( effects1.getSelectedItem().equals("flash") || effects2.getSelectedItem().equals("flash")) {
+            flashEffect(seekBarValue, stripConfig);
+        }
+
+        if ( effects1.getSelectedItem().equals("custom") || effects2.getSelectedItem().equals("custom")){
+            maliksCustomEffect(seekBarValue, stripConfig);
+        }
+
+    }
+
+    private void flashEffect(int seekBarValue, LEDConfigPattern stripConfig) {
+        if (seekBarValue == 0){
+            stripConfig.createFlashCommandArray();
+        }
+
+        if (seekBarValue % FLASH_SPEED == 0 && !stripConfig.flashOn){
+            for (int i = 0; i < stripConfig.flashCommands.size(); i++){
+                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length-1; j++){
+                    changeBulbColor(stripConfig.flashCommands.get(i).range[j],
+                            stripConfig.flashCommands.get(i).color);
+                }
+            }
+            stripConfig.flashOn = true;
+        }else if (seekBarValue % FLASH_SPEED == 0 && stripConfig.flashOn){
+            for (int i = 0; i < stripConfig.flashCommands.size(); i++){
+                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length-1; j++){
+                    changeBulbColor(stripConfig.flashCommands.get(i).range[j], Color.BLACK);
+                }
+            }
+            stripConfig.flashOn = false;
         }
 
     }
@@ -471,11 +513,8 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         protected String doInBackground(String... params) {
 
             try {
-                int emulatorIncr = 40;
-                int galaxyIncr = 1;
-
-
-                for (int time = 0; time < MAX_DISPLAY_TIME; time+= emulatorIncr) {
+                //GALAXY_SEEKBAR_INCR
+                for (int time = 0; time < MAX_DISPLAY_TIME; time+= SEEK_BAR_SPEED) {
                     updatePreviewButtons(time);
                     advanceSeekBar(time);
                     Thread.sleep(1);
@@ -494,54 +533,58 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
-    public  void dansRainbowEffect(int seekBarValue){
+    int rainbowIndex = 0;
+    String[] rainbowStr = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
+    public  void dansRainbowEffect(int seekBarValue, LEDConfigPattern stripConfig){
 
-        if (seekBarValue % 100 == 0 ){
+        if (seekBarValue == 0){
+            //stripConfig.createRainbowCommandArray();
+            stripConfig.createRainbowRangeArray();
+        }
 
-            for (int i = 0; i < previewButtons.size(); i++){
+        if (seekBarValue % RAINBOW_SPEED == 0 ){
+
+            for (int i = 0; i < stripConfig.rangeForRainbowEffect.size(); i++){
                 if (rainbowIndex == 7){
                     rainbowIndex = 0;
                 }
-                changeBulbColor(i,Color.parseColor(rainbowStr[rainbowIndex]));
+                changeBulbColor(stripConfig.rangeForRainbowEffect.get(i),Color.parseColor(rainbowStr[rainbowIndex]));
                 rainbowIndex++;
             }
         }
+
     }
 
     public void maliksCustomEffect(int seekBarValue, LEDConfigPattern stripCon){
 
         //Create ArrayList of Timestamps on initial call (at time 0)
         if (seekBarValue == 0) {
-            stripCon.createTimestampArray();
+            stripCon.createCustomTimestampArray();
         }
 
 
-        for (int i = 0; i < stripCon.allTimestamps.size(); i++) {
+        for (int i = 0; i < stripCon.allCustomTimestamps.size(); i++) {
 
-            //System.out.println("stripCon.allTimestamps.get("+i+").time = " + stripCon.allTimestamps.get(i).time);
-            if ( stripCon.allTimestamps.get(i).time <= seekBarValue && !stripCon.allTimestamps.get(i).colorDeployed ){
-                stripCon.allTimestamps.get(i).colorDeployed = true;
+            //System.out.println("stripCon.allCustomTimestamps.get("+i+").time = " + stripCon.allCustomTimestamps.get(i).colorDeployed);
+            if ( stripCon.allCustomTimestamps.get(i).time <= seekBarValue && !stripCon.allCustomTimestamps.get(i).colorDeployed ){
+                stripCon.allCustomTimestamps.get(i).colorDeployed = true;
 
-                //System.out.println("stripCon.allTimestamps.get(i).time = " + stripCon.allTimestamps.get(i).time);
-                for (int j = 0; j < stripCon.allTimestamps.get(i).range.length; j++){
-                    //System.out.println("stripCon.allTimestamps.get(i).range[j] = " + stripCon.allTimestamps.get(i).range[j]);
-                    changeBulbColor(stripCon.allTimestamps.get(i).range[j],
-                            stripCon.allTimestamps.get(i).color);
+                //System.out.println("stripCon.allCustomTimestamps.get(i).time = " + stripCon.allCustomTimestamps.get(i).time);
+                for (int j = 0; j < stripCon.allCustomTimestamps.get(i).range.length; j++){
+                    //System.out.println("stripCon.allCustomTimestamps.get(i).range[j] = " + stripCon.allCustomTimestamps.get(i).range[j]);
+                    changeBulbColor(stripCon.allCustomTimestamps.get(i).range[j],
+                            stripCon.allCustomTimestamps.get(i).color);
                 }
             }
-
         }
-/*
-        if (seekBarValue % 100 == 0 ){
 
-            for (int i = 0; i < previewButtons.size(); i++){
-                if (seekBarValue == myMap.get() ){
-                    ;
-                }
-                changeBulbColor(i,Color.parseColor();//rainbowStr[rainbowIndex]));
-                //rainbowIndex++;
+
+        if (seekBarValue > MAX_DISPLAY_TIME - SEEK_BAR_SPEED) {
+            System.out.println("COLOR DEPLOYED SET TO FALSE");
+            for (int i = 0; i < stripCon.allCustomTimestamps.size(); i++) {
+                stripCon.allCustomTimestamps.get(i).colorDeployed = false;
             }
         }
-*/
+
     }
 }
