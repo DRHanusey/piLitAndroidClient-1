@@ -23,7 +23,7 @@ import io.socket.emitter.Emitter;
 public class Login extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     Button loginButton, registerButton, sendTestMsgButton, configButton;
-    private Socket socket;
+    static public Socket socket;
     public static final String USER_OBJ = "passing user obj";
     JSONObject outgoingJson = new JSONObject();
     JSONObject incomingJson = new JSONObject();
@@ -47,6 +47,13 @@ public class Login extends AppCompatActivity {
         sendTestMsgButton = findViewById(R.id.buttonTest);
         configButton = findViewById(R.id.buttonConfig);
 
+        //Insert the https address into the socket
+        try {
+            socket = IO.socket(SERVER_ADDRESS);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
 
         // Perform login button action
         View.OnClickListener loginOCL = new View.OnClickListener() {
@@ -65,7 +72,9 @@ public class Login extends AppCompatActivity {
                     outgoingJson.put("userName",email);
                     outgoingJson.put("password",pword);
                     sendMsgToServer(outgoingJson);
-                    //loggedInUser = (String)incomingJson.get("userName");
+                    //todo get user info from server
+                    //incomingJson
+
 
 
                 } catch (JSONException e) {
@@ -99,12 +108,14 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //Insert the https address into the socket
+                //Insert the https address into the socket\
+                /*
                 try {
                     socket = IO.socket(SERVER_ADDRESS);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
+                */
 
                 //Create the Json to be sent to server
                 try {
@@ -127,12 +138,13 @@ public class Login extends AppCompatActivity {
                     public void call(Object... args) {
                         incomingJson = (JSONObject)args[0];
                         Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
-                        //Toast.makeText(getApplicationContext(), incomingJson.toString(), Toast.LENGTH_SHORT).show();
-                        socket.disconnect();
+
+                        //socket.disconnect();
                     }
                 }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
+                        Log.i("EVENT_DISCONNET", "disconnet from login screen");
                     }
                 });
                 socket.connect();

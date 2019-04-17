@@ -23,6 +23,7 @@ public class Marketplace extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marketplace);
 
+        //todo 1. connect to server 2. return is list of configs 3.for loop to convert configs to java obj
 
         homeButton = findViewById(R.id.homeButton);
 
