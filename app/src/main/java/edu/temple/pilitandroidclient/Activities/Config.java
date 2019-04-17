@@ -68,7 +68,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         createEffectsSpinner();
         configName.setText(stripConfig.description);
 
-
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,10 +97,11 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 System.out.println("PI STR" + jsonPiStr);
 
                 try {
+                    /*
                     outgoingJson = new JSONObject();
                     outgoingJson.put("userName","testuser");
                     outgoingJson.put("password","password");
-
+                    */
 
                     config = new JSONObject();
                     config.put("config",jsonConfigStr);
@@ -119,7 +119,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
                 //Log.i("~~~~~~~config:", config.toString());
                 Log.i("~~~~~~~pi:", pi.toString());
-                sendConfigToServer(outgoingJson, config, pi);
+                sendConfigToServer(config, pi);
 
             }
         });
@@ -317,21 +317,18 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         return Integer.parseInt(strIntVal);
     }
 
-    public void sendConfigToServer(final JSONObject loginMsg ,final JSONObject configMsg, final JSONObject piMsg ) {
-        //Insert the https address into the configSocket
-        try {
-            configSocket = IO.socket(Login.SERVER_ADDRESS);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+    public void sendConfigToServer(final JSONObject configMsg, final JSONObject piMsg ) {
 
         configSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
             @Override
             public void call(Object... args) {
 
+                /*
                 configSocket.emit("login",loginMsg);
                 Log.i("******* loginMsg",loginMsg.toString());
+                */
+
             }
 
         }).on("login", new Emitter.Listener() {
@@ -602,3 +599,58 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 }
+
+/*
+ public void sendConfigToServer(final JSONObject loginMsg ,final JSONObject configMsg, final JSONObject piMsg ) {
+        //Insert the https address into the configSocket
+
+        try {
+            configSocket = IO.socket(Login.SERVER_ADDRESS);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        configSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+
+@Override
+public void call(Object... args) {
+
+        configSocket.emit("login",loginMsg);
+        Log.i("******* loginMsg",loginMsg.toString());
+        }
+
+        }).on("login", new Emitter.Listener() {
+@Override
+public void call(Object... args) {
+        incomingJson = (JSONObject)args[0];
+        Log.i("&&&&&&& incomingJson:",incomingJson.toString());
+
+
+        try {
+        //Emit the command AFTER a successful login
+
+        configSocket.emit("command", configMsg, piMsg);
+        Log.i("******* configMsg.get  ", configMsg.get("config").toString());
+        Log.i("******* piMsg.get  ", piMsg.get("pi").toString());
+        } catch (JSONException e) {
+        e.printStackTrace();
+        }
+
+        }
+        }).on("command", new Emitter.Listener() {
+@Override
+public void call(Object... args) {
+        incomingJson2 = (JSONObject) args[0];
+        Log.i("&&&&&&& incomingJson2:", incomingJson2.toString());
+        configSocket.disconnect();
+        }
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+@Override
+public void call(Object... args) {
+        Log.i("EVENT_DISCONNET" , "disconnet from config screen");
+        }
+        });
+        configSocket.connect();
+        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
+        }
+ */
