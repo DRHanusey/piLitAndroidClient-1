@@ -10,7 +10,7 @@ public class UserProfileObj implements Serializable {
 
     public String userEmail;
     public ArrayList<PiObj> PiList;
-    public ArrayList<LEDconfigObj> savedConfigs;       //For what a user creates a configs OR saves a public config.
+    public ArrayList<LEDconfigObj> savedConfigs;       //For what a user creates a configs OR saves a public commandArray.
 
     //For use when loading user with PiLits already initialized
     public UserProfileObj(String userEmail, ArrayList<PiObj> piList) {

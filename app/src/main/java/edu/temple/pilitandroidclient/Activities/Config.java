@@ -31,6 +31,7 @@ import edu.temple.pilitandroidclient.Objects.Command;
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.Objects.PiObj;
 import edu.temple.pilitandroidclient.Objects.Timestamp;
+import edu.temple.pilitandroidclient.Objects.commandRequest;
 import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -85,41 +86,47 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
 
 
+        final commandRequest testRequest = new commandRequest("testpi", "testuser", "partyLights");
         final PiObj piObj = new PiObj("testpi", "username");
 
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String jsonConfigStr = gson.toJson(stripConfig.commandArray);
+                String jsonConfigStr = gson.toJson(testRequest);
+                //String jsonConfigStr = gson.toJson(stripConfig.commandArray);
                 System.out.println("COMMAND STR" + jsonConfigStr);
 
                 String jsonPiStr = gson.toJson(piObj);
                 System.out.println("PI STR" + jsonPiStr);
 
                 try {
+
+                    config = new JSONObject(jsonConfigStr);
+
                     outgoingJson = new JSONObject();
                     outgoingJson.put("userName","testuser");
                     outgoingJson.put("password","password");
 
 
-                    config = new JSONObject();
-                    config.put("config",jsonConfigStr);
+                   // config = new JSONObject();
+                   // config.put("commandArray",jsonConfigStr);
 
                     pi = new JSONObject();
                     pi.put("pi",jsonPiStr);
 
                     composite = new JSONObject();
                     composite.put("pi",pi);
-                    composite.put("config",config);
+                    composite.put("commandArray",config);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                //Log.i("~~~~~~~config:", config.toString());
+                //Log.i("~~~~~~~commandArray:", commandArray.toString());
                 Log.i("~~~~~~~pi:", pi.toString());
-                sendConfigToServer(outgoingJson, config, pi);
+                sendConfigToServer(outgoingJson, config);
+                //sendConfigToServer(outgoingJson, commandArray, pi);
 
             }
         });
@@ -317,7 +324,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         return Integer.parseInt(strIntVal);
     }
 
-    public void sendConfigToServer(final JSONObject loginMsg ,final JSONObject configMsg, final JSONObject piMsg ) {
+    public void sendConfigToServer(final JSONObject loginMsg, final JSONObject configMsg) {
         //Insert the https address into the configSocket
         try {
             configSocket = IO.socket(Login.SERVER_ADDRESS);
@@ -340,17 +347,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 incomingJson = (JSONObject)args[0];
                 Log.i("&&&&&&& incomingJson:",incomingJson.toString());
 
-
-                try {
-                    //Emit the command AFTER a successful login
-
-                    configSocket.emit("command", configMsg, piMsg);
-                    Log.i("******* configMsg.get  ", configMsg.get("config").toString());
-                    Log.i("******* piMsg.get  ", piMsg.get("pi").toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                configSocket.emit("command", configMsg); //
             }
         }).on("command", new Emitter.Listener() {
             @Override
@@ -362,7 +359,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.i("EVENT_DISCONNET" , "disconnet from config screen");
+                Log.i("EVENT_DISCONNET" , "disconnet from commandArray screen");
             }
         });
         configSocket.connect();
