@@ -39,7 +39,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    Button buttonApply, buttonExample, color1, color2;
+    Button buttonApply,buttonSave, buttonExample, color1, color2;
     int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2;
@@ -134,7 +134,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                     "Enter a range using '-' ',' 'odd' 'even'", Toast.LENGTH_LONG).show();
             return;
         }
-
+        //CUSTOM EFFECT
         if (selectedEffect.equalsIgnoreCase("custom")){
 
             if (stripConfig.commandArray.size() == indexOfCommand) {
@@ -157,7 +157,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             //Assigns color value to timestamp
             colorPicker(button, stripConfig.commandArray.get(indexOfCommand));
         }
-
+        //SOLID OR FLASH EEFECT
         if (selectedEffect.equalsIgnoreCase("solid") ||
                 selectedEffect.equalsIgnoreCase("flash")){
             //No timestamps created
@@ -174,7 +174,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             colorPicker(button, command);
             stripConfig.commandArray.add(command);
         }
-
+        //RAINBOW EFFECT
         if (selectedEffect.equalsIgnoreCase("rainbow")){
             //No color selection is necessary
 
@@ -198,6 +198,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     public void assignGUIelementsToJavaObjects(){
         buttonExample = findViewById(R.id.example);
         buttonApply = findViewById(R.id.buttonApply);
+        buttonSave = findViewById(R.id.buttonSave);
         stripConfig = new LEDConfigPattern("new custom");
         seekBarTime = findViewById(R.id.seekBarTime);
         previewButtons = new ArrayList<Button>();
@@ -233,7 +234,13 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         effects1.setAdapter(effectAdapter);
         effects2.setAdapter(effectAdapter);
     }
-
+    /*********************************************************************************************
+     * This function parses the range of lights                   *
+     * Preconditions: 																			 *
+     * @params String                                                                            *
+     * Postconditions:  																		 *
+     * @return ArrayList<Integer>   															 *
+     *********************************************************************************************/
     public ArrayList<Integer> parseRange(String strInput) {
         ArrayList<Integer> range = new ArrayList<>();
 
