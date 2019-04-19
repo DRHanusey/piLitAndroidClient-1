@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.Objects.UserProfileObj;
 import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
 import edu.temple.pilitandroidclient.Objects.PiObj;
@@ -71,8 +73,12 @@ public class User extends AppCompatActivity{
     public void createSavedConfigList(UserProfileObj userProfileObj){
 
         //Creates adapter which populates the list view
-        ArrayAdapter<LEDconfigObj> configAdapter = new ArrayAdapter<LEDconfigObj>(this,
-                android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
+        //NEW CODE
+        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
+
+        //OLD CODE
+        //ArrayAdapter<LEDconfigObj> configAdapter = new ArrayAdapter<LEDconfigObj>(this,
+                //android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
 
         //Passes the adapter to the list view
         configList.setAdapter(configAdapter);
