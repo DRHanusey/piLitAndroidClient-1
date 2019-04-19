@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
-import edu.temple.pilitandroidclient.Objects.PiObj;
 import edu.temple.pilitandroidclient.Objects.Timestamp;
 import edu.temple.pilitandroidclient.Objects.commandRequest;
 import edu.temple.pilitandroidclient.R;
@@ -48,7 +47,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     SeekBar seekBarTime;
     LinearLayout ll2;
     private Socket configSocket;
-    JSONObject outgoingJson, config, pi, composite;
+    JSONObject loginInfoJson, piAndCommandJson, pi, composite;
     JSONObject incomingJson = new JSONObject();
     JSONObject incomingJson2 = new JSONObject();
     final int MAX_DISPLAY_TIME = 9999;
@@ -86,48 +85,24 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
 
 
-        final commandRequest testRequest = new commandRequest("testpi", "testuser", "partyLights");
-        final PiObj piObj = new PiObj("testpi", "username");
-
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String jsonConfigStr = gson.toJson(testRequest);
-                //String jsonConfigStr = gson.toJson(stripConfig.commandArray);
-                System.out.println("COMMAND STR" + jsonConfigStr);
-
-                String jsonPiStr = gson.toJson(piObj);
-                System.out.println("PI STR" + jsonPiStr);
+                final commandRequest testRequest = new commandRequest("testpi", "testuser", "partyLights");
+                String piAndCommandString = gson.toJson(testRequest);
+                //System.out.println("COMMAND STR" + jsonConfigStr);
 
                 try {
+                    piAndCommandJson = new JSONObject(piAndCommandString);
 
-                    config = new JSONObject(jsonConfigStr);
-
-                    outgoingJson = new JSONObject();
-                    outgoingJson.put("userName","testuser");
-                    outgoingJson.put("password","password");
-
-
-                   // config = new JSONObject();
-                   // config.put("commandArray",jsonConfigStr);
-
-                    pi = new JSONObject();
-                    pi.put("pi",jsonPiStr);
-
-                    composite = new JSONObject();
-                    composite.put("pi",pi);
-                    composite.put("commandArray",config);
-
+                    loginInfoJson = new JSONObject();
+                    loginInfoJson.put("userName","testuser");
+                    loginInfoJson.put("password","password");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                //Log.i("~~~~~~~commandArray:", commandArray.toString());
-                Log.i("~~~~~~~pi:", pi.toString());
-                sendConfigToServer(outgoingJson, config);
-                //sendConfigToServer(outgoingJson, commandArray, pi);
-
+                sendConfigToServer(loginInfoJson, piAndCommandJson);
             }
         });
     }
@@ -347,6 +322,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 incomingJson = (JSONObject)args[0];
                 Log.i("&&&&&&& incomingJson:",incomingJson.toString());
 
+                Log.i("CONFIG MSG::::::",configMsg.toString());
                 configSocket.emit("command", configMsg); //
             }
         }).on("command", new Emitter.Listener() {

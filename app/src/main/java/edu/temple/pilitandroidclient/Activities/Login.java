@@ -130,7 +130,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void call(Object... args) {
                         socket.emit("login", outgoingJson);
-                        Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+                        Log.i("******* loginInfoJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
                     }
 
                 }).on("login", new Emitter.Listener() {
@@ -178,7 +178,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void call(Object... args) {
                 socket.emit("login", outgoingJson);
-                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+                Log.i("******* loginInfoJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
             }
 
         }).on("login", new Emitter.Listener() {
