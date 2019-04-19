@@ -25,7 +25,7 @@ public class User extends AppCompatActivity{
     private ListView configList;
     public static final String PI_OBJ = "passing pi obj";
 
-
+    
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,12 +71,11 @@ public class User extends AppCompatActivity{
 
         //Creates adapter which populates the list view
         //NEW CODE- Anika
-        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.configs);
+        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
 
         //Passes the adapter to the list view
         configList.setAdapter(configAdapter);
     }
-
 
     public void createPiDropdown(UserProfileObj userProfileObj){
         //Creates adapter which populates the spinner(dropdown)
