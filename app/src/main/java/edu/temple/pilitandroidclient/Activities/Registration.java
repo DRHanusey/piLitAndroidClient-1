@@ -74,14 +74,14 @@ public class Registration extends AppCompatActivity {
                     outgoingJson.put("userName", strUserName);
                     outgoingJson.put("password",passwordStr);
                     outgoingJson.put("email", email);
-                    //outgoingJson.put("userName", "testUserNAme222");
-                    //outgoingJson.put("password","testPassWord");
-                    //outgoingJson.put("email", "testEmail@email.com");
+                    //loginInfoJson.put("userName", "testUserNAme222");
+                    //loginInfoJson.put("password","testPassWord");
+                    //loginInfoJson.put("email", "testEmail@email.com");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                //Log.i("******Json Object:",outgoingJson.toString());
+                //Log.i("******Json Object:",loginInfoJson.toString());
                 sendMsgToServer(outgoingJson);
 
                 //Toast.makeText(getApplicationContext(),userReg.getUserName()+" "+userReg.getPassword(),Toast.LENGTH_LONG).show();
@@ -104,7 +104,7 @@ public class Registration extends AppCompatActivity {
             @Override
             public void call(Object... args) {
                 socket.emit("register", outgoingJson);
-                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+                Log.i("******* loginInfoJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
             }
 
         }).on("register", new Emitter.Listener() {
