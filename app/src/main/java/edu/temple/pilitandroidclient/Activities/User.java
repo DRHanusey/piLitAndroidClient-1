@@ -25,7 +25,7 @@ public class User extends AppCompatActivity{
     private ListView configList;
     public static final String PI_OBJ = "passing pi obj";
 
-
+    
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +37,6 @@ public class User extends AppCompatActivity{
         selectPi = findViewById(R.id.buttonSelectPi);
         marketPlace = findViewById(R.id.buttonMarketPlace);
         configList = findViewById(R.id.listSavedConfigs);
-
-
 
         //The userProfile which has been passed from the login screen
         UserProfileObj userProfileObj = (UserProfileObj) getIntent().getSerializableExtra(Login.USER_OBJ);
@@ -72,17 +70,12 @@ public class User extends AppCompatActivity{
     public void createSavedConfigList(UserProfileObj userProfileObj){
 
         //Creates adapter which populates the list view
-        //NEW CODE
-        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.configs);
-
-        //OLD CODE
-        //ArrayAdapter<LEDconfigObj> configAdapter = new ArrayAdapter<LEDconfigObj>(this,
-                //android.R.layout.simple_list_item_1, userProfileObjTEST.configs);
+        //NEW CODE- Anika
+        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
 
         //Passes the adapter to the list view
         configList.setAdapter(configAdapter);
     }
-
 
     public void createPiDropdown(UserProfileObj userProfileObj){
         //Creates adapter which populates the spinner(dropdown)

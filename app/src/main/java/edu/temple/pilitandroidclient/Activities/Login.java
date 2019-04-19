@@ -56,6 +56,7 @@ public class Login extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
         // Perform login button action
         View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
@@ -64,6 +65,8 @@ public class Login extends AppCompatActivity {
 
                 String email = inputEmail.getText().toString();
                 String pword = inputPassword.getText().toString();
+
+
 
                 try {
                     outgoingJson.put("userName",email);
@@ -86,6 +89,8 @@ public class Login extends AppCompatActivity {
                 registerMe();
             }
         });
+
+
     }
 
     public void launchUserActivity() throws JSONException {
@@ -133,6 +138,7 @@ public class Login extends AppCompatActivity {
         });
         socket.connect();
         //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
+
     }
 
     public void registerMe(){
