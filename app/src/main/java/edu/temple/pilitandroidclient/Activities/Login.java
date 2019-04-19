@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URISyntaxException;
@@ -31,6 +34,8 @@ public class Login extends AppCompatActivity {
     JSONObject incomingJson = new JSONObject();
     JSONObject testJson = new JSONObject();
     UserProfileObj userProfileObj;
+    public static String userName;
+    Gson gson = new Gson();
 
 
     public static final String SERVER_ADDRESS =  "https://pi-lit.herokuapp.com";
@@ -63,13 +68,12 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO: on successful login create UserProfileObj and launches User activity
 
-                String email = inputEmail.getText().toString();
+                userName = inputEmail.getText().toString();
                 String pword = inputPassword.getText().toString();
 
 
-
                 try {
-                    outgoingJson.put("userName",email);
+                    outgoingJson.put("userName",userName);
                     outgoingJson.put("password",pword);
                     sendMsgToServer(outgoingJson);
 
@@ -82,26 +86,34 @@ public class Login extends AppCompatActivity {
         };
         loginButton.setOnClickListener(loginOCL);
 
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerMe();
             }
         });
-
-
     }
 
     public void launchUserActivity() throws JSONException {
 
+
         String loggedInUser = (String)incomingJson.get("userName");
-        createTestObj(loggedInUser);
+        //createTestObj(loggedInUser);
+
+        //createUserObject(incomingJson);
+        userProfileObj = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
 
         //Launches the home activity and passes a user profile obj
         Intent intent = new Intent(Login.this, User.class);
         intent.putExtra(USER_OBJ,userProfileObj);
         startActivity(intent);
+    }
+
+    private void createUserObject(JSONObject incomingJson) {
+
+        //Staff staff = gson.fromJson(jsonInString, Staff.class);
+
+        //userProfileObj = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
     }
 
     public void sendMsgToServer(final JSONObject outgoingJson){
@@ -203,57 +215,3 @@ public class Login extends AppCompatActivity {
     }
 
 }
-
-
-
-/*
-        //****************SEND TEST MSG**************************
-        View.OnClickListener testOCL = new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-
-                //Insert the https address into the socket\
-
-                //try {
-                //    socket = IO.socket(SERVER_ADDRESS);
-                //} catch (URISyntaxException e) {
-                //    e.printStackTrace();
-                //}
-
-
-//Create the Json to be sent to server
-                try {
-                        outgoingJson.put("userName","testuser");
-                        outgoingJson.put("password","password");
-                        } catch (JSONException e) {
-                        e.printStackTrace();
-                        }
-
-                        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
-@Override
-public void call(Object... args) {
-        socket.emit("login", outgoingJson);
-        Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
-        }
-
-        }).on("login", new Emitter.Listener() {
-@Override
-public void call(Object... args) {
-        incomingJson = (JSONObject)args[0];
-        Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
-
-        //socket.disconnect();
-        }
-        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-@Override
-public void call(Object... args) {
-        Log.i("EVENT_DISCONNET", "disconnet from LOGIN screen");
-        }
-        });
-        socket.connect();
-        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
-        }
-        };
-        sendTestMsgButton.setOnClickListener(testOCL);
- */

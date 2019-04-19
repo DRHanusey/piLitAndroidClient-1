@@ -8,4 +8,9 @@ public class commandRequest {
         pi = new PiObj(piName, userName);
         config = new LEDConfigPattern(LEDconfigPatternDescription, 30);
     }
+
+    public commandRequest(String piName, String userName, LEDConfigPattern configPattern){
+        pi = new PiObj(piName, userName);
+        config = configPattern;
+    }
 }

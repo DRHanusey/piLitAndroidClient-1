@@ -21,6 +21,8 @@ import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.gson.Gson;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URISyntaxException;
@@ -37,7 +39,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    Button buttonApply, buttonExample, color1, color2, buttonSave;
+    Button buttonApply, buttonExample, color1, color2;
     int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2, configName;
@@ -47,7 +49,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     SeekBar seekBarTime;
     LinearLayout ll2;
     private Socket configSocket;
-    JSONObject loginInfoJson, piAndCommandJson, pi, composite;
+    JSONObject piAndCommandJson;
     JSONObject incomingJson = new JSONObject();
     JSONObject incomingJson2 = new JSONObject();
     final int MAX_DISPLAY_TIME = 9999;
@@ -88,16 +90,13 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final commandRequest testRequest = new commandRequest("testpi", "testuser", "partyLights");
+                //final commandRequest testRequest = new commandRequest("testpi", "testuser", "partyLights");
+                final commandRequest testRequest = new commandRequest("testpi","testuser", stripConfig);
                 String piAndCommandString = gson.toJson(testRequest);
                 //System.out.println("COMMAND STR" + jsonConfigStr);
 
                 try {
                     piAndCommandJson = new JSONObject(piAndCommandString);
-
-                    loginInfoJson = new JSONObject();
-                    loginInfoJson.put("userName","testuser");
-                    loginInfoJson.put("password","password");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -108,15 +107,32 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
+    public void saveConfig(View v) throws JSONException {
+        String stripConfigString = gson.toJson(stripConfig);
+        JSONObject stripConfigJson = new JSONObject(stripConfigString);
+
+        Login.socket.emit("saveConfig", stripConfigJson);
+        Log.i("&&&&&&& outgoingJson:",stripConfigJson.toString());
+
+        Login.socket.on("saveConfig", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                incomingJson = (JSONObject)args[0];
+                Log.i("&&&&&&& incomingJson2:",incomingJson.toString());
+            }
+        });
+    }
+
+
     public void sendConfigToServer2(final JSONObject configMsg) {
         Login.socket.emit("command", configMsg);
+        Log.i("&&&&&&& outgoingJson:",configMsg.toString());
 
         Login.socket.on("command", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 incomingJson = (JSONObject)args[0];
                 Log.i("&&&&&&& incomingJson2:",incomingJson.toString());
-
             }
         });
     }

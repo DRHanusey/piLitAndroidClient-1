@@ -1,12 +1,22 @@
 package edu.temple.pilitandroidclient.Objects;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import edu.temple.pilitandroidclient.Activities.Login;
+
 public class LEDConfigPattern {
+    public String configName = "default config name";
+    public String userName = Login.userName;
     public String description;                     //description of pattern, e.g. party lights, sleep lights, etc.
     public ArrayList<Command> commandArray;        //array of commands that make up the configuration pattern
+    public boolean isPublic = true;
+    public int ledNum = 30;
+
+    //for android use only
     public ArrayList<Timestamp> allCustomTimestamps;
     public ArrayList<Integer> rangeForRainbowEffect;
     public ArrayList<Command> flashCommands;
