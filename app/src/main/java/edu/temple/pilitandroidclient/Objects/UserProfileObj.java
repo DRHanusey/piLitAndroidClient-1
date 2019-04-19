@@ -10,7 +10,9 @@ public class UserProfileObj implements Serializable {
 
     public String userEmail;
     public ArrayList<PiObj> PiList;
-    public ArrayList<LEDconfigObj> savedConfigs;       //For what a user creates a configs OR saves a public commandArray.
+    //NEW
+    public ArrayList<LEDConfigPattern> savedConfigs;       //For what a user creates a configs OR saves a public commandArray.
+    //OLD public ArrayList<LEDconfigObj> savedConfigs;       //For what a user creates a configs OR saves a public commandArray.
 
     //For use when loading user with PiLits already initialized
     public UserProfileObj(String userEmail, ArrayList<PiObj> piList) {
@@ -23,7 +25,9 @@ public class UserProfileObj implements Serializable {
     public UserProfileObj(String userEmail) {
         this.userEmail = userEmail;
         PiList = new ArrayList<PiObj>();
-        savedConfigs = new ArrayList<LEDconfigObj>();
+        //NEW
+        savedConfigs = new ArrayList<LEDConfigPattern>();
+        //OLD savedConfigs = new ArrayList<LEDconfigObj>();
     }
 
     public void addPi (String piAddress, int port, String name){
