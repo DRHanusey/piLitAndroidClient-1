@@ -4,11 +4,12 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import edu.temple.pilitandroidclient.Activities.Login;
 
-public class LEDConfigPattern {
+public class LEDConfigPattern implements Serializable {
     public String configName = "default config name";
     public String userName = Login.userName;
     public String description;                     //description of pattern, e.g. party lights, sleep lights, etc.
@@ -20,7 +21,6 @@ public class LEDConfigPattern {
     public ArrayList<Timestamp> allCustomTimestamps;
     public ArrayList<Integer> rangeForRainbowEffect;
     public ArrayList<Command> flashCommands;
-    public int ledNum;
     public boolean flashOn = false;
 
     public LEDConfigPattern(String description, int numberOfLights) {
@@ -55,7 +55,6 @@ public class LEDConfigPattern {
         }
     }
 
-
     public void createCustomTimestampArray(){
         Gson gson = new Gson();
         String jsonCmdStr = gson.toJson(this.commandArray);
@@ -73,4 +72,8 @@ public class LEDConfigPattern {
         }
     }
 
+    @Override
+    public String toString() {
+        return configName;
+    }
 }
