@@ -3,16 +3,19 @@ package edu.temple.pilitandroidclient.Objects;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
-import edu.temple.pilitandroidclient.Objects.PiObj;
-
 public class UserProfileObj implements Serializable {
 
     public String userEmail;
     public ArrayList<PiObj> PiList;
     //NEW
-    public ArrayList<LEDConfigPattern> savedConfigs;       //For what a user creates a configs OR saves a public commandArray.
-    //OLD public ArrayList<LEDconfigObj> savedConfigs;       //For what a user creates a configs OR saves a public commandArray.
+    public ArrayList<LEDConfigPattern> configs;       //For what a user creates a configs OR saves a public commandArray.
+    //OLD public ArrayList<LEDconfigObj> configs;       //For what a user creates a configs OR saves a public commandArray.
+
+
+    @Override
+    public String toString() {
+        return "LEDconfig - userEmail: " + userEmail;
+    }
 
     //For use when loading user with PiLits already initialized
     public UserProfileObj(String userEmail, ArrayList<PiObj> piList) {
@@ -26,8 +29,8 @@ public class UserProfileObj implements Serializable {
         this.userEmail = userEmail;
         PiList = new ArrayList<PiObj>();
         //NEW
-        savedConfigs = new ArrayList<LEDConfigPattern>();
-        //OLD savedConfigs = new ArrayList<LEDconfigObj>();
+        configs = new ArrayList<LEDConfigPattern>();
+        //OLD configs = new ArrayList<LEDconfigObj>();
     }
 
     public void addPi (String piAddress, int port, String name){

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.Objects.UserProfileObj;
-import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
 import edu.temple.pilitandroidclient.Objects.PiObj;
 //import edu.temple.pilitandroidclient.Objects.UserProfileObj;
 import edu.temple.pilitandroidclient.R;
@@ -48,7 +47,7 @@ public class User extends AppCompatActivity{
         currentUser.setText(userProfileObj.userEmail);
 
         //Displays the User's Pis in a drop down
-        createPiDropdown(userProfileObj);
+        //createPiDropdown(userProfileObjTEST);
 
         //Displays the user's saved configurations
         createSavedConfigList(userProfileObj);
@@ -74,11 +73,11 @@ public class User extends AppCompatActivity{
 
         //Creates adapter which populates the list view
         //NEW CODE
-        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
+        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.configs);
 
         //OLD CODE
         //ArrayAdapter<LEDconfigObj> configAdapter = new ArrayAdapter<LEDconfigObj>(this,
-                //android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
+                //android.R.layout.simple_list_item_1, userProfileObjTEST.configs);
 
         //Passes the adapter to the list view
         configList.setAdapter(configAdapter);

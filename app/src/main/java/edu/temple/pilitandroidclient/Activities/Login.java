@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -17,8 +16,6 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
-import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
-import edu.temple.pilitandroidclient.Objects.LoginRegObj;
 import edu.temple.pilitandroidclient.Objects.UserProfileObj;
 import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
@@ -33,13 +30,11 @@ public class Login extends AppCompatActivity {
     JSONObject outgoingJson = new JSONObject();
     JSONObject incomingJson = new JSONObject();
     JSONObject testJson = new JSONObject();
-    UserProfileObj userProfileObj;
+    UserProfileObj userProfileObjTEST;
     public static String userName;
     Gson gson = new Gson();
 
-
     public static final String SERVER_ADDRESS =  "https://pi-lit.herokuapp.com";
-    //public static final String SERVER_ADDRESS =  "http://192.168.0.7:3000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,24 +91,23 @@ public class Login extends AppCompatActivity {
 
     public void launchUserActivity() throws JSONException {
 
+        //userProfileObjTEST = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
+        //System.out.println(incomingJson.get("name"));
+        //System.out.println(userProfileObjTEST.toString());
+
 
         String loggedInUser = (String)incomingJson.get("userName");
-        //createTestObj(loggedInUser);
-
-        //createUserObject(incomingJson);
-        userProfileObj = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
+        createTestObj(loggedInUser);
 
         //Launches the home activity and passes a user profile obj
         Intent intent = new Intent(Login.this, User.class);
-        intent.putExtra(USER_OBJ,userProfileObj);
+        intent.putExtra(USER_OBJ, userProfileObjTEST);
         startActivity(intent);
+
     }
 
     private void createUserObject(JSONObject incomingJson) {
 
-        //Staff staff = gson.fromJson(jsonInString, Staff.class);
-
-        //userProfileObj = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
     }
 
     public void sendMsgToServer(final JSONObject outgoingJson){
@@ -184,27 +178,27 @@ public class Login extends AppCompatActivity {
 
     public void createTestObj (String testEmail){
         // USER OBJ FOR TESTING
-        userProfileObj = new UserProfileObj(testEmail);
-        userProfileObj.addPi("168.0.0.1", 400, "living room");         //create mock PiLit for testing
-        userProfileObj.addPi("168.0.0.2", 400, "bed room");            //create mock PiLit for testing
+        userProfileObjTEST = new UserProfileObj(testEmail);
+        userProfileObjTEST.addPi("168.0.0.1", 400, "living room");         //create mock PiLit for testing
+        userProfileObjTEST.addPi("168.0.0.2", 400, "bed room");            //create mock PiLit for testing
 
         //NEW ADDED CODE
-        userProfileObj.savedConfigs.add(new LEDConfigPattern("Eagles Party!!", 30));           //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDConfigPattern("Red White and Blue", 30));       //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDConfigPattern("Seizure inducing party!", 30));  //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDConfigPattern("Get Lit with PiLit!!", 30));     //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDConfigPattern("Sexy time lights", 30));         //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDConfigPattern("Graduation celebration", 30));   //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDConfigPattern("Happy Bday",30));               //create mock LEDconfig obj
+        userProfileObjTEST.configs.add(new LEDConfigPattern("Eagles Party!!", 30));           //create mock LEDconfig obj
+        userProfileObjTEST.configs.add(new LEDConfigPattern("Red White and Blue", 30));       //create mock LEDconfig obj
+        userProfileObjTEST.configs.add(new LEDConfigPattern("Seizure inducing party!", 30));  //create mock LEDconfig obj
+        userProfileObjTEST.configs.add(new LEDConfigPattern("Get Lit with PiLit!!", 30));     //create mock LEDconfig obj
+        userProfileObjTEST.configs.add(new LEDConfigPattern("Sexy time lights", 30));         //create mock LEDconfig obj
+        userProfileObjTEST.configs.add(new LEDConfigPattern("Graduation celebration", 30));   //create mock LEDconfig obj
+        userProfileObjTEST.configs.add(new LEDConfigPattern("Happy Bday",30));               //create mock LEDconfig obj
 
         //OLD- ABOVE IS UPDATED
-        //userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
-        //userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
-        //userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
-        //userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
-        //userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
-        //userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
-        //userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
+        //userProfileObjTEST.configs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
+        //userProfileObjTEST.configs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
+        //userProfileObjTEST.configs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
+        //userProfileObjTEST.configs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
+        //userProfileObjTEST.configs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
+        //userProfileObjTEST.configs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
+        //userProfileObjTEST.configs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
 
     }
 
