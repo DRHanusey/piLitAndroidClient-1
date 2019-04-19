@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import edu.temple.pilitandroidclient.Activities.Login;
 
 public class LEDConfigPattern implements Serializable {
-    public String configName = "default config name";
+    public String configName = "XXXXXXXXXXXXXX";
     public String userName = Login.userName;
     public String description;                     //description of pattern, e.g. party lights, sleep lights, etc.
     public ArrayList<Command> commandArray;        //array of commands that make up the configuration pattern

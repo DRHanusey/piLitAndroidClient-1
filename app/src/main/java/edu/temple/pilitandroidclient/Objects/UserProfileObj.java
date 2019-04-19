@@ -7,10 +7,7 @@ public class UserProfileObj implements Serializable {
 
     public String userEmail;
     public ArrayList<PiObj> PiList;
-    //NEW
-    public ArrayList<LEDConfigPattern> configs;       //For what a user creates a configs OR saves a public commandArray.
-    //OLD public ArrayList<LEDconfigObj> configs;       //For what a user creates a configs OR saves a public commandArray.
-
+    public ArrayList<LEDConfigPattern> configs;
 
     @Override
     public String toString() {
