@@ -13,7 +13,7 @@ public class PiObj implements Serializable {
     public String userName;
 
 
-    // constructor for adding a new Pi (no led config necessary)
+    // constructor for adding a new Pi (no led commandArray necessary)
     public PiObj(String piAddress, int port, String piName) {
         this.piAddress = piAddress;
         this.port = port;
