@@ -38,8 +38,6 @@ public class User extends AppCompatActivity{
         marketPlace = findViewById(R.id.buttonMarketPlace);
         configList = findViewById(R.id.listSavedConfigs);
 
-
-
         //The userProfile which has been passed from the login screen
         UserProfileObj userProfileObj = (UserProfileObj) getIntent().getSerializableExtra(Login.USER_OBJ);
 
@@ -72,12 +70,8 @@ public class User extends AppCompatActivity{
     public void createSavedConfigList(UserProfileObj userProfileObj){
 
         //Creates adapter which populates the list view
-        //NEW CODE
+        //NEW CODE- Anika
         ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.configs);
-
-        //OLD CODE
-        //ArrayAdapter<LEDconfigObj> configAdapter = new ArrayAdapter<LEDconfigObj>(this,
-                //android.R.layout.simple_list_item_1, userProfileObjTEST.configs);
 
         //Passes the adapter to the list view
         configList.setAdapter(configAdapter);
