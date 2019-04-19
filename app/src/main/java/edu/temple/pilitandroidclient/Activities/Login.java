@@ -30,6 +30,7 @@ public class Login extends AppCompatActivity {
     JSONObject outgoingJson = new JSONObject();
     JSONObject incomingJson = new JSONObject();
     JSONObject testJson = new JSONObject();
+    public static String userName;
     UserProfileObj userProfileObj;
 
 
