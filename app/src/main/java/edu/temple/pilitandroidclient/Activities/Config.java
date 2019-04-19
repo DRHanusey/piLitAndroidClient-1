@@ -95,10 +95,10 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
                 String jsonConfigStr = gson.toJson(testRequest);
                 //String jsonConfigStr = gson.toJson(stripConfig.commandArray);
-                System.out.println("COMMAND STR" + jsonConfigStr);
+                //System.out.println("COMMAND STR" + jsonConfigStr);
 
                 String jsonPiStr = gson.toJson(piObj);
-                System.out.println("PI STR" + jsonPiStr);
+                //System.out.println("PI STR" + jsonPiStr);
 
                 try {
 
@@ -359,7 +359,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.i("EVENT_DISCONNET" , "disconnet from commandArray screen");
+                Log.i("EVENT_DISCONNET" , "disconnet from CONFIG screen");
             }
         });
         configSocket.connect();
