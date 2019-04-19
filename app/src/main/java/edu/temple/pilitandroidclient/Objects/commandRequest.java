@@ -6,7 +6,7 @@ public class commandRequest {
 
     public commandRequest(String piName, String userName, String LEDconfigPatternDescription){
         pi = new PiObj(piName, userName);
-        config = new LEDConfigPattern(LEDconfigPatternDescription);
+        config = new LEDConfigPattern(LEDconfigPatternDescription, 30);
     }
 
     public commandRequest(String piName, String userName, LEDConfigPattern configPattern){

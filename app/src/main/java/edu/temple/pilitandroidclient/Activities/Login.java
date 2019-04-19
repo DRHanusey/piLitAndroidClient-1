@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URISyntaxException;
+
+import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
 import edu.temple.pilitandroidclient.Objects.LoginRegObj;
 import edu.temple.pilitandroidclient.Objects.UserProfileObj;
@@ -185,13 +187,24 @@ public class Login extends AppCompatActivity {
         userProfileObj = new UserProfileObj(testEmail);
         userProfileObj.addPi("168.0.0.1", 400, "living room");         //create mock PiLit for testing
         userProfileObj.addPi("168.0.0.2", 400, "bed room");            //create mock PiLit for testing
-        userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
-        userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
+
+        //NEW ADDED CODE
+        userProfileObj.savedConfigs.add(new LEDConfigPattern("Eagles Party!!", 30));           //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDConfigPattern("Red White and Blue", 30));       //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDConfigPattern("Seizure inducing party!", 30));  //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDConfigPattern("Get Lit with PiLit!!", 30));     //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDConfigPattern("Sexy time lights", 30));         //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDConfigPattern("Graduation celebration", 30));   //create mock LEDconfig obj
+        userProfileObj.savedConfigs.add(new LEDConfigPattern("Happy Bday",30));               //create mock LEDconfig obj
+
+        //OLD- ABOVE IS UPDATED
+        //userProfileObj.savedConfigs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
+        //userProfileObj.savedConfigs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
+        //userProfileObj.savedConfigs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
+        //userProfileObj.savedConfigs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
+        //userProfileObj.savedConfigs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
+        //userProfileObj.savedConfigs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
+        //userProfileObj.savedConfigs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
 
     }
 
