@@ -26,6 +26,5 @@ public class Pilit extends AppCompatActivity {
         //Display name of Pilit
         currentPi.setText(piObj.piName);
 
-
     }
 }

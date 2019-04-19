@@ -123,7 +123,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
-
     public void sendConfigToServer2(final JSONObject configMsg) {
         Login.socket.emit("command", configMsg);
         Log.i("&&&&&&& outgoingJson:",configMsg.toString());
@@ -579,7 +578,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             stripCon.createCustomTimestampArray();
         }
 
-
         for (int i = 0; i < stripCon.allCustomTimestamps.size(); i++) {
 
             //System.out.println("stripCon.allCustomTimestamps.get("+i+").time = " + stripCon.allCustomTimestamps.get(i).colorDeployed);
@@ -594,7 +592,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 }
             }
         }
-
 
         if (seekBarValue > MAX_DISPLAY_TIME - SEEK_BAR_SPEED) {
             System.out.println("COLOR DEPLOYED SET TO FALSE");
