@@ -10,12 +10,18 @@ public class LEDConfigPattern {
     public ArrayList<Timestamp> allCustomTimestamps;
     public ArrayList<Integer> rangeForRainbowEffect;
     public ArrayList<Command> flashCommands;
+    public int ledNum;
     public boolean flashOn = false;
 
-    public LEDConfigPattern(String description) {
+    public LEDConfigPattern(String description, int numberOfLights) {
         this.description = description;
         this.commandArray = new ArrayList<Command>();
+        this.ledNum = numberOfLights;
     }
+
+    //public void setNumberOfLights(int numberOfLights){
+        //this.numberOfLights = numberOfLights;
+    //}
 
     public void createFlashCommandArray(){
         this.flashCommands = new ArrayList<>();

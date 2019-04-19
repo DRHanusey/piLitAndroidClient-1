@@ -203,7 +203,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     public void assignGUIelementsToJavaObjects(){
         buttonExample = findViewById(R.id.example);
         buttonApply = findViewById(R.id.buttonApply);
-        stripConfig = new LEDConfigPattern("default custom");
+        stripConfig = new LEDConfigPattern("default custom", btnCount);
         seekBarTime = findViewById(R.id.seekBarTime);
         previewButtons = new ArrayList<Button>();
         ll2 = findViewById(R.id.linLay2);
