@@ -65,35 +65,20 @@ public class Login extends AppCompatActivity {
                 String pword = inputPassword.getText().toString();
 
 
-                //String loggedInUser = "";
-
 
                 try {
                     outgoingJson.put("userName",email);
                     outgoingJson.put("password",pword);
                     sendMsgToServer(outgoingJson);
+
                     //todo get user info from server
-                    //incomingJson
-
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-
-                //createTestObj(loggedInUser);
-
-
-                //Launches the home activity and passes a user profile obj
-                //Intent intent = new Intent(Login.this, User.class);
-                //intent.putExtra(USER_OBJ,userProfileObj);
-                //startActivity(intent);
-
             }
         };
         loginButton.setOnClickListener(loginOCL);
-
 
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -103,55 +88,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        //****************SEND TEST MSG**************************
-        View.OnClickListener testOCL = new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
 
-                //Insert the https address into the socket\
-                /*
-                try {
-                    socket = IO.socket(SERVER_ADDRESS);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                */
-
-                //Create the Json to be sent to server
-                try {
-                    outgoingJson.put("userName","testuser");
-                    outgoingJson.put("password","password");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
-                    @Override
-                    public void call(Object... args) {
-                        socket.emit("login", outgoingJson);
-                        Log.i("******* loginInfoJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
-                    }
-
-                }).on("login", new Emitter.Listener() {
-                    @Override
-                    public void call(Object... args) {
-                        incomingJson = (JSONObject)args[0];
-                        Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
-
-                        //socket.disconnect();
-                    }
-                }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-                    @Override
-                    public void call(Object... args) {
-                        Log.i("EVENT_DISCONNET", "disconnet from login screen");
-                    }
-                });
-                socket.connect();
-                Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
-            }
-        };
-        sendTestMsgButton.setOnClickListener(testOCL);
     }
 
     public void launchUserActivity() throws JSONException {
@@ -178,7 +115,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void call(Object... args) {
                 socket.emit("login", outgoingJson);
-                Log.i("******* loginInfoJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
             }
 
         }).on("login", new Emitter.Listener() {
@@ -191,7 +128,6 @@ public class Login extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                socket.disconnect();
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
@@ -257,3 +193,54 @@ public class Login extends AppCompatActivity {
 
 
 
+/*
+        //****************SEND TEST MSG**************************
+        View.OnClickListener testOCL = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                //Insert the https address into the socket\
+
+                //try {
+                //    socket = IO.socket(SERVER_ADDRESS);
+                //} catch (URISyntaxException e) {
+                //    e.printStackTrace();
+                //}
+
+
+//Create the Json to be sent to server
+                try {
+                        outgoingJson.put("userName","testuser");
+                        outgoingJson.put("password","password");
+                        } catch (JSONException e) {
+                        e.printStackTrace();
+                        }
+
+                        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+
+@Override
+public void call(Object... args) {
+        socket.emit("login", outgoingJson);
+        Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+        }
+
+        }).on("login", new Emitter.Listener() {
+@Override
+public void call(Object... args) {
+        incomingJson = (JSONObject)args[0];
+        Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
+
+        //socket.disconnect();
+        }
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+@Override
+public void call(Object... args) {
+        Log.i("EVENT_DISCONNET", "disconnet from LOGIN screen");
+        }
+        });
+        socket.connect();
+        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
+        }
+        };
+        sendTestMsgButton.setOnClickListener(testOCL);
+ */

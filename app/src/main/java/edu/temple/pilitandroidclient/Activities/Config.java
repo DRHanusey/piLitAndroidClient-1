@@ -37,7 +37,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    Button buttonApply, buttonExample, color1, color2;
+    Button buttonApply, buttonExample, color1, color2, buttonSave;
     int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2, configName;
@@ -102,7 +102,21 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                     e.printStackTrace();
                 }
 
-                sendConfigToServer(loginInfoJson, piAndCommandJson);
+                //sendConfigToServer(loginInfoJson, piAndCommandJson);
+                sendConfigToServer2(piAndCommandJson);
+            }
+        });
+    }
+
+    public void sendConfigToServer2(final JSONObject configMsg) {
+        Login.socket.emit("command", configMsg);
+
+        Login.socket.on("command", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                incomingJson = (JSONObject)args[0];
+                Log.i("&&&&&&& incomingJson2:",incomingJson.toString());
+
             }
         });
     }
