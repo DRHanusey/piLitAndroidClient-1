@@ -9,6 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,60 +30,45 @@ public class Marketplace extends AppCompatActivity {
     //array of options -> array adapter -> use the adapter to populate the listView
     Button homeButton;
     JSONObject incomingJson = new JSONObject();
-
-    //FOR TESTING CONNECTION, REMOVE LATER
-    final commandRequest testRequest = new commandRequest("testpi", "testuser", "partyLights");
-    final PiObj piObj = new PiObj("testpi", "username");
-
+    JSONArray incomingJsonArray = new JSONArray();
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marketplace);
 
-        //todo 1. connect to server 2. return is list of configs 3.for loop to convert configs to java obj
+
         homeButton = findViewById(R.id.homeButton);
 
         //populateListView();
         sendRequestToServer();
+        populateListViewFromJson();
 
     }
 
     private void sendRequestToServer(){
-        Login.socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
+        Login.socket.emit("getPublicConfigs", "");
+
+        Login.socket.on("getPublicConfigs", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Login.socket.emit("????????", "");
-                //Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
-            }
-
-        }).on("login", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                incomingJson = (JSONObject)args[0];
-                Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
-
-                populateListViewFromJson();
-
-                Login.socket.disconnect();
-            }
-        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
+                incomingJsonArray = (JSONArray) args[0];
+                Log.i("&&&&&&& incomingJson:",incomingJsonArray.toString());
             }
         });
-        Login.socket.connect();
+
     }
 
     private void populateListViewFromJson(){
 
         //TODO convert JSON to JAVA object
-
         /*
         "incomingJson"  <- should be an array of LEDConfigPattern objects (but in json form)
         Convert from "incomingJson" to "myPatterns" (see line 77)
          */
+
 
 
         //create list of items
