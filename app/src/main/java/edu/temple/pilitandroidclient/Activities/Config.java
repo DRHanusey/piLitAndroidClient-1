@@ -37,7 +37,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    Button buttonApply, buttonExample, color1, color2;
+    Button buttonApply, buttonExample, color1, color2, buttonSave;
     int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2, configName;
@@ -115,7 +115,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             @Override
             public void call(Object... args) {
                 incomingJson = (JSONObject)args[0];
-                Log.i("&&&&&&& incomingJson:",incomingJson.toString());
+                Log.i("&&&&&&& incomingJson2:",incomingJson.toString());
 
             }
         });
