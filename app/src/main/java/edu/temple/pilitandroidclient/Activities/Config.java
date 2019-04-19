@@ -102,7 +102,21 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                     e.printStackTrace();
                 }
 
-                sendConfigToServer(loginInfoJson, piAndCommandJson);
+                //sendConfigToServer(loginInfoJson, piAndCommandJson);
+                sendConfigToServer2(piAndCommandJson);
+            }
+        });
+    }
+
+    public void sendConfigToServer2(final JSONObject configMsg) {
+        Login.socket.emit("command", configMsg);
+
+        Login.socket.on("command", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                incomingJson = (JSONObject)args[0];
+                Log.i("&&&&&&& incomingJson:",incomingJson.toString());
+
             }
         });
     }
