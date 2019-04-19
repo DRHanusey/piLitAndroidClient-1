@@ -69,8 +69,6 @@ public class Marketplace extends AppCompatActivity {
         Convert from "incomingJson" to "myPatterns" (see line 77)
          */
 
-
-
         //create list of items
         ArrayList<LEDConfigPattern> myPatterns = new ArrayList<LEDConfigPattern>();
 
