@@ -3,47 +3,50 @@ package edu.temple.pilitandroidclient.Objects;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
-import edu.temple.pilitandroidclient.Objects.PiObj;
-
 public class UserProfileObj implements Serializable {
 
-    public String userEmail;
+    public String userName;
     public ArrayList<PiObj> PiList;
-    //NEW- Anika
-    public ArrayList<LEDConfigPattern> savedConfigs;       //For what a user creates a configs OR saves a public commandArray.
-    //OLD- Anika public ArrayList<LEDconfigObj> savedConfigs;       //For what a user creates a configs OR saves a public commandArray.
+    public ArrayList<LEDConfigPattern> configs;
+    //------------------------------------------
+    public String error;
+    public String _id;
+    public String password;
+    public String email;
+    public int _v;
+
+
+    @Override
+    public String toString() {
+        return "LEDconfig - userName: " + userName;
+    }
+
+    public UserProfileObj(){
+
+    }
 
     //For use when loading user with PiLits already initialized
-    public UserProfileObj(String userEmail, ArrayList<PiObj> piList) {
-        this.userEmail = userEmail;
+    public UserProfileObj(String userName, ArrayList<PiObj> piList) {
+        this.userName = userName;
         PiList = piList;
     }
 
     //For use when user has no PiLits set up
     //For use when loading user with PiLits already initialized
-    public UserProfileObj(String userEmail) {
-        this.userEmail = userEmail;
+    public UserProfileObj(String userName) {
+        this.userName = userName;
         PiList = new ArrayList<PiObj>();
         //NEW
-        savedConfigs = new ArrayList<LEDConfigPattern>();
-        //OLD savedConfigs = new ArrayList<LEDconfigObj>();
+        configs = new ArrayList<LEDConfigPattern>();
+        //OLD configs = new ArrayList<LEDconfigObj>();
     }
 
-    public void addPi (String piAddress, int port, String name){
-        int newPiId = PiList.size();                                //index where new configObj will be placed
-        PiObj newConfigObj = new PiObj(piAddress,port,name );       //initialize new configObj
-        PiList.add(newConfigObj);                                   //add new configObj to list
+    public void addPi (String piAddress, String name){
+        //int newPiId = PiList.size();                                //index where new configObj will be placed
+        PiObj newPiObj = new PiObj(piAddress,name );       //initialize new configObj
+        PiList.add(newPiObj);                                   //add new configObj to list
     }
 
-    public void removePi (int piId) {
-        PiList.remove(piId);
-
-        //updates the stripID of each configObj to match it's index in the array
-        for(int i = 0; i < PiList.size(); i++){
-            PiList.get(i).piId = i;
-        }
-    }
 
     //param i: index of LED pi (same as pi Id)
     //returns: PiObj of the LED strip selected
