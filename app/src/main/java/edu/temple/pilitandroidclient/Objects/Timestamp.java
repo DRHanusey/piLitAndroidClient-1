@@ -1,6 +1,8 @@
 package edu.temple.pilitandroidclient.Objects;
 
-public class Timestamp {
+import java.io.Serializable;
+
+public class Timestamp implements Serializable {
     public ColorObj color = new ColorObj(); //color object (contains R, G, B values)
     public int time;                       //time at which color change will take effect
     int brightness = Command.DEFAULT_BRIGHTNESS;                 //brightness of all lights being changed by command

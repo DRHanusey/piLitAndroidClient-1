@@ -49,14 +49,6 @@ public class Login extends AppCompatActivity {
         sendTestMsgButton = findViewById(R.id.buttonTest);
         configButton = findViewById(R.id.buttonConfig);
 
-        //Insert the https address into the socket
-        /*
-        try {
-            socket = IO.socket(SERVER_ADDRESS);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        */
 
         // Perform login button action
         View.OnClickListener loginOCL = new View.OnClickListener() {
@@ -91,8 +83,8 @@ public class Login extends AppCompatActivity {
 
         userProfileObjTEST = new UserProfileObj();
         userProfileObjTEST = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
-        System.out.println("get('email') " + incomingJson.get("email"));
 
+        /*
         System.out.println(userProfileObjTEST.error);
         System.out.println(userProfileObjTEST._id);
         System.out.println(userProfileObjTEST.userName);
@@ -102,7 +94,7 @@ public class Login extends AppCompatActivity {
 
         String commandTEST = gson.toJson(userProfileObjTEST.configs.get(0));
         System.out.println(commandTEST);
-
+        */
 
         //String loggedInUser = (String)incomingJson.get("userName");
         //createTestObj(loggedInUser);

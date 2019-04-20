@@ -32,6 +32,7 @@ import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.Objects.Timestamp;
+import edu.temple.pilitandroidclient.Objects.UserProfileObj;
 import edu.temple.pilitandroidclient.Objects.commandRequest;
 import edu.temple.pilitandroidclient.R;
 import io.socket.client.IO;
@@ -53,7 +54,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     JSONObject incomingJson = new JSONObject();
     JSONObject incomingJson2 = new JSONObject();
     final int MAX_DISPLAY_TIME = 9999;
-    final int SEEK_BAR_SPEED = 1;   //Change to 40 for emulator or Maliks slow ass phone
+    final int SEEK_BAR_SPEED = 1;    //Change to 40 for emulator or Maliks slow ass phone
     final int FLASH_SPEED = 200;     //smaller = faster
     final int RAINBOW_SPEED = 100;
 
@@ -68,13 +69,18 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         assignGUIelementsToJavaObjects();
         createPreviewButtons();
         createEffectsSpinner();
-        configName.setText(stripConfig.description);
+
+        //The userProfile which has been passed from the login screen
+        stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
+        //System.out.println(stripConfig.configName);
+        configName.setText(stripConfig.configName);
+        effects1.setSelection(4);//TODO need to set selection dynamically
+        System.out.println(gson.toJson(stripConfig));
 
 
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //colorBtnClick(int indexOfCommand, EditText range, Spinner effects, Button button )
                 colorBtnClick(0, range1, effects1, color1 );
             }
         });
@@ -108,6 +114,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
     public void saveConfig(View v) throws JSONException {
+        stripConfig.configName = configName.getText().toString();
         String stripConfigString = gson.toJson(stripConfig);
         JSONObject stripConfigJson = new JSONObject(stripConfigString);
 
@@ -472,7 +479,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
     public void saveNameBtnClick(View v){
-        stripConfig.description = configName.getText().toString();
+        stripConfig.configName = configName.getText().toString();
     }
 
     //Called from AsyncTask once/milisecond

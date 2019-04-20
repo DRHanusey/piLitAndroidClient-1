@@ -5,18 +5,18 @@ import java.util.ArrayList;
 
 public class PiObj implements Serializable {
 
-    int piId;
+    //int piId;
     String piAddress;
-    int port;
+    //int port;
     ArrayList<LEDconfigObj> LEDstripList;
-    public String piName;   //ie living room, bedroom, etc
+    public String piName;
     public String userName;
 
 
     // constructor for adding a new Pi (no led commandArray necessary)
     public PiObj(String piAddress, int port, String piName) {
         this.piAddress = piAddress;
-        this.port = port;
+        //this.port = port;
         this.piName = piName;
         LEDstripList = new ArrayList<LEDconfigObj>();
     }

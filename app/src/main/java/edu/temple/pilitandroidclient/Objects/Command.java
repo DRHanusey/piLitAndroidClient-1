@@ -1,9 +1,10 @@
 package edu.temple.pilitandroidclient.Objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Command {
+public class Command implements Serializable {
     public static final int DEFAULT_BRIGHTNESS = 50;
     public static final String[] effectList = {"Select effect","solid", "rainbow","flash","custom"};
 
