@@ -50,29 +50,27 @@ public class Login extends AppCompatActivity {
         configButton = findViewById(R.id.buttonConfig);
 
         //Insert the https address into the socket
+        /*
         try {
             socket = IO.socket(SERVER_ADDRESS);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
+        */
 
         // Perform login button action
         View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: on successful login create UserProfileObj and launches User activity
 
-                userName = inputEmail.getText().toString();
-                String pword = inputPassword.getText().toString();
+                userName = "danhan";  //inputEmail.getText().toString();
+                String pword = "pppppp"; //inputPassword.getText().toString();
 
 
                 try {
                     outgoingJson.put("userName",userName);
                     outgoingJson.put("password",pword);
                     sendMsgToServer(outgoingJson);
-
-                    //todo get user info from server
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -91,13 +89,23 @@ public class Login extends AppCompatActivity {
 
     public void launchUserActivity() throws JSONException {
 
-        //userProfileObjTEST = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
-        //System.out.println(incomingJson.get("name"));
-        //System.out.println(userProfileObjTEST.toString());
+        userProfileObjTEST = new UserProfileObj();
+        userProfileObjTEST = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
+        System.out.println("get('email') " + incomingJson.get("email"));
+
+        System.out.println(userProfileObjTEST.error);
+        System.out.println(userProfileObjTEST._id);
+        System.out.println(userProfileObjTEST.userName);
+        System.out.println(userProfileObjTEST.password);
+        System.out.println(userProfileObjTEST._v);
+        System.out.println(userProfileObjTEST.email);
+
+        String commandTEST = gson.toJson(userProfileObjTEST.configs.get(0));
+        System.out.println(commandTEST);
 
 
-        String loggedInUser = (String)incomingJson.get("userName");
-        createTestObj(loggedInUser);
+        //String loggedInUser = (String)incomingJson.get("userName");
+        //createTestObj(loggedInUser);
 
         //Launches the home activity and passes a user profile obj
         Intent intent = new Intent(Login.this, User.class);
@@ -179,8 +187,8 @@ public class Login extends AppCompatActivity {
     public void createTestObj (String testEmail){
         // USER OBJ FOR TESTING
         userProfileObjTEST = new UserProfileObj(testEmail);
-        userProfileObjTEST.addPi("168.0.0.1", 400, "living room");         //create mock PiLit for testing
-        userProfileObjTEST.addPi("168.0.0.2", 400, "bed room");            //create mock PiLit for testing
+        userProfileObjTEST.addPi("168.0.0.1", "living room");         //create mock PiLit for testing
+        userProfileObjTEST.addPi("168.0.0.2", "bed room");            //create mock PiLit for testing
 
         //NEW ADDED CODE
         userProfileObjTEST.configs.add(new LEDConfigPattern("Eagles Party!!", 30));           //create mock LEDconfig obj
@@ -190,17 +198,7 @@ public class Login extends AppCompatActivity {
         userProfileObjTEST.configs.add(new LEDConfigPattern("Sexy time lights", 30));         //create mock LEDconfig obj
         userProfileObjTEST.configs.add(new LEDConfigPattern("Graduation celebration", 30));   //create mock LEDconfig obj
         userProfileObjTEST.configs.add(new LEDConfigPattern("Happy Bday",30));               //create mock LEDconfig obj
-
-        //OLD- ABOVE IS UPDATED
-        //userProfileObjTEST.configs.add(new LEDconfigObj("Eagles Party!!"));           //create mock LEDconfig obj
-        //userProfileObjTEST.configs.add(new LEDconfigObj("Red White and Blue"));       //create mock LEDconfig obj
-        //userProfileObjTEST.configs.add(new LEDconfigObj("Seizure inducing party!"));  //create mock LEDconfig obj
-        //userProfileObjTEST.configs.add(new LEDconfigObj("Get Lit with PiLit!!"));     //create mock LEDconfig obj
-        //userProfileObjTEST.configs.add(new LEDconfigObj("Sexy time lights"));         //create mock LEDconfig obj
-        //userProfileObjTEST.configs.add(new LEDconfigObj("Graduation celebration"));   //create mock LEDconfig obj
-        //userProfileObjTEST.configs.add(new LEDconfigObj("Happy Bday"));               //create mock LEDconfig obj
-
-    }
+            }
 
     //For TESTING
     public void configScreen(View v){
