@@ -11,7 +11,7 @@ public class LEDConfigPattern implements Serializable {
     public String userName = Login.userName;    //TODO
     public String description;
     public ArrayList<Command> commandArray;
-    public boolean isPublic = true;             //TODO
+    public boolean isPublic = false;             //TODO- default false because checkbox starts empty (assume that config should not be added to the marketplace)
     public int ledNum = 30;  //TODO returned as 0 from server on login, why?
     //--------------------------------------------
     String _id;
