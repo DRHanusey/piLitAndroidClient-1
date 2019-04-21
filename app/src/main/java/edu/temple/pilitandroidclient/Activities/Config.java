@@ -71,12 +71,14 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         createEffectsSpinner();
 
         //The userProfile which has been passed from the login screen
+        /*
         stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
-        //System.out.println(stripConfig.configName);
-        configName.setText(stripConfig.configName);
-        effects1.setSelection(4);//TODO need to set selection dynamically
-        System.out.println(gson.toJson(stripConfig));
-
+        if (!stripConfig.configName.equals("default")) {
+            configName.setText(stripConfig.configName);
+            effects1.setSelection(4);//TODO need to set selection dynamically
+            System.out.println(gson.toJson(stripConfig));
+        }
+        */
 
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +98,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //final commandRequest testRequest = new commandRequest("testpi", "testuser", "partyLights");
                 final commandRequest testRequest = new commandRequest("testpi","testuser", stripConfig);
                 String piAndCommandString = gson.toJson(testRequest);
                 //System.out.println("COMMAND STR" + jsonConfigStr);
