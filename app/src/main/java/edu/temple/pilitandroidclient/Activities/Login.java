@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -23,16 +24,18 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Login extends AppCompatActivity {
+    //TODO make global variables local
     private EditText inputEmail, inputPassword;
     Button loginButton, registerButton, sendTestMsgButton, configButton;
     static public Socket socket;
     public static final String USER_OBJ = "passing user obj";
-    JSONObject outgoingJson = new JSONObject();
-    JSONObject incomingJson = new JSONObject();
+    JSONObject outgoingJson;
+    JSONObject incomingJson;
     JSONObject testJson = new JSONObject();
     UserProfileObj userProfileObjTEST;
     public static String userName;
     Gson gson = new Gson();
+    public boolean waitingForServerResponse;
 
     public static final String SERVER_ADDRESS =  "https://pi-lit.herokuapp.com";
 
@@ -49,23 +52,26 @@ public class Login extends AppCompatActivity {
         sendTestMsgButton = findViewById(R.id.buttonTest);
         configButton = findViewById(R.id.buttonConfig);
 
+        connectSocket();
 
         // Perform login button action
         View.OnClickListener loginOCL = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                outgoingJson = new JSONObject();
+                incomingJson = new JSONObject();
 
-                userName = "danhan";  //inputEmail.getText().toString();
-                String pword = "pppppp"; //inputPassword.getText().toString();
-
+                userName = "testuser"; //"danhan";  //inputEmail.getText().toString();//
+                String pword =  "password"; //"pppppp"; //inputPassword.getText().toString();
 
                 try {
                     outgoingJson.put("userName",userName);
                     outgoingJson.put("password",pword);
-                    sendMsgToServer(outgoingJson);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                sendMsgToServer(outgoingJson);
+                //connectAndSend();
 
             }
         };
@@ -77,6 +83,22 @@ public class Login extends AppCompatActivity {
                 registerMe();
             }
         });
+    }
+
+    public void handleServerResponse(JSONObject serverResponse){
+
+        try {
+            String error = serverResponse.get("error").toString();
+            if ( error.equals("") ) {
+                launchUserActivity();
+            } else {
+                System.out.println("WE HAVE AN ERROR::: " + error);
+                //Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void launchUserActivity() throws JSONException {
@@ -106,11 +128,7 @@ public class Login extends AppCompatActivity {
 
     }
 
-    private void createUserObject(JSONObject incomingJson) {
-
-    }
-
-    public void sendMsgToServer(final JSONObject outgoingJson){
+    public void connectSocket(){
         //Insert the https address into the socket
         try {
             socket = IO.socket(Login.SERVER_ADDRESS);
@@ -118,37 +136,28 @@ public class Login extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+        socket.connect();
+    }
 
-            @Override
-            public void call(Object... args) {
-                socket.emit("login", outgoingJson);
-                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
-            }
+    public void sendMsgToServer(final JSONObject outgoingJson){
+        waitingForServerResponse = true;
 
-        }).on("login", new Emitter.Listener() {
+        socket.emit("login", outgoingJson);
+        Log.i("******* outgoingJson",outgoingJson.toString());
+
+        Login.socket.on("login", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 incomingJson = (JSONObject)args[0];
                 Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
-                try {
-                    launchUserActivity();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
+                //waitingForServerResponse = false;
+                handleServerResponse(incomingJson);
             }
         });
-        socket.connect();
-        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
 
     }
 
     public void registerMe(){
-
         Intent intent = new Intent(this, Registration.class);
         startActivity(intent);
     }
@@ -199,3 +208,37 @@ public class Login extends AppCompatActivity {
     }
 
 }
+
+/*
+
+        //Insert the https address into the socket
+        /*
+        try {
+            socket = IO.socket(Login.SERVER_ADDRESS);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+                socket.emit("login", outgoingJson);
+                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
+            }
+
+        }).on("login", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                incomingJson = (JSONObject)args[0];
+                Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
+                //waitingForServerResponse = false;
+            }
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+            }
+        });
+        socket.connect();
+        */

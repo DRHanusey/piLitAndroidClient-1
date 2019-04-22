@@ -10,11 +10,14 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
@@ -32,23 +35,37 @@ public class Marketplace extends AppCompatActivity {
     JSONObject incomingJson = new JSONObject();
     JSONArray incomingJsonArray = new JSONArray();
     Gson gson = new Gson();
+    ArrayList<LEDConfigPattern> publicConfigArrayList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marketplace);
 
-
         homeButton = findViewById(R.id.homeButton);
 
-        //populateListView();
-        sendRequestToServer();
-        populateListViewFromJson();
+        //The userProfile which has been passed from the login screen
+        publicConfigArrayList = (ArrayList<LEDConfigPattern>) getIntent().getSerializableExtra(User.JSON_ARRAY);
+
+        populateListViewFromAL();
+        //sendRequestToServer();
+        //populateListViewFromJson();
 
     }
 
-    private void sendRequestToServer(){
+    private void populateListViewFromAL() {
+        //create the adapter
+        ArrayAdapter<LEDConfigPattern> ledConfigList = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, publicConfigArrayList);
 
+
+        //create the listView
+        ListView list = (ListView) findViewById(R.id.listConfig);
+        list.setAdapter(ledConfigList);
+    }
+/*
+    private void sendRequestToServer(){
         Login.socket.emit("getPublicConfigs", "");
 
         Login.socket.on("getPublicConfigs", new Emitter.Listener() {
@@ -56,27 +73,32 @@ public class Marketplace extends AppCompatActivity {
             public void call(Object... args) {
                 incomingJsonArray = (JSONArray) args[0];
                 Log.i("&&&&&&& incomingJson:",incomingJsonArray.toString());
+                System.out.println("incomingJsonArray.length()::: " + incomingJsonArray.length());
+
             }
         });
-
     }
+    */
 
-    private void populateListViewFromJson(){
+    private void populateListViewFromJson() throws JSONException {
 
         //TODO convert JSON to JAVA object
-        /*
-        "incomingJson"  <- should be an array of LEDConfigPattern objects (but in json form)
-        Convert from "incomingJson" to "myPatterns" (see line 77)
-         */
+
+        //Type type = new TypeToken<ArrayList<LEDConfigPattern>>() {}.getType();
+        //ArrayList<LEDConfigPattern> myPatterns = new Gson().fromJson(incomingJsonArray.toString(), type);
 
 
-
-        //create list of items
-        ArrayList<LEDConfigPattern> myPatterns = new ArrayList<LEDConfigPattern>();
+        for (int i = 0; i < incomingJsonArray.length();i++){
+            LEDConfigPattern temp;
+            temp = gson.fromJson(incomingJsonArray.get(i).toString(),LEDConfigPattern.class);
+            publicConfigArrayList.add(temp);
+            System.out.println(publicConfigArrayList.get(i).configName);
+            //System.out.println(incomingJsonArray.get(i).toString());
+        }
 
         //create the adapter
-        ArrayAdapter<LEDConfigPattern> ledConfigList = new ArrayAdapter<LEDConfigPattern>(this,
-                android.R.layout.simple_list_item_1, myPatterns);
+        ArrayAdapter<LEDConfigPattern> ledConfigList = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, publicConfigArrayList);
 
 
         //create the listView

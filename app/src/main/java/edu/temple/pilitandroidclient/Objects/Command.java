@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Command implements Serializable {
-    public static final int DEFAULT_BRIGHTNESS = 50;
+    public static final int DEFAULT_BRIGHTNESS = 100;
     public static final String[] effectList = {"Select effect","solid", "rainbow","flash","custom"};
 
     public int range[];                                                     //range of LED lights being changed, each item is an individual light

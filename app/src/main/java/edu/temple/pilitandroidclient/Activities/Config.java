@@ -71,6 +71,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         createEffectsSpinner();
 
         //The userProfile which has been passed from the login screen
+
         /*
         stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
         if (!stripConfig.configName.equals("default")) {
@@ -79,6 +80,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             System.out.println(gson.toJson(stripConfig));
         }
         */
+
 
         color1.setOnClickListener(new View.OnClickListener() {
             @Override

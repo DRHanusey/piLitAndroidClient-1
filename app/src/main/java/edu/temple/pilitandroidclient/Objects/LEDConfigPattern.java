@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import edu.temple.pilitandroidclient.Activities.Login;
 
 public class LEDConfigPattern implements Serializable {
-    public String configName;
+    public String configName = " ";
     public String userName = Login.userName;    //TODO
     public String description;
     public ArrayList<Command> commandArray;
@@ -28,6 +28,10 @@ public class LEDConfigPattern implements Serializable {
         this.description = description;
         this.commandArray = new ArrayList<Command>();
         this.ledNum = numberOfLights;
+    }
+
+    public LEDConfigPattern(){
+
     }
 
     //public void setNumberOfLights(int numberOfLights){
