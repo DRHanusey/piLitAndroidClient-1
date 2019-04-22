@@ -40,6 +40,7 @@ public class User extends AppCompatActivity {
     public Context context = this;
     public static final String CONFIG_OBJ = "passing config obj";
     public static final String JSON_ARRAY = "passing json array";
+    public static final String EXTRA_PRESENT = "boolean";
     JSONArray incomingJsonArray;
 
     @Override
@@ -75,13 +76,12 @@ public class User extends AppCompatActivity {
         configList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //view.setBackgroundColor(Color.CYAN);
-
                 System.out.println("A config has been clicked at position: " + position);
                 //System.out.println(configList.getItemAtPosition(position));
 
                 Intent intent = new Intent(context, Config.class);
                 intent.putExtra(CONFIG_OBJ, (LEDConfigPattern) configList.getItemAtPosition(position));
+                intent.putExtra(EXTRA_PRESENT,true);
                 startActivity(intent);
             }
         });

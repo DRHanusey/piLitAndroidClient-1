@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
@@ -25,6 +26,7 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -70,29 +72,30 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         createPreviewButtons();
         createEffectsSpinner();
 
-        //The userProfile which has been passed from the login screen
+        boolean loadConfig = getIntent().getBooleanExtra(User.EXTRA_PRESENT, false);
 
-        /*
-        stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
-        if (!stripConfig.configName.equals("default")) {
-            configName.setText(stripConfig.configName);
-            effects1.setSelection(4);//TODO need to set selection dynamically
-            System.out.println(gson.toJson(stripConfig));
+        if (loadConfig) {
+            stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
+            if (!stripConfig.configName.equals("default")) {
+                configName.setText(stripConfig.configName);
+                effects1.setSelection(4);//TODO need to set selection dynamically
+                System.out.println(gson.toJson(stripConfig));
+            }
         }
-        */
+
 
 
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorBtnClick(0, range1, effects1, color1 );
+                colorBtnClick(0, range1, effects1, color1);
             }
         });
 
         color2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorBtnClick(1, range2, effects2, color2 );
+                colorBtnClick(1, range2, effects2, color2);
             }
         });
 
@@ -100,7 +103,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final commandRequest testRequest = new commandRequest("testpi","testuser", stripConfig);
+                final commandRequest testRequest = new commandRequest("testpi", "testuser", stripConfig);
                 String piAndCommandString = gson.toJson(testRequest);
                 //System.out.println("COMMAND STR" + jsonConfigStr);
 
@@ -122,13 +125,13 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         JSONObject stripConfigJson = new JSONObject(stripConfigString);
 
         Login.socket.emit("saveConfig", stripConfigJson);
-        Log.i("&&&&&&& outgoingJson:",stripConfigJson.toString());
+        Log.i("&&&&&&& outgoingJson:", stripConfigJson.toString());
 
         Login.socket.on("saveConfig", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                incomingJson = (JSONObject)args[0];
-                Log.i("&&&&&&& incomingJson2:",incomingJson.toString());
+                incomingJson = (JSONObject) args[0];
+                Log.i("&&&&&&& incomingJson2:", incomingJson.toString());
             }
         });
     }
@@ -136,37 +139,37 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     public void sendConfigToServer2(final JSONObject configMsg) {
         Login.socket.emit("command", configMsg);
-        Log.i("&&&&&&& outgoingJson:",configMsg.toString());
+        Log.i("&&&&&&& outgoingJson:", configMsg.toString());
 
         Login.socket.on("command", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                incomingJson = (JSONObject)args[0];
-                Log.i("&&&&&&& incomingJson2:",incomingJson.toString());
+                incomingJson = (JSONObject) args[0];
+                Log.i("&&&&&&& incomingJson2:", incomingJson.toString());
             }
         });
     }
 
-    public void colorBtnClick(int indexOfCommand, EditText range, Spinner effects, Button button ){
+    public void colorBtnClick(int indexOfCommand, EditText range, Spinner effects, Button button) {
         //int indexOfCommand = indexOfCmd;     //each frag will need this to point to its corresponding command
         String selectedEffect = effects.getSelectedItem().toString();
         String strRange;
         strRange = range.getText().toString();
 
         //if a effect hasn't been selected, exit onClick
-        if (selectedEffect.equals("Select effect")){
+        if (selectedEffect.equals("Select effect")) {
             Toast.makeText(getApplicationContext(),
                     "Select an effect from the dropdown!", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (strRange.equalsIgnoreCase("")){
+        if (strRange.equalsIgnoreCase("")) {
             Toast.makeText(getApplicationContext(),
                     "Enter a range using '-' ',' 'odd' 'even'", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (selectedEffect.equalsIgnoreCase("custom")){
+        if (selectedEffect.equalsIgnoreCase("custom")) {
 
             if (stripConfig.commandArray.size() == indexOfCommand) {
 
@@ -190,7 +193,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }
 
         if (selectedEffect.equalsIgnoreCase("solid") ||
-                selectedEffect.equalsIgnoreCase("flash")){
+                selectedEffect.equalsIgnoreCase("flash")) {
             //No timestamps created
 
             Command command = new Command(selectedEffect);
@@ -206,7 +209,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             stripConfig.commandArray.add(command);
         }
 
-        if (selectedEffect.equalsIgnoreCase("rainbow")){
+        if (selectedEffect.equalsIgnoreCase("rainbow")) {
             //No color selection is necessary
 
             Command command = new Command(selectedEffect);
@@ -226,7 +229,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         effects.setEnabled(false);
     }
 
-    public void assignGUIelementsToJavaObjects(){
+    public void assignGUIelementsToJavaObjects() {
         buttonExample = findViewById(R.id.example);
         buttonApply = findViewById(R.id.buttonApply);
         stripConfig = new LEDConfigPattern("default custom", btnCount);
@@ -244,7 +247,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
-    public void createPreviewButtons(){
+    public void createPreviewButtons() {
         //This creates the LED preview at the top of the activity.
         //Each index of the arrayList previewButtons corresponds to a preview element(bulb)
         //EXAMPLE change color of bulb at index 3:
@@ -256,7 +259,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }
     }
 
-    public void createEffectsSpinner(){
+    public void createEffectsSpinner() {
         //Creates effects spinner
         ArrayAdapter<String> effectAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, Command.effectList);
@@ -270,18 +273,18 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     public ArrayList<Integer> parseRange(String strInput) {
         ArrayList<Integer> range = new ArrayList<>();
 
-        if (strInput.equalsIgnoreCase("even")){
-            for (int i = 0; i < btnCount; i++){
-                if (i % 2 == 0 ){
+        if (strInput.equalsIgnoreCase("even")) {
+            for (int i = 0; i < btnCount; i++) {
+                if (i % 2 == 0) {
                     range.add(i);
                 }
             }
             return range;
         }
 
-        if (strInput.equalsIgnoreCase("odd")){
-            for (int i = 0; i < btnCount; i++){
-                if (i % 2 != 0 ){
+        if (strInput.equalsIgnoreCase("odd")) {
+            for (int i = 0; i < btnCount; i++) {
+                if (i % 2 != 0) {
                     range.add(i);
                 }
             }
@@ -352,17 +355,17 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             @Override
             public void call(Object... args) {
 
-                configSocket.emit("login",loginMsg);
-                Log.i("******* loginMsg",loginMsg.toString());
+                configSocket.emit("login", loginMsg);
+                Log.i("******* loginMsg", loginMsg.toString());
             }
 
         }).on("login", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                incomingJson = (JSONObject)args[0];
-                Log.i("&&&&&&& incomingJson:",incomingJson.toString());
+                incomingJson = (JSONObject) args[0];
+                Log.i("&&&&&&& incomingJson:", incomingJson.toString());
 
-                Log.i("CONFIG MSG::::::",configMsg.toString());
+                Log.i("CONFIG MSG::::::", configMsg.toString());
                 configSocket.emit("command", configMsg); //
             }
         }).on("command", new Emitter.Listener() {
@@ -375,7 +378,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.i("EVENT_DISCONNET" , "disconnet from commandArray screen");
+                Log.i("EVENT_DISCONNET", "disconnet from commandArray screen");
             }
         });
         configSocket.connect();
@@ -414,7 +417,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     public void colorSelected(int col, Command command) {
 
         //command.color.r < 0
-        if ( !command.effect.equalsIgnoreCase("custom") ) {     //enter values for command
+        if (!command.effect.equalsIgnoreCase("custom")) {     //enter values for command
             for (int i = 0; i < command.range.length; i++) {
                 previewButtons.get(command.range[i]).setBackgroundColor(col);
             }
@@ -433,7 +436,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
     public void changeBulbColor(int index, ColorObj colorObj) {
-        previewButtons.get(index).setBackgroundColor(Color.rgb(colorObj.r,colorObj.g,colorObj.b));
+        previewButtons.get(index).setBackgroundColor(Color.rgb(colorObj.r, colorObj.g, colorObj.b));
     }
 
     @Override
@@ -453,17 +456,17 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
         String[] rainbow = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
 
-        int colorOfTheRainbow =0;
-        for (int buttunPostion =0;buttunPostion <previewButtons.size(); buttunPostion++){
-             if (colorOfTheRainbow > rainbow.length-1) {
-                 colorOfTheRainbow=0;
-                 Log.i("in if","k is set to 0");
-             }
-                 if (buttunPostion % 2 == 0) {
-                     previewButtons.get(buttunPostion).setBackgroundColor(Color.parseColor(rainbow[colorOfTheRainbow]));
-                 } else {
-                     previewButtons.get(buttunPostion).setBackgroundColor(Color.parseColor(rainbow[colorOfTheRainbow]));
-                 }
+        int colorOfTheRainbow = 0;
+        for (int buttunPostion = 0; buttunPostion < previewButtons.size(); buttunPostion++) {
+            if (colorOfTheRainbow > rainbow.length - 1) {
+                colorOfTheRainbow = 0;
+                Log.i("in if", "k is set to 0");
+            }
+            if (buttunPostion % 2 == 0) {
+                previewButtons.get(buttunPostion).setBackgroundColor(Color.parseColor(rainbow[colorOfTheRainbow]));
+            } else {
+                previewButtons.get(buttunPostion).setBackgroundColor(Color.parseColor(rainbow[colorOfTheRainbow]));
+            }
             try {
                 System.out.println("good night");
                 Thread.sleep(500);
@@ -475,51 +478,51 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }
     }
 
-    public void startPreview(View v){
+    public void startPreview(View v) {
         //seekBarTime.setProgress(0);
         AsyncTaskRunner runner = new AsyncTaskRunner();
         runner.execute();
     }
 
-    public void saveNameBtnClick(View v){
+    public void saveNameBtnClick(View v) {
         stripConfig.configName = configName.getText().toString();
     }
 
     //Called from AsyncTask once/milisecond
-    public void updatePreviewButtons(int seekBarValue){
+    public void updatePreviewButtons(int seekBarValue) {
 
         //TODO effects1.getSelected.... is wrong. What if first comand is solid, second command is custom?
 
-        if ( effects1.getSelectedItem().equals("rainbow") || effects2.getSelectedItem().equals("rainbow") ) {
+        if (effects1.getSelectedItem().equals("rainbow") || effects2.getSelectedItem().equals("rainbow")) {
             dansRainbowEffect(seekBarValue, stripConfig);
         }
 
-        if ( effects1.getSelectedItem().equals("flash") || effects2.getSelectedItem().equals("flash")) {
+        if (effects1.getSelectedItem().equals("flash") || effects2.getSelectedItem().equals("flash")) {
             flashEffect(seekBarValue, stripConfig);
         }
 
-        if ( effects1.getSelectedItem().equals("custom") || effects2.getSelectedItem().equals("custom")){
+        if (effects1.getSelectedItem().equals("custom") || effects2.getSelectedItem().equals("custom")) {
             maliksCustomEffect(seekBarValue, stripConfig);
         }
 
     }
 
     private void flashEffect(int seekBarValue, LEDConfigPattern stripConfig) {
-        if (seekBarValue == 0){
+        if (seekBarValue == 0) {
             stripConfig.createFlashCommandArray();
         }
 
-        if (seekBarValue % FLASH_SPEED == 0 && !stripConfig.flashOn){
-            for (int i = 0; i < stripConfig.flashCommands.size(); i++){
-                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length-1; j++){
+        if (seekBarValue % FLASH_SPEED == 0 && !stripConfig.flashOn) {
+            for (int i = 0; i < stripConfig.flashCommands.size(); i++) {
+                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length - 1; j++) {
                     changeBulbColor(stripConfig.flashCommands.get(i).range[j],
                             stripConfig.flashCommands.get(i).color);
                 }
             }
             stripConfig.flashOn = true;
-        }else if (seekBarValue % FLASH_SPEED == 0 && stripConfig.flashOn){
-            for (int i = 0; i < stripConfig.flashCommands.size(); i++){
-                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length-1; j++){
+        } else if (seekBarValue % FLASH_SPEED == 0 && stripConfig.flashOn) {
+            for (int i = 0; i < stripConfig.flashCommands.size(); i++) {
+                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length - 1; j++) {
                     changeBulbColor(stripConfig.flashCommands.get(i).range[j], Color.BLACK);
                 }
             }
@@ -528,7 +531,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
-    public void advanceSeekBar(int newVal){
+    public void advanceSeekBar(int newVal) {
         seekBarTime.setProgress(newVal);
     }
 
@@ -541,7 +544,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
             try {
                 //GALAXY_SEEKBAR_INCR
-                for (int time = 0; time < MAX_DISPLAY_TIME; time+= SEEK_BAR_SPEED) {
+                for (int time = 0; time < MAX_DISPLAY_TIME; time += SEEK_BAR_SPEED) {
                     updatePreviewButtons(time);
                     advanceSeekBar(time);
                     Thread.sleep(1);
@@ -562,27 +565,28 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     int rainbowIndex = 0;
     String[] rainbowStr = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
-    public  void dansRainbowEffect(int seekBarValue, LEDConfigPattern stripConfig){
 
-        if (seekBarValue == 0){
+    public void dansRainbowEffect(int seekBarValue, LEDConfigPattern stripConfig) {
+
+        if (seekBarValue == 0) {
             //stripConfig.createRainbowCommandArray();
             stripConfig.createRainbowRangeArray();
         }
 
-        if (seekBarValue % RAINBOW_SPEED == 0 ){
+        if (seekBarValue % RAINBOW_SPEED == 0) {
 
-            for (int i = 0; i < stripConfig.rangeForRainbowEffect.size(); i++){
-                if (rainbowIndex == 7){
+            for (int i = 0; i < stripConfig.rangeForRainbowEffect.size(); i++) {
+                if (rainbowIndex == 7) {
                     rainbowIndex = 0;
                 }
-                changeBulbColor(stripConfig.rangeForRainbowEffect.get(i),Color.parseColor(rainbowStr[rainbowIndex]));
+                changeBulbColor(stripConfig.rangeForRainbowEffect.get(i), Color.parseColor(rainbowStr[rainbowIndex]));
                 rainbowIndex++;
             }
         }
 
     }
 
-    public void maliksCustomEffect(int seekBarValue, LEDConfigPattern stripCon){
+    public void maliksCustomEffect(int seekBarValue, LEDConfigPattern stripCon) {
 
         //Create ArrayList of Timestamps on initial call (at time 0)
         if (seekBarValue == 0) {
@@ -593,11 +597,11 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         for (int i = 0; i < stripCon.allCustomTimestamps.size(); i++) {
 
             //System.out.println("stripCon.allCustomTimestamps.get("+i+").time = " + stripCon.allCustomTimestamps.get(i).colorDeployed);
-            if ( stripCon.allCustomTimestamps.get(i).time <= seekBarValue && !stripCon.allCustomTimestamps.get(i).colorDeployed ){
+            if (stripCon.allCustomTimestamps.get(i).time <= seekBarValue && !stripCon.allCustomTimestamps.get(i).colorDeployed) {
                 stripCon.allCustomTimestamps.get(i).colorDeployed = true;
 
                 //System.out.println("stripCon.allCustomTimestamps.get(i).time = " + stripCon.allCustomTimestamps.get(i).time);
-                for (int j = 0; j < stripCon.allCustomTimestamps.get(i).range.length; j++){
+                for (int j = 0; j < stripCon.allCustomTimestamps.get(i).range.length; j++) {
                     //System.out.println("stripCon.allCustomTimestamps.get(i).range[j] = " + stripCon.allCustomTimestamps.get(i).range[j]);
                     changeBulbColor(stripCon.allCustomTimestamps.get(i).range[j],
                             stripCon.allCustomTimestamps.get(i).color);
