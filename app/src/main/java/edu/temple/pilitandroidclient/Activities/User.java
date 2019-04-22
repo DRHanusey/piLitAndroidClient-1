@@ -100,8 +100,7 @@ public class User extends AppCompatActivity {
                         System.out.println("incomingJsonArray.length()::: " + incomingJsonArray.length());
 
 
-                        Type type = new TypeToken<ArrayList<LEDConfigPattern>>() {
-                        }.getType();
+                        Type type = new TypeToken<ArrayList<LEDConfigPattern>>() {}.getType();
                         ArrayList<LEDConfigPattern> publicConfigsArray = new Gson().fromJson(incomingJsonArray.toString(), type);
 
                         System.out.println("pubConfigs size: " + publicConfigsArray.size());

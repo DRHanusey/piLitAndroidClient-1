@@ -106,21 +106,6 @@ public class Login extends AppCompatActivity {
         userProfileObjTEST = new UserProfileObj();
         userProfileObjTEST = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
 
-        /*
-        System.out.println(userProfileObjTEST.error);
-        System.out.println(userProfileObjTEST._id);
-        System.out.println(userProfileObjTEST.userName);
-        System.out.println(userProfileObjTEST.password);
-        System.out.println(userProfileObjTEST._v);
-        System.out.println(userProfileObjTEST.email);
-
-        String commandTEST = gson.toJson(userProfileObjTEST.configs.get(0));
-        System.out.println(commandTEST);
-        */
-
-        //String loggedInUser = (String)incomingJson.get("userName");
-        //createTestObj(loggedInUser);
-
         //Launches the home activity and passes a user profile obj
         Intent intent = new Intent(Login.this, User.class);
         intent.putExtra(USER_OBJ, userProfileObjTEST);
@@ -206,39 +191,4 @@ public class Login extends AppCompatActivity {
         Intent intent = new Intent(this, Config.class);
         startActivity(intent);
     }
-
 }
-
-/*
-
-        //Insert the https address into the socket
-        /*
-        try {
-            socket = IO.socket(Login.SERVER_ADDRESS);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
-            @Override
-            public void call(Object... args) {
-                socket.emit("login", outgoingJson);
-                Log.i("******* outgoingJson",outgoingJson.toString());      //Print JSON to Logcat(bottom of screen
-            }
-
-        }).on("login", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                incomingJson = (JSONObject)args[0];
-                Log.i("&&&&&&& incomingJson:",incomingJson.toString());     //Print JSON to Logcat(bottom of screen
-                //waitingForServerResponse = false;
-            }
-        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-            }
-        });
-        socket.connect();
-        */

@@ -106,27 +106,6 @@ public class Marketplace extends AppCompatActivity {
         list.setAdapter(ledConfigList);
     }
 
-    private void populateListView(){
-
-        LEDConfigPattern partyLights = new LEDConfigPattern("partyLights", 30);
-        LEDConfigPattern sleepLights = new LEDConfigPattern("sleepLights", 30);
-        LEDConfigPattern gameLights = new LEDConfigPattern("gameLights", 30);
-
-        //create list of items
-        ArrayList<LEDConfigPattern> myPatterns = new ArrayList<LEDConfigPattern>();
-        myPatterns.add(partyLights);
-        myPatterns.add(sleepLights);
-        myPatterns.add(gameLights);
-
-        //create the adapter
-        ArrayAdapter<LEDConfigPattern> ledConfigList = new ArrayAdapter<LEDConfigPattern>(this,
-                android.R.layout.simple_list_item_1, myPatterns);
-
-        //create the listView
-        ListView list = (ListView) findViewById(R.id.listConfig);
-        list.setAdapter(ledConfigList);
-
-    }
 
     public void goHome(View v){
 
