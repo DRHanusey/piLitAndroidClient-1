@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -32,8 +31,8 @@ public class Login extends AppCompatActivity {
     JSONObject outgoingJson;
     JSONObject incomingJson;
     JSONObject testJson = new JSONObject();
-    UserProfileObj userProfileObjTEST;
-    public static String userName;
+    UserProfileObj userProfileObj;
+    public static String userName, piName;
     Gson gson = new Gson();
     public boolean waitingForServerResponse;
 
@@ -61,8 +60,8 @@ public class Login extends AppCompatActivity {
                 outgoingJson = new JSONObject();
                 incomingJson = new JSONObject();
 
-                userName = "testuser"; //"danhan";  //inputEmail.getText().toString();//
-                String pword =  "password"; //"pppppp"; //inputPassword.getText().toString();
+                userName = inputEmail.getText().toString(); //"testuser"; //"danhan";  //
+                String pword = inputPassword.getText().toString(); //  "password"; //"pppppp";
 
                 try {
                     outgoingJson.put("userName",userName);
@@ -103,12 +102,15 @@ public class Login extends AppCompatActivity {
 
     public void launchUserActivity() throws JSONException {
 
-        userProfileObjTEST = new UserProfileObj();
-        userProfileObjTEST = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
+        userProfileObj = new UserProfileObj();
+        userProfileObj = gson.fromJson(incomingJson.toString(),UserProfileObj.class);
+        if (!userProfileObj.piList.isEmpty()) {
+            piName = userProfileObj.piList.get(0).piName;
+        }
 
         //Launches the home activity and passes a user profile obj
         Intent intent = new Intent(Login.this, User.class);
-        intent.putExtra(USER_OBJ, userProfileObjTEST);
+        intent.putExtra(USER_OBJ, userProfileObj);
         startActivity(intent);
 
     }
@@ -172,18 +174,18 @@ public class Login extends AppCompatActivity {
 
     public void createTestObj (String testEmail){
         // USER OBJ FOR TESTING
-        userProfileObjTEST = new UserProfileObj(testEmail);
-        userProfileObjTEST.addPi("168.0.0.1", "living room");         //create mock PiLit for testing
-        userProfileObjTEST.addPi("168.0.0.2", "bed room");            //create mock PiLit for testing
+        userProfileObj = new UserProfileObj(testEmail);
+        userProfileObj.addPi("168.0.0.1", "living room");         //create mock PiLit for testing
+        userProfileObj.addPi("168.0.0.2", "bed room");            //create mock PiLit for testing
 
         //NEW ADDED CODE
-        userProfileObjTEST.configs.add(new LEDConfigPattern("Eagles Party!!", 30));           //create mock LEDconfig obj
-        userProfileObjTEST.configs.add(new LEDConfigPattern("Red White and Blue", 30));       //create mock LEDconfig obj
-        userProfileObjTEST.configs.add(new LEDConfigPattern("Seizure inducing party!", 30));  //create mock LEDconfig obj
-        userProfileObjTEST.configs.add(new LEDConfigPattern("Get Lit with PiLit!!", 30));     //create mock LEDconfig obj
-        userProfileObjTEST.configs.add(new LEDConfigPattern("Sexy time lights", 30));         //create mock LEDconfig obj
-        userProfileObjTEST.configs.add(new LEDConfigPattern("Graduation celebration", 30));   //create mock LEDconfig obj
-        userProfileObjTEST.configs.add(new LEDConfigPattern("Happy Bday",30));               //create mock LEDconfig obj
+        userProfileObj.configs.add(new LEDConfigPattern("Eagles Party!!", 30));           //create mock LEDconfig obj
+        userProfileObj.configs.add(new LEDConfigPattern("Red White and Blue", 30));       //create mock LEDconfig obj
+        userProfileObj.configs.add(new LEDConfigPattern("Seizure inducing party!", 30));  //create mock LEDconfig obj
+        userProfileObj.configs.add(new LEDConfigPattern("Get Lit with PiLit!!", 30));     //create mock LEDconfig obj
+        userProfileObj.configs.add(new LEDConfigPattern("Sexy time lights", 30));         //create mock LEDconfig obj
+        userProfileObj.configs.add(new LEDConfigPattern("Graduation celebration", 30));   //create mock LEDconfig obj
+        userProfileObj.configs.add(new LEDConfigPattern("Happy Bday",30));               //create mock LEDconfig obj
             }
 
     //For TESTING

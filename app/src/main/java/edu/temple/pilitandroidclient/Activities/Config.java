@@ -71,19 +71,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         assignGUIelementsToJavaObjects();
         createPreviewButtons();
         createEffectsSpinner();
-
-        boolean loadConfig = getIntent().getBooleanExtra(User.EXTRA_PRESENT, false);
-
-        if (loadConfig) {
-            stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
-            if (!stripConfig.configName.equals("default")) {
-                configName.setText(stripConfig.configName);
-                effects1.setSelection(4);//TODO need to set selection dynamically
-                System.out.println(gson.toJson(stripConfig));
-            }
-        }
-
-
+        populateConfigScreen();
 
         color1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +91,8 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final commandRequest testRequest = new commandRequest("testpi", "testuser", stripConfig);
+                //final commandRequest testRequest = new commandRequest("testpi", "testuser", stripConfig);
+                final commandRequest testRequest = new commandRequest(Login.piName, Login.userName, stripConfig);
                 String piAndCommandString = gson.toJson(testRequest);
                 //System.out.println("COMMAND STR" + jsonConfigStr);
 
@@ -117,6 +106,34 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 sendConfigToServer2(piAndCommandJson);
             }
         });
+    }
+
+    public void populateConfigScreen(){
+        //Load config if one is passed
+        boolean loadConfig = getIntent().getBooleanExtra(User.EXTRA_PRESENT, false);
+        if (loadConfig) {
+            stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
+            if (!stripConfig.configName.equals("default")) {
+                configName.setText(stripConfig.configName);
+
+                for (int i = 0; i < stripConfig.commandArray.size(); i++) {
+                    String effectName = stripConfig.commandArray.get(i).effect;
+                    System.out.println(effectName);
+
+                    //TODO put effect spinner in array
+                    for (int j = 1; j < Command.effectList.length; j++) {
+                        if (effectName.equals(Command.effectList[j])) {
+                            if (i == 0) {
+                                effects1.setSelection(j);
+                            } else{
+                                effects2.setSelection(j);
+                            }
+                        }
+                    }
+                }
+                //System.out.println(gson.toJson(stripConfig));
+            }
+        }
     }
 
     public void saveConfig(View v) throws JSONException {
@@ -568,10 +585,13 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     public void dansRainbowEffect(int seekBarValue, LEDConfigPattern stripConfig) {
 
+        //TODO
+
         if (seekBarValue == 0) {
             //stripConfig.createRainbowCommandArray();
             stripConfig.createRainbowRangeArray();
         }
+
 
         if (seekBarValue % RAINBOW_SPEED == 0) {
 

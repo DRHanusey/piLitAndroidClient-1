@@ -51,7 +51,7 @@ public class User extends AppCompatActivity {
         //connect java items with their GUI representations
         currentUser = findViewById(R.id.textCurrentPi);
         spinner = findViewById(R.id.spinnerPiSelect);
-        selectPi = findViewById(R.id.buttonSelectPi);
+        //selectPi = findViewById(R.id.buttonSelectPi);
         marketPlace = findViewById(R.id.buttonMarketPlace);
         configList = findViewById(R.id.listSavedConfigs);
 
@@ -119,9 +119,11 @@ public class User extends AppCompatActivity {
 
     public void selectPi(View v) {
         //Launches the home activity and passes a user profile obj
+        /*
         Intent intent = new Intent(User.this, Pilit.class);
         intent.putExtra(PI_OBJ, (PiObj) spinner.getSelectedItem());
         startActivity(intent);
+        */
     }
 
     public void createSavedConfigList(UserProfileObj userProfileObj) {
@@ -144,6 +146,11 @@ public class User extends AppCompatActivity {
 
         //Passes the adapter to the spinner
         spinner.setAdapter(piAdapter);
+    }
+
+    public void launchConfigActivity(View v ){
+        Intent intent = new Intent(this, Config.class);
+        startActivity(intent);
     }
 
 }
