@@ -1,11 +1,14 @@
 package edu.temple.pilitandroidclient.Activities;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -24,8 +27,10 @@ public class User extends AppCompatActivity{
     private Button selectPi, marketPlace;
     private ListView configList;
     public static final String PI_OBJ = "passing pi obj";
+    public Context context = this;
+    public static final String CONFIG_OBJ = "passing config obj";
 
-    
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,17 +43,36 @@ public class User extends AppCompatActivity{
         marketPlace = findViewById(R.id.buttonMarketPlace);
         configList = findViewById(R.id.listSavedConfigs);
 
+
+
         //The userProfile which has been passed from the login screen
         UserProfileObj userProfileObj = (UserProfileObj) getIntent().getSerializableExtra(Login.USER_OBJ);
 
         //Display name of user
-        currentUser.setText(userProfileObj.userEmail);
+        currentUser.setText(userProfileObj.userName);
 
         //Displays the User's Pis in a drop down
-        //createPiDropdown(userProfileObjTEST);
+        //createPiDropdown(userProfileObj);
 
         //Displays the user's saved configurations
         createSavedConfigList(userProfileObj);
+
+
+
+        configList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //view.setBackgroundColor(Color.CYAN);
+
+                System.out.println("A config has been clicked at position: " + position);
+                //System.out.println(configList.getItemAtPosition(position));
+
+                Intent intent = new Intent(context, Config.class);
+                //intent.putExtra(CONFIG_OBJ, (LEDConfigPattern) configList.getItemIdAtPosition(position));
+                intent.putExtra(CONFIG_OBJ, (LEDConfigPattern) configList.getItemAtPosition(position));
+                startActivity(intent);
+            }
+        });
 
         marketPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +84,8 @@ public class User extends AppCompatActivity{
 
     }
 
+
+
     public void selectPi(View v){
         //Launches the home activity and passes a user profile obj
         Intent intent = new Intent(User.this, Pilit.class);
@@ -68,21 +94,21 @@ public class User extends AppCompatActivity{
     }
 
     public void createSavedConfigList(UserProfileObj userProfileObj){
-
         //Creates adapter which populates the list view
-        //NEW CODE- Anika
-        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.savedConfigs);
+        ArrayAdapter<LEDConfigPattern> configAdapter = new ArrayAdapter<LEDConfigPattern>(this, android.R.layout.simple_list_item_1, userProfileObj.configs);
 
-        //Passes the adapter to the list view
         configList.setAdapter(configAdapter);
     }
+
 
     public void createPiDropdown(UserProfileObj userProfileObj){
         //Creates adapter which populates the spinner(dropdown)
         ArrayAdapter<PiObj> piAdapter = new ArrayAdapter<PiObj>(this,
                 android.R.layout.simple_spinner_item, userProfileObj.PiList);
+
         //Changes the way names are displayed when the drop down is rendered
         piAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         //Passes the adapter to the spinner
         spinner.setAdapter(piAdapter);
     }

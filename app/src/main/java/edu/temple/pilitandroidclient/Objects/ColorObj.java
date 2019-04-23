@@ -2,7 +2,9 @@ package edu.temple.pilitandroidclient.Objects;
 
 import android.graphics.Color;
 
-public class ColorObj {
+import java.io.Serializable;
+
+public class ColorObj implements Serializable {
     public int r = -1; //r value; value must be integer between 1-255
     public int g = -1; //g value; value must be integer between 1-255
     public int b = -1; //b value; value is an integer between 1-255
