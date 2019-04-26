@@ -25,12 +25,6 @@ public class UserProfileObj implements Serializable {
 
     }
 
-    //For use when loading user with PiLits already initialized
-    public UserProfileObj(String userName, ArrayList<PiObj> piList) {
-        this.userName = userName;
-        this.piList = piList;
-    }
-
     //For use when user has no PiLits set up
     //For use when loading user with PiLits already initialized
     public UserProfileObj(String userName) {
@@ -46,13 +40,5 @@ public class UserProfileObj implements Serializable {
         PiObj newPiObj = new PiObj(piAddress,name );       //initialize new configObj
         piList.add(newPiObj);                                   //add new configObj to list
     }
-
-
-    //param i: index of LED pi (same as pi Id)
-    //returns: PiObj of the LED strip selected
-    public PiObj getPiObj(int i){
-        return piList.get(i);
-    }
-
 
 }

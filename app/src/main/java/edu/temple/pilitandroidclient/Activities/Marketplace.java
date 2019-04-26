@@ -49,7 +49,6 @@ public class Marketplace extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marketplace);
         list = findViewById(R.id.listConfig);
-
         homeButton = findViewById(R.id.homeButton);
 
 
@@ -85,53 +84,4 @@ public class Marketplace extends AppCompatActivity {
         ListView list = (ListView) findViewById(R.id.listConfig);
         list.setAdapter(ledConfigList);
     }
-
-    private void populateListViewFromJson() throws JSONException {
-
-        //TODO convert JSON to JAVA object
-
-        //Type type = new TypeToken<ArrayList<LEDConfigPattern>>() {}.getType();
-        //ArrayList<LEDConfigPattern> myPatterns = new Gson().fromJson(incomingJsonArray.toString(), type);
-
-
-        for (int i = 0; i < incomingJsonArray.length();i++){
-            LEDConfigPattern temp;
-            temp = gson.fromJson(incomingJsonArray.get(i).toString(),LEDConfigPattern.class);
-            publicConfigArrayList.add(temp);
-            System.out.println(publicConfigArrayList.get(i).configName);
-            //System.out.println(incomingJsonArray.get(i).toString());
-        }
-
-        //create the adapter
-        ArrayAdapter<LEDConfigPattern> ledConfigList = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, publicConfigArrayList);
-
-
-        //create the listView
-        list.setAdapter(ledConfigList);
-    }
-
-
-    public void goHome(View v){
-
-        Intent intent = new Intent(this, User.class);
-        startActivity(intent);
-    }
-
-    /*
-    private void sendRequestToServer(){
-        Login.socket.emit("getPublicConfigs", "");
-
-        Login.socket.on("getPublicConfigs", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                incomingJsonArray = (JSONArray) args[0];
-                Log.i("&&&&&&& incomingJson:",incomingJsonArray.toString());
-                System.out.println("incomingJsonArray.length()::: " + incomingJsonArray.length());
-
-            }
-        });
-    }
-    */
-
 }

@@ -23,22 +23,17 @@ import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import edu.temple.pilitandroidclient.Objects.ColorObj;
 import edu.temple.pilitandroidclient.Objects.Command;
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
 import edu.temple.pilitandroidclient.Objects.Timestamp;
-import edu.temple.pilitandroidclient.Objects.UserProfileObj;
 import edu.temple.pilitandroidclient.Objects.commandRequest;
 import edu.temple.pilitandroidclient.R;
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -51,7 +46,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     Gson gson = new Gson();
     SeekBar seekBarTime;
     LinearLayout ll2;
-    private Socket configSocket;
     JSONObject piAndCommandJson;
     JSONObject incomingJson = new JSONObject();
     JSONObject incomingJson2 = new JSONObject();
@@ -103,7 +97,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 }
 
                 //sendConfigToServer(loginInfoJson, piAndCommandJson);
-                sendConfigToServer2(piAndCommandJson);
+                sendConfigToPi(piAndCommandJson);
             }
         });
     }
@@ -119,14 +113,19 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 for (int i = 0; i < stripConfig.commandArray.size(); i++) {
                     String effectName = stripConfig.commandArray.get(i).effect;
                     System.out.println(effectName);
+                    System.out.println("range length " + stripConfig.commandArray.get(i).range.length );
 
                     //TODO put effect spinner in array
                     for (int j = 1; j < Command.effectList.length; j++) {
                         if (effectName.equals(Command.effectList[j])) {
                             if (i == 0) {
                                 effects1.setSelection(j);
+                                //range1.setText(stripConfig.commandArray.get(j).range.toString());
+                                //deactivate box
                             } else{
                                 effects2.setSelection(j);
+                                //range2.setText(stripConfig.commandArray.get(j).range.toString());
+                                //deactivate box
                             }
                         }
                     }
@@ -154,7 +153,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
 
-    public void sendConfigToServer2(final JSONObject configMsg) {
+    public void sendConfigToPi(final JSONObject configMsg) {
         Login.socket.emit("command", configMsg);
         Log.i("&&&&&&& outgoingJson:", configMsg.toString());
 
@@ -359,49 +358,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         return Integer.parseInt(strIntVal);
     }
 
-    public void sendConfigToServer(final JSONObject loginMsg, final JSONObject configMsg) {
-        //Insert the https address into the configSocket
-        try {
-            configSocket = IO.socket(Login.SERVER_ADDRESS);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        configSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
-            @Override
-            public void call(Object... args) {
-
-                configSocket.emit("login", loginMsg);
-                Log.i("******* loginMsg", loginMsg.toString());
-            }
-
-        }).on("login", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                incomingJson = (JSONObject) args[0];
-                Log.i("&&&&&&& incomingJson:", incomingJson.toString());
-
-                Log.i("CONFIG MSG::::::", configMsg.toString());
-                configSocket.emit("command", configMsg); //
-            }
-        }).on("command", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                incomingJson2 = (JSONObject) args[0];
-                Log.i("&&&&&&& incomingJson2:", incomingJson2.toString());
-                configSocket.disconnect();
-            }
-        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Log.i("EVENT_DISCONNET", "disconnet from commandArray screen");
-            }
-        });
-        configSocket.connect();
-        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
-    }
-
     public void colorPicker(final Button btn, final Command command) {
         ColorPickerDialogBuilder
                 .with(this)
@@ -469,32 +425,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
-    public void rainbowEffect() {
-
-        String[] rainbow = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
-
-        int colorOfTheRainbow = 0;
-        for (int buttunPostion = 0; buttunPostion < previewButtons.size(); buttunPostion++) {
-            if (colorOfTheRainbow > rainbow.length - 1) {
-                colorOfTheRainbow = 0;
-                Log.i("in if", "k is set to 0");
-            }
-            if (buttunPostion % 2 == 0) {
-                previewButtons.get(buttunPostion).setBackgroundColor(Color.parseColor(rainbow[colorOfTheRainbow]));
-            } else {
-                previewButtons.get(buttunPostion).setBackgroundColor(Color.parseColor(rainbow[colorOfTheRainbow]));
-            }
-            try {
-                System.out.println("good night");
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                System.out.print("Sleep error here");
-            }
-            colorOfTheRainbow++;
-
-        }
-    }
-
     public void startPreview(View v) {
         //seekBarTime.setProgress(0);
         AsyncTaskRunner runner = new AsyncTaskRunner();
@@ -511,7 +441,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         //TODO effects1.getSelected.... is wrong. What if first comand is solid, second command is custom?
 
         if (effects1.getSelectedItem().equals("rainbow") || effects2.getSelectedItem().equals("rainbow")) {
-            dansRainbowEffect(seekBarValue, stripConfig);
+            rainbowEffect(seekBarValue, stripConfig);
         }
 
         if (effects1.getSelectedItem().equals("flash") || effects2.getSelectedItem().equals("flash")) {
@@ -519,7 +449,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         }
 
         if (effects1.getSelectedItem().equals("custom") || effects2.getSelectedItem().equals("custom")) {
-            maliksCustomEffect(seekBarValue, stripConfig);
+            customEffect(seekBarValue, stripConfig);
         }
 
     }
@@ -583,7 +513,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
     int rainbowIndex = 0;
     String[] rainbowStr = {"#ff0000", "#ffa500", "#ffff00", "#008000", "#0000ff", "#4b0082", "#ee82ee"};
 
-    public void dansRainbowEffect(int seekBarValue, LEDConfigPattern stripConfig) {
+    public void rainbowEffect(int seekBarValue, LEDConfigPattern stripConfig) {
 
         //TODO
 
@@ -606,7 +536,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
-    public void maliksCustomEffect(int seekBarValue, LEDConfigPattern stripCon) {
+    public void customEffect(int seekBarValue, LEDConfigPattern stripCon) {
 
         //Create ArrayList of Timestamps on initial call (at time 0)
         if (seekBarValue == 0) {
@@ -636,6 +566,10 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 stripCon.allCustomTimestamps.get(i).colorDeployed = false;
             }
         }
+
+    }
+
+    public void savePublicToPrivate(View v){
 
     }
 }

@@ -26,17 +26,10 @@ public class LEDConfigPattern implements Serializable {
 
     public LEDConfigPattern(String description, int numberOfLights) {
         this.description = description;
-        this.commandArray = new ArrayList<Command>();
+        this.commandArray = new ArrayList<>();
         this.ledNum = numberOfLights;
     }
 
-    public LEDConfigPattern(){
-
-    }
-
-    //public void setNumberOfLights(int numberOfLights){
-        //this.numberOfLights = numberOfLights;
-    //}
 
     public void createFlashCommandArray(){
         this.flashCommands = new ArrayList<>();
