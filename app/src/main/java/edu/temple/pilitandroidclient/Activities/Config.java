@@ -152,8 +152,8 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
-
     public void sendConfigToPi(final JSONObject configMsg) {
+
         Login.socket.emit("command", configMsg);
         Log.i("&&&&&&& outgoingJson:", configMsg.toString());
 
@@ -244,7 +244,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         effects.setFocusable(false);
         effects.setEnabled(false);
     }
-
+  
     public void assignGUIelementsToJavaObjects() {
         buttonExample = findViewById(R.id.example);
         buttonApply = findViewById(R.id.buttonApply);
@@ -543,7 +543,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             stripCon.createCustomTimestampArray();
         }
 
-
         for (int i = 0; i < stripCon.allCustomTimestamps.size(); i++) {
 
             //System.out.println("stripCon.allCustomTimestamps.get("+i+").time = " + stripCon.allCustomTimestamps.get(i).colorDeployed);
@@ -558,7 +557,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                 }
             }
         }
-
 
         if (seekBarValue > MAX_DISPLAY_TIME - SEEK_BAR_SPEED) {
             System.out.println("COLOR DEPLOYED SET TO FALSE");

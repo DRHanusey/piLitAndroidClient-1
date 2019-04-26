@@ -16,5 +16,6 @@
     <string name="password">Enter Password</string>
     <string name="signup" >SignUp</string>
     <string name="name" >UserName</string>
+    <string name="make_public">Make public</string>
 
 </resources>
