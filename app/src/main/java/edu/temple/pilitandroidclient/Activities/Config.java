@@ -37,7 +37,7 @@ import edu.temple.pilitandroidclient.R;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    Button buttonApply, buttonExample, color1, color2;
+    Button buttonApply, buttonExample, color1, color2, buttonClear;
     int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2, configName;
@@ -82,13 +82,13 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
 
 
+        //SEND TO PI
         buttonApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //final commandRequest testRequest = new commandRequest("testpi", "testuser", stripConfig);
                 final commandRequest testRequest = new commandRequest(Login.piName, Login.userName, stripConfig);
                 String piAndCommandString = gson.toJson(testRequest);
-                //System.out.println("COMMAND STR" + jsonConfigStr);
 
                 try {
                     piAndCommandJson = new JSONObject(piAndCommandString);
@@ -102,18 +102,19 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
-    public void populateConfigScreen(){
+    public void populateConfigScreen() {
         //Load config if one is passed
         boolean loadConfig = getIntent().getBooleanExtra(User.EXTRA_PRESENT, false);
         if (loadConfig) {
             stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
+
             if (!stripConfig.configName.equals("default")) {
                 configName.setText(stripConfig.configName);
 
                 for (int i = 0; i < stripConfig.commandArray.size(); i++) {
                     String effectName = stripConfig.commandArray.get(i).effect;
-                    System.out.println(effectName);
-                    System.out.println("range length " + stripConfig.commandArray.get(i).range.length );
+                    //System.out.println(effectName);
+                    //System.out.println("range length " + stripConfig.commandArray.get(i).range.length );
 
                     //TODO put effect spinner in array
                     for (int j = 1; j < Command.effectList.length; j++) {
@@ -122,7 +123,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
                                 effects1.setSelection(j);
                                 //range1.setText(stripConfig.commandArray.get(j).range.toString());
                                 //deactivate box
-                            } else{
+                            } else {
                                 effects2.setSelection(j);
                                 //range2.setText(stripConfig.commandArray.get(j).range.toString());
                                 //deactivate box
@@ -152,7 +153,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         });
     }
 
-
     public void sendConfigToPi(final JSONObject configMsg) {
         Login.socket.emit("command", configMsg);
         Log.i("&&&&&&& outgoingJson:", configMsg.toString());
@@ -161,7 +161,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             @Override
             public void call(Object... args) {
                 incomingJson = (JSONObject) args[0];
-                Log.i("&&&&&&& incomingJson2:", incomingJson.toString());
+                Log.i("&&&&&&& incomingJson:", incomingJson.toString());
             }
         });
     }
@@ -260,6 +260,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         color1 = findViewById(R.id.buttonColor1);
         color2 = findViewById(R.id.buttonColor2);
         configName = findViewById(R.id.configNameEditText);
+        buttonClear = findViewById(R.id.buttonClear);
 
     }
 
@@ -288,6 +289,13 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     public ArrayList<Integer> parseRange(String strInput) {
         ArrayList<Integer> range = new ArrayList<>();
+
+        if (strInput.equalsIgnoreCase("all")) {
+            for (int i = 0; i < btnCount; i++) {
+                range.add(i);
+            }
+            return range;
+        }
 
         if (strInput.equalsIgnoreCase("even")) {
             for (int i = 0; i < btnCount; i++) {
@@ -435,49 +443,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         stripConfig.configName = configName.getText().toString();
     }
 
-    //Called from AsyncTask once/milisecond
-    public void updatePreviewButtons(int seekBarValue) {
-
-        //TODO effects1.getSelected.... is wrong. What if first comand is solid, second command is custom?
-
-        if (effects1.getSelectedItem().equals("rainbow") || effects2.getSelectedItem().equals("rainbow")) {
-            rainbowEffect(seekBarValue, stripConfig);
-        }
-
-        if (effects1.getSelectedItem().equals("flash") || effects2.getSelectedItem().equals("flash")) {
-            flashEffect(seekBarValue, stripConfig);
-        }
-
-        if (effects1.getSelectedItem().equals("custom") || effects2.getSelectedItem().equals("custom")) {
-            customEffect(seekBarValue, stripConfig);
-        }
-
-    }
-
-    private void flashEffect(int seekBarValue, LEDConfigPattern stripConfig) {
-        if (seekBarValue == 0) {
-            stripConfig.createFlashCommandArray();
-        }
-
-        if (seekBarValue % FLASH_SPEED == 0 && !stripConfig.flashOn) {
-            for (int i = 0; i < stripConfig.flashCommands.size(); i++) {
-                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length - 1; j++) {
-                    changeBulbColor(stripConfig.flashCommands.get(i).range[j],
-                            stripConfig.flashCommands.get(i).color);
-                }
-            }
-            stripConfig.flashOn = true;
-        } else if (seekBarValue % FLASH_SPEED == 0 && stripConfig.flashOn) {
-            for (int i = 0; i < stripConfig.flashCommands.size(); i++) {
-                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length - 1; j++) {
-                    changeBulbColor(stripConfig.flashCommands.get(i).range[j], Color.BLACK);
-                }
-            }
-            stripConfig.flashOn = false;
-        }
-
-    }
-
     public void advanceSeekBar(int newVal) {
         seekBarTime.setProgress(newVal);
     }
@@ -508,6 +473,42 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             return resp;
         }
 
+    }
+
+    //Called from AsyncTask once/milisecond
+    public void updatePreviewButtons(int seekBarValue) {
+
+        //TODO effects1.getSelected.... is wrong. What if first comand is solid, second command is custom?
+
+        if (effects1.getSelectedItem().equals("rainbow") || effects2.getSelectedItem().equals("rainbow")) {
+            rainbowEffect(seekBarValue, stripConfig);
+        }
+
+        if (effects1.getSelectedItem().equals("flash") || effects2.getSelectedItem().equals("flash")) {
+            flashEffect(seekBarValue, stripConfig);
+        }
+
+        if (effects1.getSelectedItem().equals("custom") || effects2.getSelectedItem().equals("custom")) {
+            customEffect(seekBarValue, stripConfig);
+        }
+
+        if (effects1.getSelectedItem().equals("solid") || effects2.getSelectedItem().equals("solid")) {
+            solidEffect(seekBarValue, stripConfig);
+        }
+
+    }
+
+    private void solidEffect(int seekBarValue, LEDConfigPattern stripConfig) {
+        if (seekBarValue == 0) {
+            for (int i = 0; i < stripConfig.commandArray.size(); i++) {
+                if (stripConfig.commandArray.get(i).effect.equalsIgnoreCase("solid")) {
+                    Command currentCommand = stripConfig.commandArray.get(i);
+                    for (int j = 0; j < currentCommand.range.length; j++) {
+                        changeBulbColor(currentCommand.range[j], currentCommand.color);
+                    }
+                }
+            }
+        }
     }
 
     int rainbowIndex = 0;
@@ -541,6 +542,11 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         //Create ArrayList of Timestamps on initial call (at time 0)
         if (seekBarValue == 0) {
             stripCon.createCustomTimestampArray();
+            System.out.println("COLOR DEPLOYED SET TO FALSE");
+            for (int i = 0; i < stripCon.allCustomTimestamps.size(); i++) {
+                stripCon.allCustomTimestamps.get(i).colorDeployed = false;
+            }
+
         }
 
 
@@ -569,7 +575,60 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
-    public void savePublicToPrivate(View v){
+    private void flashEffect(int seekBarValue, LEDConfigPattern stripConfig) {
+        if (seekBarValue == 0) {
+            stripConfig.createFlashCommandArray();
+        }
+
+        if (seekBarValue % FLASH_SPEED == 0 && !stripConfig.flashOn) {
+            for (int i = 0; i < stripConfig.flashCommands.size(); i++) {
+                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length - 1; j++) {
+                    changeBulbColor(stripConfig.flashCommands.get(i).range[j],
+                            stripConfig.flashCommands.get(i).color);
+                }
+            }
+            stripConfig.flashOn = true;
+        } else if (seekBarValue % FLASH_SPEED == 0 && stripConfig.flashOn) {
+            for (int i = 0; i < stripConfig.flashCommands.size(); i++) {
+                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length - 1; j++) {
+                    changeBulbColor(stripConfig.flashCommands.get(i).range[j], Color.BLACK);
+                }
+            }
+            stripConfig.flashOn = false;
+        }
+
+    }
+
+    public void savePublicToPrivate(View v) {
+
+    }
+
+    public void buttonClearClick(View v) {
+        LEDConfigPattern clearConfig = new LEDConfigPattern("clear", btnCount);
+        Command command = new Command("solid");
+        JSONObject clearStripJson = new JSONObject();
+
+        //set command range
+        command.setRangeSize(btnCount);
+        for (int i = 0; i < btnCount; i++) {
+            command.range[i] = i;
+        }
+        //set command color = black
+        command.color = new ColorObj(0,0,0);
+        //add command to config
+        clearConfig.commandArray.add(command);
+        //make strip config to not public
+        clearConfig.isPublic = false;
+
+        //Send to pi
+        final commandRequest clearStrip = new commandRequest(Login.piName, Login.userName, clearConfig);
+        String clearStripString = gson.toJson(clearStrip);
+        try {
+            clearStripJson = new JSONObject(clearStripString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sendConfigToPi(clearStripJson);
 
     }
 }

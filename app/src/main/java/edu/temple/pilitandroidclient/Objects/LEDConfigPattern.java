@@ -2,8 +2,10 @@ package edu.temple.pilitandroidclient.Objects;
 
 
 import com.google.gson.Gson;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import edu.temple.pilitandroidclient.Activities.Login;
 
 public class LEDConfigPattern implements Serializable {
@@ -31,11 +33,11 @@ public class LEDConfigPattern implements Serializable {
     }
 
 
-    public void createFlashCommandArray(){
+    public void createFlashCommandArray() {
         this.flashCommands = new ArrayList<>();
 
-        for (int i = 0; i < commandArray.size(); i++){
-            if (commandArray.get(i).effect.equalsIgnoreCase("flash")){
+        for (int i = 0; i < commandArray.size(); i++) {
+            if (commandArray.get(i).effect.equalsIgnoreCase("flash")) {
                 flashCommands.add(commandArray.get(i));
             }
         }
@@ -44,29 +46,31 @@ public class LEDConfigPattern implements Serializable {
 
     public void createRainbowRangeArray() {
         this.rangeForRainbowEffect = new ArrayList<>();
-        for (int i = 0; i < commandArray.size(); i++){
-            if (commandArray.get(i).effect.equalsIgnoreCase("rainbow")){
-                for (int j = 0; j < commandArray.get(i).range.length-1; j++){
+        for (int i = 0; i < commandArray.size(); i++) {
+            if (commandArray.get(i).effect.equalsIgnoreCase("rainbow")) {
+                for (int j = 0; j < commandArray.get(i).range.length - 1; j++) {
                     rangeForRainbowEffect.add(commandArray.get(i).range[j]);
                 }
             }
         }
     }
 
-    public void createCustomTimestampArray(){
+    public void createCustomTimestampArray() {
         Gson gson = new Gson();
         String jsonCmdStr = gson.toJson(this.commandArray);
-        //System.out.println("GSON COMMAND STR" + jsonCmdStr);
+        System.out.println("GSON COMMAND STR" + jsonCmdStr);
         allCustomTimestamps = new ArrayList<>();
 
-        for (int i = 0; i < this.commandArray.size(); i++){
-            for (int j = 0; j < this.commandArray.get(i).timestamps.size(); j++){
-                if (this.commandArray.get(i).effect.equalsIgnoreCase("custom")) {
+        for (int i = 0; i < this.commandArray.size(); i++) {
+            if (this.commandArray.get(i).effect.equalsIgnoreCase("custom")) {
+                for (int j = 0; j < this.commandArray.get(i).timestamps.size(); j++) {
+
                     allCustomTimestamps.add(this.commandArray.get(i).timestamps.get(j));
                     //System.out.println("ADDED TIME STAMP: " + this.commandArray.get(i).timestamps.get(j).toString());
                 }
+                this.commandArray.get(i).injectRangeIntoChildTimestamps();
             }
-            this.commandArray.get(i).injectRangeIntoChildTimestamps();
+
         }
     }
 

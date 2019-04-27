@@ -60,8 +60,8 @@ public class Login extends AppCompatActivity {
                 outgoingJson = new JSONObject();
                 incomingJson = new JSONObject();
 
-                userName = inputEmail.getText().toString(); //"testuser"; //"danhan";  //
-                String pword = inputPassword.getText().toString(); //  "password"; //"pppppp";
+                userName = "testuser"; //inputEmail.getText().toString(); //"danhan";  //
+                String pword = "password"; //inputPassword.getText().toString(); //  "pppppp";
 
                 try {
                     outgoingJson.put("userName",userName);
@@ -171,22 +171,6 @@ public class Login extends AppCompatActivity {
             }
         }
     }
-
-    public void createTestObj (String testEmail){
-        // USER OBJ FOR TESTING
-        userProfileObj = new UserProfileObj(testEmail);
-        userProfileObj.addPi("168.0.0.1", "living room");         //create mock PiLit for testing
-        userProfileObj.addPi("168.0.0.2", "bed room");            //create mock PiLit for testing
-
-        //NEW ADDED CODE
-        userProfileObj.configs.add(new LEDConfigPattern("Eagles Party!!", 30));           //create mock LEDconfig obj
-        userProfileObj.configs.add(new LEDConfigPattern("Red White and Blue", 30));       //create mock LEDconfig obj
-        userProfileObj.configs.add(new LEDConfigPattern("Seizure inducing party!", 30));  //create mock LEDconfig obj
-        userProfileObj.configs.add(new LEDConfigPattern("Get Lit with PiLit!!", 30));     //create mock LEDconfig obj
-        userProfileObj.configs.add(new LEDConfigPattern("Sexy time lights", 30));         //create mock LEDconfig obj
-        userProfileObj.configs.add(new LEDConfigPattern("Graduation celebration", 30));   //create mock LEDconfig obj
-        userProfileObj.configs.add(new LEDConfigPattern("Happy Bday",30));               //create mock LEDconfig obj
-            }
 
     //For TESTING
     public void configScreen(View v){

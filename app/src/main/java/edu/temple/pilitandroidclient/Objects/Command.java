@@ -24,10 +24,12 @@ public class Command implements Serializable {
 
     public void injectRangeIntoChildTimestamps(){
 
+        System.out.println("timestamps.size = " + timestamps.size());
+
         for (int i = 0; i<timestamps.size(); i++){
             //timestamps.get(i).range = new int[this.range.length];
             timestamps.get(i).range = Arrays.copyOf(this.range,this.range.length);
-            System.out.println("TS range[0] = " + timestamps.get(i).range[0]);
+            System.out.println("TS"+i+" range[0] = " + timestamps.get(i).range[0]);
             System.out.println("TS range[last] = " + timestamps.get(i).range[timestamps.get(i).range.length-1]);
         }
     }
