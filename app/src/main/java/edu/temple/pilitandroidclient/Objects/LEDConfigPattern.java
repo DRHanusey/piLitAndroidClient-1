@@ -45,12 +45,14 @@ public class LEDConfigPattern implements Serializable {
 
 
     public void createRainbowRangeArray() {
-        this.rangeForRainbowEffect = new ArrayList<>();
-        for (int i = 0; i < commandArray.size(); i++) {
-            if (commandArray.get(i).effect.equalsIgnoreCase("rainbow")) {
-                for (int j = 0; j < commandArray.get(i).range.length - 1; j++) {
+        rangeForRainbowEffect = new ArrayList<>();
+
+        for (int i = 0; i < this.commandArray.size(); i++) {
+            if (this.commandArray.get(i).effect.equalsIgnoreCase("rainbow")) {
+                for (int j = 0; j < commandArray.get(i).range.length; j++) {
                     rangeForRainbowEffect.add(commandArray.get(i).range[j]);
                 }
+                System.out.println("Rainbow Range:: " + rangeForRainbowEffect.toString());
             }
         }
     }

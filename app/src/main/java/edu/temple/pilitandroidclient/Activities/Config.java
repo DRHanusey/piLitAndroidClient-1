@@ -179,9 +179,10 @@ public class Config extends AppCompatActivity {
             return;
         }
 
+
         if (strRange.equalsIgnoreCase("")) {
             Toast.makeText(getApplicationContext(),
-                    "Enter a range using '-' ',' 'odd' 'even'", Toast.LENGTH_LONG).show();
+                    "Enter a range using '-' ',' 'odd' 'even' 'all'", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -511,6 +512,7 @@ public class Config extends AppCompatActivity {
         }
 
 
+        //System.out.println("seekbar mod rainbow sp :: " + seekBarValue % RAINBOW_SPEED);
         if (seekBarValue % RAINBOW_SPEED == 0) {
 
             for (int i = 0; i < stripConfig.rangeForRainbowEffect.size(); i++) {
