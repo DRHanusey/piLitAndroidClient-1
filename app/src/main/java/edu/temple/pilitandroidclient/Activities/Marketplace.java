@@ -4,31 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-
 import edu.temple.pilitandroidclient.Objects.LEDConfigPattern;
-import edu.temple.pilitandroidclient.Objects.LEDconfigObj;
-import edu.temple.pilitandroidclient.Objects.PiObj;
-import edu.temple.pilitandroidclient.Objects.commandRequest;
 import edu.temple.pilitandroidclient.R;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
+
 
 public class Marketplace extends AppCompatActivity {
 

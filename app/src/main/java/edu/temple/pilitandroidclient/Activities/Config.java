@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,7 +58,6 @@ public class Config extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
-        //Toast.makeText(getApplicationContext(), "test button pressed", Toast.LENGTH_SHORT).show();
 
         //Methods used to clean up and organize onCreate
         assignGUIelementsToJavaObjects();
@@ -504,13 +502,10 @@ public class Config extends AppCompatActivity {
 
     public void rainbowEffect(int seekBarValue, LEDConfigPattern stripConfig) {
 
-        //TODO
-
         if (seekBarValue == 0) {
             //stripConfig.createRainbowCommandArray();
             stripConfig.createRainbowRangeArray();
         }
-
 
         //System.out.println("seekbar mod rainbow sp :: " + seekBarValue % RAINBOW_SPEED);
         if (seekBarValue % RAINBOW_SPEED == 0) {
@@ -523,7 +518,6 @@ public class Config extends AppCompatActivity {
                 rainbowIndex++;
             }
         }
-
     }
 
     public void customEffect(int seekBarValue, LEDConfigPattern stripCon) {
