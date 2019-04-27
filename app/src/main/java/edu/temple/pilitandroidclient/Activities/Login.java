@@ -60,8 +60,8 @@ public class Login extends AppCompatActivity {
                 outgoingJson = new JSONObject();
                 incomingJson = new JSONObject();
 
-                userName = "testuser"; //inputEmail.getText().toString(); //"danhan";  //
-                String pword = "password"; //inputPassword.getText().toString(); //  "pppppp";
+                userName = inputEmail.getText().toString(); // "testuser"; //"danhan";  //
+                String pword = inputPassword.getText().toString(); // "password"; // "pppppp";
 
                 try {
                     outgoingJson.put("userName",userName);

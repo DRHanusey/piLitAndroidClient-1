@@ -51,7 +51,7 @@ public class Marketplace extends AppCompatActivity {
         //create the adapter
         ArrayAdapter<LEDConfigPattern> ledConfigList = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, publicConfigArrayList);
-        
+
         //create the listView
         ListView list = (ListView) findViewById(R.id.listConfig);
         list.setAdapter(ledConfigList);
