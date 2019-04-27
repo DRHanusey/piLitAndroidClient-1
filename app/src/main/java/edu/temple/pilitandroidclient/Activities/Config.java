@@ -36,7 +36,7 @@ import edu.temple.pilitandroidclient.Objects.commandRequest;
 import edu.temple.pilitandroidclient.R;
 import io.socket.emitter.Emitter;
 
-public class Config extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class Config extends AppCompatActivity {
     Button buttonApply, buttonExample, color1, color2, buttonClear;
     int btnCount = 30;
     Spinner effects1, effects2;
@@ -420,19 +420,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
         previewButtons.get(index).setBackgroundColor(Color.rgb(colorObj.r, colorObj.g, colorObj.b));
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // On selecting a spinner item
-        String item = parent.getItemAtPosition(position).toString();
-
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
     public void startPreview(View v) {
         //seekBarTime.setProgress(0);
         AsyncTaskRunner runner = new AsyncTaskRunner();
@@ -546,7 +533,6 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             for (int i = 0; i < stripCon.allCustomTimestamps.size(); i++) {
                 stripCon.allCustomTimestamps.get(i).colorDeployed = false;
             }
-
         }
 
 
@@ -565,14 +551,14 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             }
         }
 
-
+        /*
         if (seekBarValue > MAX_DISPLAY_TIME - SEEK_BAR_SPEED) {
             System.out.println("COLOR DEPLOYED SET TO FALSE");
             for (int i = 0; i < stripCon.allCustomTimestamps.size(); i++) {
                 stripCon.allCustomTimestamps.get(i).colorDeployed = false;
             }
         }
-
+        */
     }
 
     private void flashEffect(int seekBarValue, LEDConfigPattern stripConfig) {
@@ -582,7 +568,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
 
         if (seekBarValue % FLASH_SPEED == 0 && !stripConfig.flashOn) {
             for (int i = 0; i < stripConfig.flashCommands.size(); i++) {
-                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length - 1; j++) {
+                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length ; j++) {
                     changeBulbColor(stripConfig.flashCommands.get(i).range[j],
                             stripConfig.flashCommands.get(i).color);
                 }
@@ -590,7 +576,7 @@ public class Config extends AppCompatActivity implements AdapterView.OnItemSelec
             stripConfig.flashOn = true;
         } else if (seekBarValue % FLASH_SPEED == 0 && stripConfig.flashOn) {
             for (int i = 0; i < stripConfig.flashCommands.size(); i++) {
-                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length - 1; j++) {
+                for (int j = 0; j < stripConfig.flashCommands.get(i).range.length ; j++) {
                     changeBulbColor(stripConfig.flashCommands.get(i).range[j], Color.BLACK);
                 }
             }
