@@ -13,7 +13,8 @@ public class LEDConfigPattern implements Serializable {
     public String userName = Login.userName;    //TODO
     public String description;
     public ArrayList<Command> commandArray;
-    public boolean isPublic = true;             //TODO
+    public boolean isPublic = true;             //TODO //false, is not added made public until user indicates that config should
+                                                //be made public
     public int ledNum = 30;  //TODO returned as 0 from server on login, why?
     //--------------------------------------------
     String _id;

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -36,7 +37,8 @@ import edu.temple.pilitandroidclient.R;
 import io.socket.emitter.Emitter;
 
 public class Config extends AppCompatActivity {
-    Button buttonApply, buttonExample, color1, color2, buttonClear;
+    Button buttonApply, buttonExample, color1, color2, buttonClear, buttonSavePublic;
+    CheckBox makePublic; //for the makePublic checkbox
     int btnCount = 30;
     Spinner effects1, effects2;
     EditText range1, range2, configName;
@@ -100,11 +102,15 @@ public class Config extends AppCompatActivity {
         });
     }
 
+
     public void populateConfigScreen() {
         //Load config if one is passed
         boolean loadConfig = getIntent().getBooleanExtra(User.EXTRA_PRESENT, false);
         if (loadConfig) {
             stripConfig = (LEDConfigPattern) getIntent().getSerializableExtra(User.CONFIG_OBJ);
+
+            //if loadedConfig is public make sure checkbox appears checked on config screen
+            checkTheCheckboxIfPublic(stripConfig.isPublic); //passes true or false depending on if the config is public and checks or unchecks the checkbox accordingly
 
             if (!stripConfig.configName.equals("default")) {
                 configName.setText(stripConfig.configName);
@@ -134,7 +140,17 @@ public class Config extends AppCompatActivity {
         }
     }
 
+    public void checkTheCheckboxIfPublic(boolean isPublic){
+        if (isPublic == true){ //yes, the loaded config is publicly available on the marketplace - uncheck the checkbox
+            makePublic.setChecked(true);
+        }
+        else{ //no, the loaded config is a private config- make sure that the visual checkbox is unchecked
+            makePublic.setChecked(false);
+        }
+    }
+
     public void saveConfig(View v) throws JSONException {
+        shouldConfigBeAddedToMarketplace(); //if checkbox is checked, change config variable isPublic to true
         stripConfig.configName = configName.getText().toString();
         String stripConfigString = gson.toJson(stripConfig);
         JSONObject stripConfigJson = new JSONObject(stripConfigString);
@@ -244,7 +260,16 @@ public class Config extends AppCompatActivity {
         effects.setEnabled(false);
     }
 
+    public void shouldConfigBeAddedToMarketplace(){
+        if (makePublic.isChecked()){ //the checkbox is checked, indicating that the user wants the config to be displayed in the marketplace
+            stripConfig.isPublic = true; //indicate that the configuration should be made public
+        }
+        else{
+            stripConfig.isPublic = false; //indicate that the configuration should be kept private
+        }
+    }
     public void assignGUIelementsToJavaObjects() {
+        buttonSavePublic = findViewById(R.id.buttonSavePublic);
         buttonExample = findViewById(R.id.example);
         buttonApply = findViewById(R.id.buttonApply);
         stripConfig = new LEDConfigPattern("default custom", btnCount);
@@ -260,6 +285,7 @@ public class Config extends AppCompatActivity {
         color2 = findViewById(R.id.buttonColor2);
         configName = findViewById(R.id.configNameEditText);
         buttonClear = findViewById(R.id.buttonClear);
+        makePublic = findViewById(R.id.makePublic); //assign xml checkbox to makePublic checkbox variable
 
     }
 
@@ -581,8 +607,14 @@ public class Config extends AppCompatActivity {
 
     }
 
+    //change a public config to private
     public void savePublicToPrivate(View v) {
-
+       // if user indicates that a public config should be made private{
+       //     stripConfig.isPublic = false; //indicate that the configuration should be made private
+       // }
+       // else{
+       //     stripConfig.isPublic = true; //indicate that the configuration should remain public
+       // }
     }
 
     public void buttonClearClick(View v) {
