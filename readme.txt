@@ -8,6 +8,7 @@ This readme file contains the following:
 
 3. detailed instructions to build (include makefiles if there any), install and configure the entire project on target devices.
 
+
 Pi-Lit! Android Application
 
 1. This application allows a user to control LED lights connected to a Raspberry Pi. The application contains the following features:
