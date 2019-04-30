@@ -19,7 +19,6 @@ Pi-Lit! Android Application
 
 2.
 
-3. This project can be built using Android Studio. To run the project, Android Studio must first be downloaded and installed. Next, the project must be downloaded
-and then opened in Android Studio. Once the project is open in Android Studio, the Android application can be run on either a physical or virtual Android device
-(for physical, Android device must be in debugging/developer mode; for virtual, the virtual Android device must first be configured via Android Studio before running).
+3. This project can be built using Android Studio. To run the project, Android Studio must first be downloaded and installed. Next, the project must be downloaded and then opened in Android Studio. Once the project is open in Android Studio, the Android application can 
+be run on either a physical or virtual Android device (for physical, Android device must be in debugging/developer mode; for virtual, the virtual Android device must first be configured via Android Studio before running).
 
